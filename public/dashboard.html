@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Ntandostore</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f6fa;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .btn-home {
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-home:hover {
+            background: #5a67d8;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-header p {
+            color: #666;
+        }
+
+        /* Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .upload-section h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        .code-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: #f0f0f0;
+            color: #666;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .btn-upload {
+            background: #667eea;
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn-upload:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .quick-stats h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* Sites List */
+        .sites-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .sites-section h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .sites-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .site-card {
+            padding: 1.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .site-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .site-info h3 {
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .site-domain {
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .site-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-visit {
+            background: #48bb78;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .btn-visit:hover {
+            background: #38a169;
+        }
+
+        .btn-delete {
+            background: #f56565;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-delete:hover {
+            background: #e53e3e;
+        }
+
+        .site-stats {
+            display: flex;
+            gap: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .site-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .status-success {
+            background: #e8f5e8;
+            color: #2d7d2d;
+            border: 1px solid #48bb78;
+        }
+
+        .status-error {
+            background: #ffe8e8;
+            color: #d32f2f;
+            border: 1px solid #f56565;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .site-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .site-actions {
+                width: 100%;
+            }
+
+            .btn-visit,
+            .btn-delete {
+                flex: 1;
+                text-align: center;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">🚀 Ntandostore</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+            </ul>
+            <a href="/" class="btn-home">← Back to Home</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1>📊 Your Hosting Dashboard</h1>
+            <p>Upload and manage your free websites with unique *.ntandostore domains</p>
+        </div>
+
+        <!-- Grid Layout -->
+        <div class="dashboard-grid">
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <h2>📤 Upload New Website</h2>
+                
+                <div class="status-message" id="statusMessage"></div>
+
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label for="siteName">Website Name</label>
+                        <input type="text" id="siteName" placeholder="My Awesome Website" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Website Code</label>
+                        <div class="code-tabs">
+                            <button type="button" class="tab-btn active" onclick="switchTab('html')">HTML</button>
+                            <button type="button" class="tab-btn" onclick="switchTab('css')">CSS</button>
+                            <button type="button" class="tab-btn" onclick="switchTab('js')">JavaScript</button>
+                        </div>
+                        
+                        <div class="tab-content active" id="html-tab">
+                            <textarea id="html" placeholder="<!DOCTYPE html>
+<html>
+<head>
+    <title>My Website</title>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <p>Welcome to my website.</p>
+</body>
+</html>" required></textarea>
+                        </div>
+                        
+                        <div class="tab-content" id="css-tab">
+                            <textarea id="css" placeholder="body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f0f0f0;
+}
+
+h1 {
+    color: #333;
+}"></textarea>
+                        </div>
+                        
+                        <div class="tab-content" id="js-tab">
+                            <textarea id="js" placeholder="console.log('Hello World!');
+document.addEventListener('DOMContentLoaded', function() {
+    // Your JavaScript code here
+});"></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-upload">🚀 Deploy Website</button>
+                </form>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <h2>📈 Quick Stats</h2>
+                <div class="stat-item">
+                    <span class="stat-label">Total Websites</span>
+                    <span class="stat-value" id="totalSites">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Visits</span>
+                    <span class="stat-value" id="totalVisits">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Free Storage</span>
+                    <span class="stat-value">∞</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Uptime</span>
+                    <span class="stat-value">99.9%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sites List -->
+        <div class="sites-section">
+            <h2>🌐 Your Hosted Websites</h2>
+            <div class="sites-list" id="sitesList">
+                <div class="loading">Loading your websites...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'html';
+
+        // Switch between code tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tab}-tab`).classList.add('active');
+        }
+
+        // Show status message
+        function showStatus(message, isError = false) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = isError ? 'status-message status-error' : 'status-message status-success';
+            statusEl.style.display = 'block';
+            
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Load sites
+        async function loadSites() {
+            try {
+                const response = await fetch('/api/sites');
+                const sites = await response.json();
+                
+                const sitesList = document.getElementById('sitesList');
+                
+                if (sites.length === 0) {
+                    sitesList.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No websites yet</h3>
+                            <p>Upload your first website using the form above to get started!</p>
+                        </div>
+                    `;
+                } else {
+                    sitesList.innerHTML = sites.map(site => `
+                        <div class="site-card" data-domain="${site.domain}">
+                            <div class="site-header">
+                                <div class="site-info">
+                                    <h3>${site.name}</h3>
+                                    <div class="site-domain">${site.domain}</div>
+                                </div>
+                                <div class="site-actions">
+                                    <a href="${site.url}" target="_blank" class="btn-visit">👁️ Visit</a>
+                                    <button class="btn-delete" onclick="deleteSite('${site.domain}')">🗑️ Delete</button>
+                                </div>
+                            </div>
+                            <div class="site-stats">
+                                <div class="site-stat">
+                                    <span>📅</span>
+                                    <span>Created: ${new Date(site.createdAt).toLocaleDateString()}</span>
+                                </div>
+                                <div class="site-stat">
+                                    <span>👥</span>
+                                    <span>Visits: ${site.visits || 0}</span>
+                                </div>
+                                <div class="site-stat">
+                                    <span>🔗</span>
+                                    <span>URL: ${window.location.origin}${site.url}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                // Update stats
+                const totalSites = sites.length;
+                const totalVisits = sites.reduce((sum, site) => sum + (site.visits || 0), 0);
+                
+                document.getElementById('totalSites').textContent = totalSites;
+                document.getElementById('totalVisits').textContent = totalVisits;
+                
+            } catch (error) {
+                console.error('Failed to load sites:', error);
+                document.getElementById('sitesList').innerHTML = `
+                    <div class="empty-state">
+                        <h3>Failed to load websites</h3>
+                        <p>Please refresh the page to try again.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Upload site
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const siteName = document.getElementById('siteName').value;
+            const html = document.getElementById('html').value;
+            const css = document.getElementById('css').value;
+            const js = document.getElementById('js').value;
+            
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        siteName,
+                        html,
+                        css,
+                        js
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showStatus(`🎉 Success! Your website is now live at: ${result.url}`);
+                    
+                    // Clear form
+                    document.getElementById('uploadForm').reset();
+                    
+                    // Reload sites list
+                    loadSites();
+                    
+                    // Show success message with link
+                    setTimeout(() => {
+                        if (confirm(`Website deployed successfully!\n\nDomain: ${result.domain}\n\nWould you like to visit your new website?`)) {
+                            window.open(result.url, '_blank');
+                        }
+                    }, 1000);
+                    
+                } else {
+                    showStatus(result.error || 'Upload failed', true);
+                }
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                showStatus('Upload failed. Please try again.', true);
+            }
+        });
+
+        // Delete site
+        async function deleteSite(domain) {
+            if (confirm(`Are you sure you want to delete ${domain}? This action cannot be undone.`)) {
+                try {
+                    const response = await fetch(`/api/sites/${domain}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showStatus('Website deleted successfully');
+                        loadSites();
+                    } else {
+                        showStatus(result.error || 'Failed to delete website', true);
+                    }
+                    
+                } catch (error) {
+                    console.error('Delete error:', error);
+                    showStatus('Failed to delete website', true);
+                }
+            }
+        }
+
+        // Load sites on page load
+        window.addEventListener('load', loadSites);
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Computer</title>
+    <title>Ntandostore - Free Website Hosting Platform</title>
     <style>
         * {
             margin: 0;
@@ -15,314 +15,453 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
-        }
-
-        h1 {
-            text-align: center;
             color: #333;
-            margin-bottom: 30px;
-            font-size: 2.5em;
         }
 
-        .calculator {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .display {
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: right;
-            font-size: 2em;
-            min-height: 60px;
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: flex-end;
         }
 
-        .input-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        input[type="number"] {
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1.2em;
-            transition: border-color 0.3s;
-        }
-
-        input[type="number"]:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .operations {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        button {
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s;
+        .logo {
+            font-size: 1.5rem;
             font-weight: bold;
+            color: #667eea;
         }
 
-        .btn-operation {
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .btn-primary {
             background: #667eea;
             color: white;
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
         }
 
-        .btn-operation:hover {
+        .btn-primary:hover {
             background: #5a67d8;
             transform: translateY(-2px);
         }
 
-        .btn-calculate {
-            background: #48bb78;
-            color: white;
-            grid-column: span 2;
-        }
-
-        .btn-calculate:hover {
-            background: #38a169;
-            transform: translateY(-2px);
-        }
-
-        .btn-clear {
-            background: #f56565;
-            color: white;
-        }
-
-        .btn-clear:hover {
-            background: #e53e3e;
-            transform: translateY(-2px);
-        }
-
-        .features {
+        /* Hero Section */
+        .hero {
+            padding: 4rem 2rem;
             text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-hero {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-hero:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* Features Section */
+        .features {
+            background: white;
+            padding: 4rem 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 15px;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* How it Works */
+        .how-it-works {
+            background: #f8f9fa;
+            padding: 4rem 2rem;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+
+        .step h3 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .step p {
             color: #666;
         }
 
-        .features h3 {
-            color: #333;
-            margin-bottom: 15px;
+        /* Stats Section */
+        .stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
         }
 
-        .feature-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .feature-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .feature-list li:last-child {
-            border-bottom: none;
-        }
-
-        .status {
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
             text-align: center;
-            margin-top: 20px;
-            padding: 10px;
-            background: #e8f5e8;
-            border-radius: 10px;
-            color: #2d7d2d;
-            display: none;
         }
 
-        .error {
-            background: #ffe8e8;
-            color: #d32f2f;
+        .stat-item h3 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
+        .stat-item p {
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
             }
 
-            h1 {
-                font-size: 2em;
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
             }
 
-            .operations {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .btn-calculate {
-                grid-column: span 1;
+            .nav-links {
+                display: none;
             }
         }
     </style>
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>🖥️ Simple Computer</h1>
-        
-        <div class="calculator">
-            <div class="display" id="display">0</div>
-            
-            <div class="input-group">
-                <input type="number" id="num1" placeholder="First number" step="any">
-                <input type="number" id="num2" placeholder="Second number" step="any">
-            </div>
-            
-            <div class="operations">
-                <button class="btn-operation" onclick="setOperation('add')">+</button>
-                <button class="btn-operation" onclick="setOperation('subtract')">−</button>
-                <button class="btn-operation" onclick="setOperation('multiply')">×</button>
-                <button class="btn-operation" onclick="setOperation('divide')">÷</button>
-                <button class="btn-calculate" onclick="calculate()">Calculate</button>
-                <button class="btn-clear" onclick="clearAll()">Clear</button>
-            </div>
-        </div>
-        
-        <div class="features">
-            <h3>Features</h3>
-            <ul class="feature-list">
-                <li>✅ Basic arithmetic operations</li>
-                <li>✅ Real-time calculation</li>
-                <li>✅ Responsive design</li>
-                <li>✅ Deployable on Render.com</li>
-                <li>✅ Health check endpoint</li>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">🚀 Ntandostore</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How it Works</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
             </ul>
+            <a href="/dashboard" class="btn-primary">Get Started</a>
         </div>
-        
-        <div class="status" id="status"></div>
-    </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Free Website Hosting Platform</h1>
+        <p>Deploy your HTML websites instantly with unique *.ntandostore domains</p>
+        <div class="cta-buttons">
+            <a href="/dashboard" class="btn-large btn-hero">Start Hosting Free</a>
+            <a href="#how-it-works" class="btn-large btn-secondary">Learn More</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2>Why Choose Ntandostore?</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Free Domains</h3>
+                    <p>Get unique *.ntandostore domains for your websites at no cost</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Deployment</h3>
+                    <p>Deploy your websites in seconds with our simple upload system</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Friendly</h3>
+                    <p>All hosted sites are fully responsive and work on all devices</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Easy Management</h3>
+                    <p>Manage all your sites from our intuitive dashboard</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Visitor Analytics</h3>
+                    <p>Track visitor statistics for all your hosted websites</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Fast & Reliable</h3>
+                    <p>Built on modern infrastructure for maximum performance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Write Your Code</h3>
+                    <p>Create your HTML, CSS, and JavaScript files using any editor</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Upload to Dashboard</h3>
+                    <p>Paste your code in our user-friendly upload interface</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Free Domain</h3>
+                    <p>Receive your unique *.ntandostore domain instantly</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Go Live!</h3>
+                    <p>Your website is instantly live and accessible worldwide</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3 id="sitesCount">0</h3>
+                    <p>Sites Hosted</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="visitsCount">0</h3>
+                    <p>Total Visits</p>
+                </div>
+                <div class="stat-item">
+                    <h3>100%</h3>
+                    <p>Free Forever</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24/7</h3>
+                    <p>Uptime Guaranteed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Ntandostore - Free Website Hosting Platform</p>
+            <p>Deploy your websites for free with unique domains</p>
+        </div>
+    </footer>
 
     <script>
-        let currentOperation = null;
-        let currentValue = '0';
-
-        function setOperation(operation) {
-            currentOperation = operation;
-            updateDisplay();
-            showStatus(`Operation: ${getOperationSymbol(operation)}`, false);
-        }
-
-        function getOperationSymbol(operation) {
-            const symbols = {
-                'add': '+',
-                'subtract': '−',
-                'multiply': '×',
-                'divide': '÷'
-            };
-            return symbols[operation] || operation;
-        }
-
-        function updateDisplay() {
-            const num1 = document.getElementById('num1').value || '0';
-            const num2 = document.getElementById('num2').value || '0';
-            
-            if (currentOperation && num1 && num2) {
-                currentValue = `${num1} ${getOperationSymbol(currentOperation)} ${num2}`;
-            } else if (num1 && currentOperation) {
-                currentValue = `${num1} ${getOperationSymbol(currentOperation)}`;
-            } else {
-                currentValue = num1 || '0';
+        // Load statistics
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/sites');
+                const sites = await response.json();
+                
+                const totalSites = sites.length;
+                const totalVisits = sites.reduce((sum, site) => sum + (site.visits || 0), 0);
+                
+                // Animate counters
+                animateCounter('sitesCount', 0, totalSites, 1000);
+                animateCounter('visitsCount', 0, totalVisits, 1500);
+            } catch (error) {
+                console.error('Failed to load stats:', error);
             }
-            
-            document.getElementById('display').textContent = currentValue;
         }
 
-        function calculate() {
-            const num1 = document.getElementById('num1').value;
-            const num2 = document.getElementById('num2').value;
+        function animateCounter(elementId, start, end, duration) {
+            const element = document.getElementById(elementId);
+            const increment = (end - start) / (duration / 16);
+            let current = start;
             
-            if (!num1 || !num2 || !currentOperation) {
-                showStatus('Please enter both numbers and select an operation', true);
-                return;
-            }
-
-            fetch('/calculate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    operation: currentOperation,
-                    num1: num1,
-                    num2: num2
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    showStatus(data.error, true);
-                } else {
-                    document.getElementById('display').textContent = data.result;
-                    showStatus(`Result: ${data.result}`, false);
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= end) {
+                    current = end;
+                    clearInterval(timer);
                 }
-            })
-            .catch(error => {
-                showStatus('Calculation failed. Please try again.', true);
-                console.error('Error:', error);
+                element.textContent = Math.floor(current).toLocaleString();
+            }, 16);
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
             });
-        }
-
-        function clearAll() {
-            document.getElementById('num1').value = '';
-            document.getElementById('num2').value = '';
-            currentOperation = null;
-            currentValue = '0';
-            updateDisplay();
-            showStatus('Calculator cleared', false);
-        }
-
-        function showStatus(message, isError) {
-            const status = document.getElementById('status');
-            status.textContent = message;
-            status.style.display = 'block';
-            status.className = isError ? 'status error' : 'status';
-            
-            setTimeout(() => {
-                status.style.display = 'none';
-            }, 3000);
-        }
-
-        // Add input event listeners
-        document.getElementById('num1').addEventListener('input', updateDisplay);
-        document.getElementById('num2').addEventListener('input', updateDisplay);
-
-        // Handle keyboard input
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                calculate();
-            } else if (e.key === 'Escape') {
-                clearAll();
-            }
         });
+
+        // Load stats when page loads
+        window.addEventListener('load', loadStats);
     </script>
 </body>
 </html>
