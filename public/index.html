@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Computer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .calculator {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .display {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: right;
+            font-size: 2em;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        input[type="number"] {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.2em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .operations {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-operation {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-operation:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-calculate {
+            background: #48bb78;
+            color: white;
+            grid-column: span 2;
+        }
+
+        .btn-calculate:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .btn-clear {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #e53e3e;
+            transform: translateY(-2px);
+        }
+
+        .features {
+            text-align: center;
+            color: #666;
+        }
+
+        .features h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background: #e8f5e8;
+            border-radius: 10px;
+            color: #2d7d2d;
+            display: none;
+        }
+
+        .error {
+            background: #ffe8e8;
+            color: #d32f2f;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .operations {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .btn-calculate {
+                grid-column: span 1;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🖥️ Simple Computer</h1>
+        
+        <div class="calculator">
+            <div class="display" id="display">0</div>
+            
+            <div class="input-group">
+                <input type="number" id="num1" placeholder="First number" step="any">
+                <input type="number" id="num2" placeholder="Second number" step="any">
+            </div>
+            
+            <div class="operations">
+                <button class="btn-operation" onclick="setOperation('add')">+</button>
+                <button class="btn-operation" onclick="setOperation('subtract')">−</button>
+                <button class="btn-operation" onclick="setOperation('multiply')">×</button>
+                <button class="btn-operation" onclick="setOperation('divide')">÷</button>
+                <button class="btn-calculate" onclick="calculate()">Calculate</button>
+                <button class="btn-clear" onclick="clearAll()">Clear</button>
+            </div>
+        </div>
+        
+        <div class="features">
+            <h3>Features</h3>
+            <ul class="feature-list">
+                <li>✅ Basic arithmetic operations</li>
+                <li>✅ Real-time calculation</li>
+                <li>✅ Responsive design</li>
+                <li>✅ Deployable on Render.com</li>
+                <li>✅ Health check endpoint</li>
+            </ul>
+        </div>
+        
+        <div class="status" id="status"></div>
+    </div>
+
+    <script>
+        let currentOperation = null;
+        let currentValue = '0';
+
+        function setOperation(operation) {
+            currentOperation = operation;
+            updateDisplay();
+            showStatus(`Operation: ${getOperationSymbol(operation)}`, false);
+        }
+
+        function getOperationSymbol(operation) {
+            const symbols = {
+                'add': '+',
+                'subtract': '−',
+                'multiply': '×',
+                'divide': '÷'
+            };
+            return symbols[operation] || operation;
+        }
+
+        function updateDisplay() {
+            const num1 = document.getElementById('num1').value || '0';
+            const num2 = document.getElementById('num2').value || '0';
+            
+            if (currentOperation && num1 && num2) {
+                currentValue = `${num1} ${getOperationSymbol(currentOperation)} ${num2}`;
+            } else if (num1 && currentOperation) {
+                currentValue = `${num1} ${getOperationSymbol(currentOperation)}`;
+            } else {
+                currentValue = num1 || '0';
+            }
+            
+            document.getElementById('display').textContent = currentValue;
+        }
+
+        function calculate() {
+            const num1 = document.getElementById('num1').value;
+            const num2 = document.getElementById('num2').value;
+            
+            if (!num1 || !num2 || !currentOperation) {
+                showStatus('Please enter both numbers and select an operation', true);
+                return;
+            }
+
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    operation: currentOperation,
+                    num1: num1,
+                    num2: num2
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showStatus(data.error, true);
+                } else {
+                    document.getElementById('display').textContent = data.result;
+                    showStatus(`Result: ${data.result}`, false);
+                }
+            })
+            .catch(error => {
+                showStatus('Calculation failed. Please try again.', true);
+                console.error('Error:', error);
+            });
+        }
+
+        function clearAll() {
+            document.getElementById('num1').value = '';
+            document.getElementById('num2').value = '';
+            currentOperation = null;
+            currentValue = '0';
+            updateDisplay();
+            showStatus('Calculator cleared', false);
+        }
+
+        function showStatus(message, isError) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.style.display = 'block';
+            status.className = isError ? 'status error' : 'status';
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 3000);
+        }
+
+        // Add input event listeners
+        document.getElementById('num1').addEventListener('input', updateDisplay);
+        document.getElementById('num2').addEventListener('input', updateDisplay);
+
+        // Handle keyboard input
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                calculate();
+            } else if (e.key === 'Escape') {
+                clearAll();
+            }
+        });
+    </script>
+</body>
+</html>
