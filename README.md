@@ -1,35 +1,41 @@
-# Simple Computer - Render.com Deployable Web Application
+# 🚀 Ntandostore - Free Website Hosting Platform
 
-A simple, responsive web-based calculator application built with Node.js and Express, designed for easy deployment on Render.com.
+A powerful free hosting platform that provides unique *.ntandostore domains and hosts HTML websites instantly. Built with Node.js and Express, designed for easy deployment on Render.com.
 
-## 🚀 Features
+## ✨ Features
 
-- **Basic Arithmetic Operations**: Addition, subtraction, multiplication, and division
-- **Real-time Display**: Shows the current calculation as you type
-- **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
-- **Health Check Endpoint**: `/health` endpoint for monitoring
-- **REST API**: POST `/calculate` endpoint for programmatic access
-- **Error Handling**: Comprehensive error handling with user-friendly messages
-- **Keyboard Support**: Press Enter to calculate, Escape to clear
+- **🌐 Free Domains**: Get unique *.ntandostore domains for your websites at no cost
+- **⚡ Instant Deployment**: Upload and deploy websites in seconds
+- **📱 Responsive Dashboard**: Modern, mobile-friendly management interface
+- **🎨 HTML/CSS/JS Support**: Full support for modern web technologies
+- **📊 Visitor Analytics**: Track visit counts for all your hosted websites
+- **🗂️ Site Management**: Create, view, and delete websites from your dashboard
+- **🔒 Secure Hosting**: Built with security best practices
+- **📈 Real-time Statistics**: Live stats on your dashboard
+- **🌍 Global Access**: Websites accessible worldwide instantly
+
+## 🏗️ Technology Stack
+
+- **Backend**: Node.js with Express.js
+- **Frontend**: Pure HTML, CSS, and JavaScript (no frameworks required)
+- **Storage**: File-based storage with JSON mapping
+- **Deployment**: Render.com (free tier compatible)
+- **API**: RESTful API with JSON responses
 
 ## 📁 Project Structure
 
 ```
-simple-computer/
+ntandostore/
 ├── server.js              # Main Express server
 ├── package.json           # Node.js dependencies and scripts
 ├── render.yaml           # Render.com deployment configuration
+├── domains.json          # Domain mappings (auto-generated)
+├── uploads/              # Hosted websites directory
 ├── public/
-│   └── index.html        # Frontend HTML/CSS/JavaScript
+│   ├── index.html        # Landing page
+│   └── dashboard.html    # User dashboard
 └── README.md            # This file
 ```
-
-## 🛠️ Technology Stack
-
-- **Backend**: Node.js with Express.js
-- **Frontend**: Pure HTML, CSS, and JavaScript (no frameworks required)
-- **Deployment**: Render.com (free tier compatible)
-- **API**: RESTful API with JSON responses
 
 ## 🚀 Quick Start - Deploy to Render.com
 
@@ -39,7 +45,7 @@ simple-computer/
    ```bash
    git init
    git add .
-   git commit -m "Initial commit - Simple Computer"
+   git commit -m "Initial commit - Ntandostore Free Hosting"
    git branch -M main
    git remote add origin <your-github-repo-url>
    git push -u origin main
@@ -51,27 +57,25 @@ simple-computer/
    - Connect your GitHub repository
    - Select the repository
    - Use the following settings:
-     - **Name**: simple-computer
+     - **Name**: ntandostore
      - **Environment**: Node
      - **Build Command**: `npm install`
      - **Start Command**: `npm start`
      - **Instance Type**: Free
    - Click "Create Web Service"
 
-3. **Wait for Deployment**: Render will automatically build and deploy your app
+3. **Access Your Platform**: Your hosting platform will be live at `https://your-app-name.onrender.com`
 
 ### Method 2: Using render.yaml (Automatic)
 
-1. The `render.yaml` file is already included in this project
-2. When you connect your GitHub repository to Render, it will automatically use this configuration
-3. No manual configuration needed!
+The `render.yaml` file is already included for automatic configuration when deploying to Render.com.
 
 ## 🏃‍♂️ Local Development
 
 1. **Clone and Install**:
    ```bash
    git clone <your-repository-url>
-   cd simple-computer
+   cd ntandostore
    npm install
    ```
 
@@ -79,9 +83,11 @@ simple-computer/
    ```bash
    npm start
    ```
-   The app will be available at `http://localhost:3000`
+   The platform will be available at `http://localhost:3000`
 
-3. **Development Mode** (with auto-restart):
+3. **Access the Dashboard**: Navigate to `http://localhost:3000/dashboard`
+
+4. **Development Mode** (with auto-restart):
    ```bash
    npm run dev
    ```
@@ -95,59 +101,115 @@ Health check endpoint for monitoring.
 ```json
 {
   "status": "OK",
+  "service": "Ntandostore Free Hosting",
   "timestamp": "2024-01-01T12:00:00.000Z"
 }
 ```
 
-### POST `/calculate`
-Perform arithmetic calculations.
+### POST `/upload`
+Upload and deploy a new website.
 
 **Request Body:**
 ```json
 {
-  "operation": "add|subtract|multiply|divide",
-  "num1": "number",
-  "num2": "number"
+  "siteName": "My Awesome Website",
+  "html": "<!DOCTYPE html><html>...</html>",
+  "css": "body { color: blue; }",
+  "js": "console.log('Hello World');"
 }
 ```
 
 **Response:**
 ```json
 {
-  "result": "123.45"
+  "success": true,
+  "domain": "quickweb123.ntandostore",
+  "url": "/hosted/quickweb123.ntandostore/",
+  "message": "Site published successfully!"
 }
 ```
 
-**Error Response:**
+### GET `/api/sites`
+Get all hosted websites.
+
+**Response:**
+```json
+[
+  {
+    "domain": "quickweb123.ntandostore",
+    "name": "My Awesome Website",
+    "createdAt": "2024-01-01T12:00:00.000Z",
+    "visits": 42,
+    "url": "/hosted/quickweb123.ntandostore/"
+  }
+]
+```
+
+### DELETE `/api/sites/:domain`
+Delete a hosted website.
+
+**Response:**
 ```json
 {
-  "error": "Cannot divide by zero"
+  "success": true,
+  "message": "Site deleted successfully"
 }
 ```
+
+### GET `/hosted/:domain/`
+Serve hosted websites.
+
+This endpoint automatically tracks visitor counts and serves the deployed HTML files.
+
+## 🎯 How to Use Ntandostore
+
+1. **Visit the Platform**: Go to your deployed URL or `http://localhost:3000`
+2. **Navigate to Dashboard**: Click "Get Started" or visit `/dashboard`
+3. **Upload Your Website**:
+   - Enter your website name
+   - Paste your HTML code (required)
+   - Add CSS styling (optional)
+   - Add JavaScript functionality (optional)
+   - Click "Deploy Website"
+4. **Get Your Domain**: Receive a unique *.ntandostore domain instantly
+5. **Manage Sites**: View, visit, or delete websites from your dashboard
+6. **Track Analytics**: Monitor visitor counts and site statistics
+
+## 🌐 Domain Generation
+
+Domains are automatically generated using:
+- **Format**: `[adjective][noun][number].ntandostore`
+- **Examples**: 
+  - `quickweb123.ntandostore`
+  - `brightsite456.ntandostore`
+  - `smartpage789.ntandostore`
+
+Each domain is unique and automatically checked for availability.
 
 ## 🎨 Customization
 
-### Adding New Operations
-1. Open `server.js`
-2. Add new case in the `/calculate` route:
+### Adding New Domain Patterns
+Edit `server.js` and modify the `generateDomain()` function:
 ```javascript
-case 'power':
-  result = Math.pow(n1, n2);
-  break;
+function generateDomain() {
+  const adjectives = ['quick', 'bright', 'clever', 'swift', 'smart'];
+  const nouns = ['site', 'web', 'page', 'space', 'zone'];
+  const numbers = Math.floor(Math.random() * 9999) + 1;
+  
+  const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const noun = nouns[Math.floor(Math.random() * nouns.length)];
+  
+  return `${adjective}${noun}${numbers}.ntandostore`;
+}
 ```
 
-### Styling Changes
-- Edit the CSS in `public/index.html`
-- All styles are embedded in the HTML file for simplicity
+### Customizing the Landing Page
+- Edit `public/index.html` to change the main landing page
+- Modify colors, text, and features as needed
 
-### Adding New Pages
-1. Create new HTML files in the `public/` directory
-2. Add new routes in `server.js`:
-```javascript
-app.get('/newpage', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'newpage.html'));
-});
-```
+### Dashboard Customization
+- Edit `public/dashboard.html` to change the user interface
+- Add new features, statistics, or management options
 
 ## 🔧 Environment Variables
 
@@ -155,47 +217,76 @@ The application uses the following environment variable:
 
 - `PORT`: Server port (defaults to 3000, automatically set by Render.com)
 
-## 📱 Screenshots
+## 📱 Mobile Support
 
-The application features:
-- Clean, modern interface with gradient background
-- Large, easy-to-read display
-- Responsive button layout
-- Mobile-friendly design
-- Real-time calculation preview
+- Fully responsive design works on all devices
+- Touch-friendly interface for mobile users
+- Optimized dashboard for small screens
+
+## 🔒 Security Features
+
+- Input sanitization for uploaded content
+- File system access restrictions
+- Domain validation and uniqueness checks
+- Safe file serving with proper headers
+
+## 📊 Storage System
+
+- **File-based storage**: Websites stored as HTML files
+- **JSON mapping**: Domain-to-file mapping in `domains.json`
+- **Automatic cleanup**: Files removed when domains are deleted
+- **Scalable architecture**: Easy to migrate to database storage
 
 ## 🚨 Troubleshooting
 
 ### Common Issues
 
-1. **Port Already in Use**:
-   - The app automatically uses the PORT environment variable
-   - Locally, change the port with: `PORT=3001 npm start`
+1. **Upload Fails**:
+   - Check HTML syntax
+   - Ensure JSON is properly formatted
+   - Verify file size limits (50MB max)
 
-2. **Build Fails on Render**:
-   - Check that all dependencies are in `package.json`
-   - Ensure Node.js version is >= 14.0.0
+2. **Domain Not Accessible**:
+   - Check if the site was uploaded successfully
+   - Verify the domain format
+   - Check server logs for errors
 
-3. **App Not Responding**:
-   - Check the `/health` endpoint
-   - Review Render.com logs for errors
+3. **Dashboard Not Loading**:
+   - Ensure the server is running
+   - Check browser console for JavaScript errors
+   - Verify all static files are accessible
 
 ### Getting Help
 
-- Check Render.com dashboard for deployment logs
-- Verify all files are pushed to GitHub
-- Ensure `package.json` has correct start script
+- Check the browser console for JavaScript errors
+- Review server logs for backend issues
+- Ensure all files are properly deployed
+- Verify Render.com build and deployment logs
+
+## 🔮 Future Enhancements
+
+Consider adding these features to enhance the platform:
+
+- **Custom Domains**: Allow users to connect their own domains
+- **Database Storage**: Move from file-based to database storage
+- **User Authentication**: Add user accounts and login system
+- **SSL Certificates**: Automatic HTTPS for all hosted sites
+- **Analytics Dashboard**: Detailed visitor analytics and insights
+- **File Upload**: Support for uploading files via drag-and-drop
+- **Templates**: Pre-built website templates for quick deployment
+- **Collaboration**: Multi-user support for team projects
 
 ## 📄 License
 
-MIT License - Feel free to use this project for learning or as a template for your own applications.
+MIT License - Feel free to use this project for learning or as a foundation for your own hosting platform.
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Submit a pull request
+4. Test thoroughly
+5. Submit a pull request
 
 ## 📞 Support
 
@@ -203,9 +294,10 @@ If you encounter any issues during deployment:
 1. Check this README file first
 2. Review Render.com documentation
 3. Check the application logs in the Render.com dashboard
+4. Verify all files are pushed to GitHub
 
 ---
 
-**Happy Coding! 🎉**
+**🎉 Start Hosting Your Websites for Free Today!**
 
-This Simple Computer application is ready to deploy and demonstrates a complete, production-ready web application suitable for the Render.com free tier.
+Ntandostore provides a complete, production-ready hosting platform suitable for the Render.com free tier. Deploy your websites instantly with unique domains and professional management tools.

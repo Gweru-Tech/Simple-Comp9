@@ -1,13 +1,13 @@
 {
-  "name": "simple-computer",
+  "name": "ntandostore",
   "version": "1.0.0",
-  "description": "A simple web-based computer application deployable on render.com",
+  "description": "Free website hosting platform with unique *.ntandostore domains",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "keywords": ["calculator", "web-app", "render"],
+  "keywords": ["hosting", "domains", "websites", "free", "ntandostore"],
   "author": "SuperNinja",
   "license": "MIT",
   "dependencies": {
