@@ -3,5 +3,27 @@
     "name": "Test Website",
     "createdAt": "2025-12-09T20:51:56.404Z",
     "visits": 0
+  },
+  "brighthub8955.ntandostore": {
+    "name": "Ntando ",
+    "createdAt": "2025-12-09T20:59:51.781Z",
+    "visits": 0
+  },
+  "cleverspot3629.ntandostore": {
+    "name": "Ntando ",
+    "createdAt": "2025-12-09T21:01:58.683Z",
+    "visits": 0
+  },
+  "my-awesome-site.ntandostore": {
+    "name": "Custom Domain Test",
+    "createdAt": "2025-12-09T21:25:07.147Z",
+    "visits": 1,
+    "isCustom": true
+  },
+  "mrntando.ntandostore": {
+    "name": "Ntando",
+    "createdAt": "2025-12-09T21:26:37.077Z",
+    "visits": 1,
+    "isCustom": true
   }
 }
