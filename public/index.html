@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ntandostore - Free Website Hosting Platform</title>
+    <title>Ntandostore - Enhanced Free Website Hosting Platform</title>
     <style>
         * {
             margin: 0;
@@ -89,10 +89,17 @@
             animation: fadeInUp 0.8s ease;
         }
 
+        .hero .subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.1s both;
+        }
+
         .hero p {
             font-size: 1.2rem;
             margin-bottom: 2rem;
-            opacity: 0.9;
+            opacity: 0.8;
             animation: fadeInUp 0.8s ease 0.2s both;
         }
 
@@ -132,6 +139,35 @@
             color: #667eea;
         }
 
+        /* New Features Banner */
+        .new-features {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .new-features h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-pills {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .feature-pill {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+        }
+
         /* Features Section */
         .features {
             background: white;
@@ -162,6 +198,24 @@
             border-radius: 15px;
             background: #f8f9fa;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: translateY(-100%);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover::before {
+            transform: translateY(0);
         }
 
         .feature-card:hover {
@@ -185,6 +239,18 @@
             line-height: 1.6;
         }
 
+        .new-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ed8936;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
         /* How it Works */
         .how-it-works {
             background: #f8f9fa;
@@ -206,7 +272,7 @@
         .step-number {
             width: 60px;
             height: 60px;
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -224,6 +290,72 @@
 
         .step p {
             color: #666;
+        }
+
+        /* Templates Showcase */
+        .templates-showcase {
+            background: white;
+            padding: 4rem 2rem;
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .template-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .template-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .template-preview {
+            height: 200px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .template-info {
+            padding: 1.5rem;
+        }
+
+        .template-info h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .template-info p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .template-btn {
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .template-btn:hover {
+            background: #5a67d8;
         }
 
         /* Stats Section */
@@ -280,6 +412,10 @@
                 font-size: 2rem;
             }
 
+            .subtitle {
+                font-size: 1.1rem !important;
+            }
+
             .cta-buttons {
                 flex-direction: column;
                 align-items: center;
@@ -287,6 +423,11 @@
 
             .nav-links {
                 display: none;
+            }
+
+            .feature-pills {
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
@@ -299,8 +440,8 @@
             <div class="logo">🚀 Ntandostore</div>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
+                <li><a href="#templates">Templates</a></li>
                 <li><a href="#how-it-works">How it Works</a></li>
-                <li><a href="/dashboard">Dashboard</a></li>
             </ul>
             <a href="/dashboard" class="btn-primary">Get Started</a>
         </div>
@@ -308,48 +449,116 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>Free Website Hosting Platform</h1>
-        <p>Deploy your HTML websites instantly with unique *.ntandostore domains</p>
+        <h1>Enhanced Free Website Hosting</h1>
+        <div class="subtitle">Custom Domains • Direct Access • Professional Templates</div>
+        <p>Deploy your HTML websites instantly with unique *.ntandostore domains and advanced features</p>
         <div class="cta-buttons">
             <a href="/dashboard" class="btn-large btn-hero">Start Hosting Free</a>
-            <a href="#how-it-works" class="btn-large btn-secondary">Learn More</a>
+            <a href="#features" class="btn-large btn-secondary">Explore Features</a>
+        </div>
+    </section>
+
+    <!-- New Features Banner -->
+    <section class="new-features">
+        <h2>🎉 Exciting New Features</h2>
+        <div class="feature-pills">
+            <div class="feature-pill">🌐 Custom Domain Names</div>
+            <div class="feature-pill">🔗 Direct URL Access</div>
+            <div class="feature-pill">🎨 Website Templates</div>
+            <div class="feature-pill">🌙 Dark Mode Dashboard</div>
+            <div class="feature-pill">📱 QR Code Sharing</div>
+            <div class="feature-pill">🔍 Live Preview</div>
         </div>
     </section>
 
     <!-- Features Section -->
     <section class="features" id="features">
         <div class="container">
-            <h2>Why Choose Ntandostore?</h2>
+            <h2>Why Choose Ntandostore Enhanced?</h2>
             <div class="feature-grid">
                 <div class="feature-card">
+                    <span class="new-badge">NEW</span>
                     <div class="feature-icon">🌐</div>
-                    <h3>Free Domains</h3>
-                    <p>Get unique *.ntandostore domains for your websites at no cost</p>
+                    <h3>Custom Domains</h3>
+                    <p>Create your own custom *.ntandostore domains with real-time availability checking. Choose names that represent your brand perfectly!</p>
+                </div>
+                <div class="feature-card">
+                    <span class="new-badge">NEW</span>
+                    <div class="feature-icon">🔗</div>
+                    <h3>Direct URL Access</h3>
+                    <p>Access your websites directly at yourdomain.ntandostore without the /hosted/ prefix. Clean, professional URLs that are easy to share!</p>
+                </div>
+                <div class="feature-card">
+                    <span class="new-badge">NEW</span>
+                    <div class="feature-icon">🎨</div>
+                    <h3>Website Templates</h3>
+                    <p>Choose from professionally designed templates for portfolios, business sites, and blogs. Start with a solid foundation and customize as needed!</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
                     <h3>Instant Deployment</h3>
-                    <p>Deploy your websites in seconds with our simple upload system</p>
+                    <p>Deploy your websites in seconds with our simple upload system. No complex configuration required!</p>
                 </div>
                 <div class="feature-card">
+                    <span class="new-badge">NEW</span>
+                    <div class="feature-icon">🌙</div>
+                    <h3>Dark Mode Dashboard</h3>
+                    <p>Manage your websites in style with our sleek dark mode dashboard. Easy on the eyes and perfect for late-night coding sessions!</p>
+                </div>
+                <div class="feature-card">
+                    <span class="new-badge">NEW</span>
                     <div class="feature-icon">📱</div>
-                    <h3>Mobile Friendly</h3>
-                    <p>All hosted sites are fully responsive and work on all devices</p>
+                    <h3>QR Code Sharing</h3>
+                    <p>Generate QR codes for your websites instantly. Perfect for sharing on mobile devices and presentations!</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🔧</div>
-                    <h3>Easy Management</h3>
-                    <p>Manage all your sites from our intuitive dashboard</p>
+                    <span class="new-badge">NEW</span>
+                    <div class="feature-icon">🔍</div>
+                    <h3>Live Preview</h3>
+                    <p>Preview your websites before going live. Test responsive design and functionality right from your dashboard!</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📊</div>
                     <h3>Visitor Analytics</h3>
-                    <p>Track visitor statistics for all your hosted websites</p>
+                    <p>Track visitor statistics for all your hosted websites with real-time analytics and insights.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🚀</div>
                     <h3>Fast & Reliable</h3>
-                    <p>Built on modern infrastructure for maximum performance</p>
+                    <p>Built on modern infrastructure for maximum performance and 99.9% uptime guarantee.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Templates Showcase -->
+    <section class="templates-showcase" id="templates">
+        <div class="container">
+            <h2>🎨 Professional Website Templates</h2>
+            <div class="templates-grid">
+                <div class="template-card">
+                    <div class="template-preview">🎨</div>
+                    <div class="template-info">
+                        <h3>Portfolio Template</h3>
+                        <p>Perfect for showcasing your work, projects, and skills with a clean, modern design.</p>
+                        <a href="/dashboard" class="template-btn">Use This Template</a>
+                    </div>
+                </div>
+                <div class="template-card">
+                    <div class="template-preview">💼</div>
+                    <div class="template-info">
+                        <h3>Business Template</h3>
+                        <p>Professional business website with services, about section, and call-to-action.</p>
+                        <a href="/dashboard" class="template-btn">Use This Template</a>
+                    </div>
+                </div>
+                <div class="template-card">
+                    <div class="template-preview">📝</div>
+                    <div class="template-info">
+                        <h3>Blog Template</h3>
+                        <p>Clean blog layout perfect for sharing articles, thoughts, and ideas.</p>
+                        <a href="/dashboard" class="template-btn">Use This Template</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -362,23 +571,23 @@
             <div class="steps">
                 <div class="step">
                     <div class="step-number">1</div>
-                    <h3>Write Your Code</h3>
-                    <p>Create your HTML, CSS, and JavaScript files using any editor</p>
+                    <h3>Choose Template or Code</h3>
+                    <p>Start with a professional template or write your own HTML, CSS, and JavaScript code</p>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
-                    <h3>Upload to Dashboard</h3>
-                    <p>Paste your code in our user-friendly upload interface</p>
+                    <h3>Select Custom Domain</h3>
+                    <p>Choose your own custom *.ntandostore domain or get one generated automatically</p>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
-                    <h3>Get Free Domain</h3>
-                    <p>Receive your unique *.ntandostore domain instantly</p>
+                    <h3>Deploy Instantly</h3>
+                    <p>Click deploy and your website goes live instantly with direct URL access</p>
                 </div>
                 <div class="step">
                     <div class="step-number">4</div>
-                    <h3>Go Live!</h3>
-                    <p>Your website is instantly live and accessible worldwide</p>
+                    <h3>Share & Track</h3>
+                    <p>Share your website with QR codes, social links, and track visitor analytics</p>
                 </div>
             </div>
         </div>
@@ -401,8 +610,8 @@
                     <p>Free Forever</p>
                 </div>
                 <div class="stat-item">
-                    <h3>24/7</h3>
-                    <p>Uptime Guaranteed</p>
+                    <h3>99.9%</h3>
+                    <p>Uptime</p>
                 </div>
             </div>
         </div>
@@ -411,8 +620,8 @@
     <!-- Footer -->
     <footer>
         <div class="footer-content">
-            <p>&copy; 2024 Ntandostore - Free Website Hosting Platform</p>
-            <p>Deploy your websites for free with unique domains</p>
+            <p>&copy; 2024 Ntandostore - Enhanced Free Website Hosting Platform</p>
+            <p>Deploy your websites for free with custom domains and professional features</p>
         </div>
     </footer>
 
@@ -458,6 +667,24 @@
                     target.scrollIntoView({ behavior: 'smooth' });
                 }
             });
+        });
+
+        // Add animation to feature cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease both';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .template-card, .step').forEach(el => {
+            observer.observe(el);
         });
 
         // Load stats when page loads

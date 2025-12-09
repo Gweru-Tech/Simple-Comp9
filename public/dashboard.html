@@ -11,21 +11,49 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #48bb78;
+            --danger-color: #f56565;
+            --warning-color: #ed8936;
+            --text-color: #2d3748;
+            --bg-color: #f5f6fa;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --text-color: #f7fafc;
+            --bg-color: #1a202c;
+            --card-bg: #2d3748;
+            --border-color: #4a5568;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f6fa;
+            background: var(--bg-color);
+            color: var(--text-color);
             min-height: 100vh;
+            transition: all 0.3s ease;
         }
 
         /* Navigation */
         nav {
-            background: white;
+            background: var(--card-bg);
             padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
 
         .nav-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -35,29 +63,33 @@
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #667eea;
+            color: var(--primary-color);
             text-decoration: none;
         }
 
-        .nav-links {
+        .nav-controls {
             display: flex;
-            gap: 2rem;
-            list-style: none;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s;
+        .theme-toggle {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
         }
 
-        .nav-links a:hover {
-            color: #667eea;
+        .theme-toggle:hover {
+            background: var(--secondary-color);
         }
 
         .btn-home {
-            background: #667eea;
+            background: var(--primary-color);
             color: white;
             padding: 0.5rem 1.5rem;
             border: none;
@@ -68,53 +100,89 @@
         }
 
         .btn-home:hover {
-            background: #5a67d8;
+            background: var(--secondary-color);
         }
 
         /* Main Container */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 2rem auto;
             padding: 0 2rem;
         }
 
         /* Dashboard Header */
         .dashboard-header {
-            background: white;
+            background: var(--card-bg);
             padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow);
             margin-bottom: 2rem;
+            transition: all 0.3s ease;
         }
 
         .dashboard-header h1 {
-            color: #333;
+            color: var(--text-color);
             margin-bottom: 0.5rem;
         }
 
         .dashboard-header p {
-            color: #666;
+            color: #718096;
         }
 
         /* Grid Layout */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 2fr 1fr;
             gap: 2rem;
             margin-bottom: 2rem;
         }
 
         /* Upload Section */
         .upload-section {
-            background: white;
+            background: var(--card-bg);
             padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
         }
 
         .upload-section h2 {
-            color: #333;
+            color: var(--text-color);
             margin-bottom: 1.5rem;
+        }
+
+        .template-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .template-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .template-btn {
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .template-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .template-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
 
         .form-group {
@@ -124,7 +192,7 @@
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: #333;
+            color: var(--text-color);
             font-weight: 500;
         }
 
@@ -132,22 +200,52 @@
         .form-group textarea {
             width: 100%;
             padding: 0.75rem;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--text-color);
             transition: border-color 0.3s;
         }
 
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary-color);
         }
 
-        .form-group textarea {
-            min-height: 150px;
-            font-family: 'Courier New', monospace;
-            resize: vertical;
+        .domain-input-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .domain-input {
+            flex: 1;
+        }
+
+        .domain-suffix {
+            color: var(--text-color);
+            font-weight: bold;
+            padding: 0.75rem;
+            background: var(--border-color);
+            border-radius: 0 8px 8px 0;
+            border: 2px solid var(--border-color);
+            border-left: none;
+        }
+
+        .domain-status {
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .domain-status.available {
+            color: var(--success-color);
+        }
+
+        .domain-status.unavailable {
+            color: var(--danger-color);
         }
 
         .code-tabs {
@@ -159,15 +257,15 @@
         .tab-btn {
             padding: 0.5rem 1rem;
             border: none;
-            background: #f0f0f0;
-            color: #666;
+            background: var(--border-color);
+            color: var(--text-color);
             border-radius: 5px 5px 0 0;
             cursor: pointer;
             transition: all 0.3s;
         }
 
         .tab-btn.active {
-            background: #667eea;
+            background: var(--primary-color);
             color: white;
         }
 
@@ -180,9 +278,9 @@
         }
 
         .btn-upload {
-            background: #667eea;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 0.75rem 2rem;
+            padding: 1rem 2rem;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
@@ -193,54 +291,75 @@
         }
 
         .btn-upload:hover {
-            background: #5a67d8;
             transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
         }
 
-        /* Quick Stats */
-        .quick-stats {
-            background: white;
-            padding: 2rem;
+        /* Advanced Features */
+        .advanced-features {
+            background: var(--card-bg);
+            padding: 1.5rem;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
         }
 
-        .quick-stats h2 {
-            color: #333;
+        .advanced-features h2 {
+            color: var(--text-color);
             margin-bottom: 1.5rem;
         }
 
-        .stat-item {
+        .feature-item {
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .feature-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .feature-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
-        .stat-label {
-            color: #666;
-            font-weight: 500;
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
+        .feature-title {
             font-weight: bold;
-            color: #667eea;
+            color: var(--text-color);
+        }
+
+        .feature-toggle {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .feature-toggle:hover {
+            background: var(--secondary-color);
         }
 
         /* Sites List */
         .sites-section {
-            background: white;
+            background: var(--card-bg);
             padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
         }
 
         .sites-section h2 {
-            color: #333;
+            color: var(--text-color);
             margin-bottom: 1.5rem;
         }
 
@@ -251,14 +370,14 @@
 
         .site-card {
             padding: 1.5rem;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--border-color);
             border-radius: 10px;
             transition: all 0.3s;
         }
 
         .site-card:hover {
-            border-color: #667eea;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-hover);
         }
 
         .site-header {
@@ -269,14 +388,23 @@
         }
 
         .site-info h3 {
-            color: #333;
+            color: var(--text-color);
             margin-bottom: 0.25rem;
         }
 
         .site-domain {
-            color: #667eea;
+            color: var(--primary-color);
             font-family: 'Courier New', monospace;
             font-size: 0.9rem;
+        }
+
+        .custom-domain-badge {
+            background: var(--warning-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
         }
 
         .site-actions {
@@ -284,8 +412,7 @@
             gap: 0.5rem;
         }
 
-        .btn-visit {
-            background: #48bb78;
+        .btn-visit, .btn-preview, .btn-share, .btn-delete {
             color: white;
             padding: 0.5rem 1rem;
             border: none;
@@ -293,32 +420,25 @@
             text-decoration: none;
             font-size: 0.85rem;
             transition: all 0.3s;
-        }
-
-        .btn-visit:hover {
-            background: #38a169;
-        }
-
-        .btn-delete {
-            background: #f56565;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.3s;
         }
 
-        .btn-delete:hover {
-            background: #e53e3e;
-        }
+        .btn-visit { background: var(--success-color); }
+        .btn-visit:hover { background: #38a169; }
+        
+        .btn-preview { background: var(--primary-color); }
+        .btn-preview:hover { background: #5a67d8; }
+        
+        .btn-share { background: var(--warning-color); }
+        .btn-share:hover { background: #dd6b20; }
+        
+        .btn-delete { background: var(--danger-color); }
+        .btn-delete:hover { background: #e53e3e; }
 
         .site-stats {
             display: flex;
             gap: 2rem;
-            color: #666;
+            color: #718096;
             font-size: 0.9rem;
         }
 
@@ -328,52 +448,77 @@
             gap: 0.5rem;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: #666;
-        }
-
-        .empty-state h3 {
-            margin-bottom: 1rem;
-            color: #333;
-        }
-
-        /* Status Messages */
-        .status-message {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
+        /* Modal */
+        .modal {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
         }
 
-        .status-success {
-            background: #e8f5e8;
-            color: #2d7d2d;
-            border: 1px solid #48bb78;
-        }
-
-        .status-error {
-            background: #ffe8e8;
-            color: #d32f2f;
-            border: 1px solid #f56565;
-        }
-
-        /* Loading */
-        .loading {
-            text-align: center;
+        .modal-content {
+            background: var(--card-bg);
+            margin: 5% auto;
             padding: 2rem;
-            color: #666;
+            border-radius: 15px;
+            max-width: 90%;
+            max-height: 80%;
+            overflow: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 500px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        /* QR Code */
+        .qr-modal {
+            text-align: center;
+        }
+
+        .qr-code {
+            margin: 1rem auto;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            display: inline-block;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+        }
 
-            .nav-links {
-                display: none;
+        @media (max-width: 768px) {
+            .template-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .domain-input-group {
+                flex-direction: column;
             }
 
             .site-header {
@@ -383,13 +528,48 @@
 
             .site-actions {
                 width: 100%;
+                flex-wrap: wrap;
             }
 
             .btn-visit,
+            .btn-preview,
+            .btn-share,
             .btn-delete {
                 flex: 1;
                 text-align: center;
             }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-color);
+        }
+
+        .spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
@@ -399,11 +579,10 @@
     <nav>
         <div class="nav-container">
             <a href="/" class="logo">🚀 Ntandostore</a>
-            <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/dashboard">Dashboard</a></li>
-            </ul>
-            <a href="/" class="btn-home">← Back to Home</a>
+            <div class="nav-controls">
+                <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+                <a href="/" class="btn-home">← Back to Home</a>
+            </div>
         </div>
     </nav>
 
@@ -411,8 +590,8 @@
     <div class="container">
         <!-- Dashboard Header -->
         <div class="dashboard-header">
-            <h1>📊 Your Hosting Dashboard</h1>
-            <p>Upload and manage your free websites with unique *.ntandostore domains</p>
+            <h1>📊 Enhanced Hosting Dashboard</h1>
+            <p>Create custom domains, use templates, and deploy websites with advanced features!</p>
         </div>
 
         <!-- Grid Layout -->
@@ -423,12 +602,34 @@
                 
                 <div class="status-message" id="statusMessage"></div>
 
+                <!-- Template Selector -->
+                <div class="template-selector">
+                    <label>Choose a Template (Optional)</label>
+                    <div class="template-buttons" id="templateButtons">
+                        <button class="template-btn" onclick="loadTemplate('portfolio')">🎨 Portfolio</button>
+                        <button class="template-btn" onclick="loadTemplate('business')">💼 Business</button>
+                        <button class="template-btn" onclick="loadTemplate('blog')">📝 Blog</button>
+                    </div>
+                </div>
+
                 <form id="uploadForm">
                     <div class="form-group">
                         <label for="siteName">Website Name</label>
                         <input type="text" id="siteName" placeholder="My Awesome Website" required>
                     </div>
 
+                    <!-- Custom Domain -->
+                    <div class="form-group">
+                        <label for="customDomain">Custom Domain (Optional)</label>
+                        <div class="domain-input-group">
+                            <input type="text" id="customDomain" class="domain-input" placeholder="my-awesome-site" oninput="checkDomainAvailability()">
+                            <span class="domain-suffix">.ntandostore</span>
+                        </div>
+                        <div class="domain-status" id="domainStatus"></div>
+                        <small>Leave blank for auto-generated domain</small>
+                    </div>
+
+                    <!-- Code Editor -->
                     <div class="form-group">
                         <label>Website Code</label>
                         <div class="code-tabs">
@@ -476,24 +677,56 @@ document.addEventListener('DOMContentLoaded', function() {
                 </form>
             </div>
 
-            <!-- Quick Stats -->
-            <div class="quick-stats">
-                <h2>📈 Quick Stats</h2>
-                <div class="stat-item">
-                    <span class="stat-label">Total Websites</span>
-                    <span class="stat-value" id="totalSites">0</span>
+            <!-- Advanced Features -->
+            <div class="advanced-features">
+                <h2>✨ Advanced Features</h2>
+                
+                <div class="feature-item">
+                    <div class="feature-header">
+                        <span class="feature-title">🎨 Website Templates</span>
+                        <button class="feature-toggle" onclick="showFeatureInfo('templates')">Learn More</button>
+                    </div>
+                    <p>Choose from pre-designed templates for portfolios, business sites, and blogs.</p>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label">Total Visits</span>
-                    <span class="stat-value" id="totalVisits">0</span>
+
+                <div class="feature-item">
+                    <div class="feature-header">
+                        <span class="feature-title">🌐 Custom Domains</span>
+                        <button class="feature-toggle" onclick="showFeatureInfo('domains')">Learn More</button>
+                    </div>
+                    <p>Create your own custom *.ntandostore domain name (3-50 characters).</p>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label">Free Storage</span>
-                    <span class="stat-value">∞</span>
+
+                <div class="feature-item">
+                    <div class="feature-header">
+                        <span class="feature-title">🔗 Direct Access</span>
+                        <button class="feature-toggle" onclick="showFeatureInfo('direct')">Learn More</button>
+                    </div>
+                    <p>Access your sites directly at yourdomain.ntandostore without /hosted/ prefix.</p>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label">Uptime</span>
-                    <span class="stat-value">99.9%</span>
+
+                <div class="feature-item">
+                    <div class="feature-header">
+                        <span class="feature-title">📱 Mobile Responsive</span>
+                        <button class="feature-toggle" onclick="showFeatureInfo('mobile')">Learn More</button>
+                    </div>
+                    <p>All hosted sites work perfectly on desktop, tablet, and mobile devices.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-header">
+                        <span class="feature-title">📊 Real-time Analytics</span>
+                        <button class="feature-toggle" onclick="showFeatureInfo('analytics')">Learn More</button>
+                    </div>
+                    <p>Track visitor statistics and site performance in real-time.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-header">
+                        <span class="feature-title">🌙 Dark Mode</span>
+                        <button class="feature-toggle" onclick="toggleTheme()">Toggle Now</button>
+                    </div>
+                    <p>Switch between light and dark themes for comfortable viewing.</p>
                 </div>
             </div>
         </div>
@@ -502,29 +735,132 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="sites-section">
             <h2>🌐 Your Hosted Websites</h2>
             <div class="sites-list" id="sitesList">
-                <div class="loading">Loading your websites...</div>
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Loading your websites...
+                </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('previewModal')">×</button>
+            <h3>Website Preview</h3>
+            <iframe class="preview-iframe" id="previewFrame"></iframe>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div class="modal" id="qrModal">
+        <div class="modal-content qr-modal">
+            <button class="modal-close" onclick="closeModal('qrModal')">×</button>
+            <h3>Share Your Website</h3>
+            <p>Scan this QR code to visit your website on mobile</p>
+            <div class="qr-code" id="qrCode">
+                <p>QR Code will appear here</p>
+            </div>
+            <p id="shareUrl"></p>
         </div>
     </div>
 
     <script>
         let currentTab = 'html';
+        let templates = [];
+        let domainCheckTimeout;
+
+        // Load templates on page load
+        async function loadTemplates() {
+            try {
+                const response = await fetch('/api/templates');
+                templates = await response.json();
+            } catch (error) {
+                console.error('Failed to load templates:', error);
+            }
+        }
+
+        // Load template content
+        function loadTemplate(templateId) {
+            const template = templates.find(t => t.id === templateId);
+            if (!template) return;
+
+            // Update template buttons
+            document.querySelectorAll('.template-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Fill form with template content
+            document.getElementById('siteName').value = template.name;
+            document.getElementById('html').value = template.html;
+            document.getElementById('css').value = template.css;
+            document.getElementById('js').value = '';
+            
+            showStatus(`Template "${template.name}" loaded successfully!`, false);
+        }
+
+        // Check domain availability
+        async function checkDomainAvailability() {
+            const domain = document.getElementById('customDomain').value.trim();
+            const statusEl = document.getElementById('domainStatus');
+            
+            if (domain.length < 3) {
+                statusEl.style.display = 'none';
+                return;
+            }
+
+            // Debounce the check
+            clearTimeout(domainCheckTimeout);
+            domainCheckTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/api/check-domain/${domain}`);
+                    const result = await response.json();
+                    
+                    if (result.available) {
+                        statusEl.textContent = '✅ Domain is available!';
+                        statusEl.className = 'domain-status available';
+                    } else {
+                        statusEl.textContent = '❌ Domain is taken or invalid';
+                        statusEl.className = 'domain-status unavailable';
+                    }
+                    statusEl.style.display = 'block';
+                } catch (error) {
+                    console.error('Domain check failed:', error);
+                }
+            }, 500);
+        }
 
         // Switch between code tabs
         function switchTab(tab) {
             currentTab = tab;
             
-            // Update tab buttons
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // Update tab content
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
             document.getElementById(`${tab}-tab`).classList.add('active');
+        }
+
+        // Toggle theme
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            document.querySelector('.theme-toggle').textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.querySelector('.theme-toggle').textContent = '☀️ Light Mode';
+            }
         }
 
         // Show status message
@@ -533,6 +869,7 @@ document.addEventListener('DOMContentLoaded', function() {
             statusEl.textContent = message;
             statusEl.className = isError ? 'status-message status-error' : 'status-message status-success';
             statusEl.style.display = 'block';
+            statusEl.classList.add('fade-in');
             
             setTimeout(() => {
                 statusEl.style.display = 'none';
@@ -556,14 +893,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                 } else {
                     sitesList.innerHTML = sites.map(site => `
-                        <div class="site-card" data-domain="${site.domain}">
+                        <div class="site-card fade-in" data-domain="${site.domain}">
                             <div class="site-header">
                                 <div class="site-info">
-                                    <h3>${site.name}</h3>
+                                    <h3>${site.name}
+                                        ${site.isCustom ? '<span class="custom-domain-badge">Custom</span>' : ''}
+                                    </h3>
                                     <div class="site-domain">${site.domain}</div>
                                 </div>
                                 <div class="site-actions">
                                     <a href="${site.url}" target="_blank" class="btn-visit">👁️ Visit</a>
+                                    <button class="btn-preview" onclick="previewSite('${site.url}')">🔍 Preview</button>
+                                    <button class="btn-share" onclick="shareSite('${site.url}')">📱 Share</button>
                                     <button class="btn-delete" onclick="deleteSite('${site.domain}')">🗑️ Delete</button>
                                 </div>
                             </div>
@@ -611,6 +952,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const html = document.getElementById('html').value;
             const css = document.getElementById('css').value;
             const js = document.getElementById('js').value;
+            const customDomain = document.getElementById('customDomain').value.trim();
             
             try {
                 const response = await fetch('/upload', {
@@ -622,24 +964,27 @@ document.addEventListener('DOMContentLoaded', function() {
                         siteName,
                         html,
                         css,
-                        js
+                        js,
+                        customDomain: customDomain || null
                     })
                 });
                 
                 const result = await response.json();
                 
                 if (result.success) {
-                    showStatus(`🎉 Success! Your website is now live at: ${result.url}`);
+                    const domainType = result.isCustom ? 'custom domain' : 'domain';
+                    showStatus(`🎉 Success! Your website is live at: ${result.url}`);
                     
                     // Clear form
                     document.getElementById('uploadForm').reset();
+                    document.getElementById('domainStatus').style.display = 'none';
                     
                     // Reload sites list
                     loadSites();
                     
                     // Show success message with link
                     setTimeout(() => {
-                        if (confirm(`Website deployed successfully!\n\nDomain: ${result.domain}\n\nWould you like to visit your new website?`)) {
+                        if (confirm(`Website deployed with ${domainType}!\n\n${result.domain}\n\nWould you like to visit your new website?`)) {
                             window.open(result.url, '_blank');
                         }
                     }, 1000);
@@ -653,6 +998,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 showStatus('Upload failed. Please try again.', true);
             }
         });
+
+        // Preview site
+        function previewSite(url) {
+            const frame = document.getElementById('previewFrame');
+            frame.src = url;
+            document.getElementById('previewModal').style.display = 'block';
+        }
+
+        // Share site
+        function shareSite(url) {
+            const fullUrl = window.location.origin + url;
+            document.getElementById('shareUrl').textContent = fullUrl;
+            
+            // Generate simple QR code placeholder
+            const qrDiv = document.getElementById('qrCode');
+            qrDiv.innerHTML = `
+                <div style="padding: 20px; background: #f0f0f0; border-radius: 8px;">
+                    <p style="font-family: monospace; font-size: 0.8rem; line-height: 1.2;">
+                        📱 QR Code for:<br>
+                        ${fullUrl}
+                    </p>
+                </div>
+            `;
+            
+            document.getElementById('qrModal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
 
         // Delete site
         async function deleteSite(domain) {
@@ -678,8 +1054,32 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Load sites on page load
-        window.addEventListener('load', loadSites);
+        // Show feature info
+        function showFeatureInfo(feature) {
+            const info = {
+                templates: 'Choose from professionally designed templates for portfolios, business websites, and blogs. Each template includes responsive design and modern styling.',
+                domains: 'Create your own custom domain name ending with .ntandostore. Use 3-50 characters with letters, numbers, and hyphens. Check availability in real-time!',
+                direct: 'Your websites are now accessible directly at yourdomain.ntandostore without the /hosted/ prefix. This provides cleaner, professional URLs.',
+                mobile: 'All hosted websites automatically adapt to different screen sizes. Test them on desktop, tablet, and mobile devices for the best user experience.',
+                analytics: 'Track how many visitors your websites receive. Visit counts are updated in real-time and displayed in your dashboard.'
+            };
+            
+            alert(info[feature] || 'Feature information not available.');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Initialize page
+        window.addEventListener('load', () => {
+            loadTheme();
+            loadTemplates();
+            loadSites();
+        });
     </script>
 </body>
 </html>
