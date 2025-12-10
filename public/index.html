@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ntandostore Enhanced - Subdomain Hosting Platform</title>
+    <title>Ntandostore Enhanced - DNS Forwarding & Custom Domain Extensions</title>
     <style>
         * {
             margin: 0;
@@ -251,6 +251,111 @@
             font-weight: bold;
         }
 
+        /* Domain Extensions Showcase */
+        .domain-extensions {
+            background: #f8f9fa;
+            padding: 4rem 2rem;
+        }
+
+        .extensions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .extension-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .extension-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .extension-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .extension-name {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .extension-type {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .premium-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #f6ad55;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        /* DNS Examples */
+        .dns-examples {
+            background: white;
+            padding: 4rem 2rem;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .example-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .example-title {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .example-url {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 1rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .example-description {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
         /* How it Works */
         .how-it-works {
             background: #f8f9fa;
@@ -290,107 +395,6 @@
 
         .step p {
             color: #666;
-        }
-
-        /* Templates Showcase */
-        .templates-showcase {
-            background: white;
-            padding: 4rem 2rem;
-        }
-
-        .templates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .template-card {
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-
-        .template-card:hover {
-            border-color: #667eea;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .template-preview {
-            height: 200px;
-            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-        }
-
-        .template-info {
-            padding: 1.5rem;
-        }
-
-        .template-info h3 {
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-
-        .template-info p {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .template-btn {
-            background: #667eea;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s;
-        }
-
-        .template-btn:hover {
-            background: #5a67d8;
-        }
-
-        /* Subdomain Examples */
-        .subdomain-examples {
-            background: #f8f9fa;
-            padding: 4rem 2rem;
-        }
-
-        .examples-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .example-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s;
-        }
-
-        .example-card:hover {
-            border-color: #667eea;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .example-url {
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            color: #667eea;
-            margin: 0.5rem 0;
         }
 
         /* Stats Section */
@@ -464,6 +468,10 @@
                 flex-direction: column;
                 align-items: center;
             }
+
+            .extensions-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
         }
     </style>
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
@@ -475,8 +483,8 @@
             <div class="logo">🚀 Ntandostore Enhanced</div>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
-                <li><a href="#subdomains">Subdomains</a></li>
-                <li><a href="#templates">Templates</a></li>
+                <li><a href="#domains">Domain Extensions</a></li>
+                <li><a href="#dns">DNS Forwarding</a></li>
                 <li><a href="#how-it-works">How it Works</a></li>
             </ul>
             <a href="/dashboard" class="btn-primary">Get Started</a>
@@ -485,167 +493,179 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>Enhanced Subdomain Hosting Platform</h1>
-        <div class="subtitle">User Accounts • Subdomains • Site Editing • Templates</div>
-        <p>Deploy your HTML websites with unique subdomains, manage multiple sites, and enjoy advanced features</p>
+        <h1>DNS Forwarding & Custom Domain Extensions</h1>
+        <div class="subtitle">Choose Your Domain • DNS Forwarding • Custom URLs • Enhanced Hosting</div>
+        <p>Deploy your websites with custom domain extensions and professional DNS forwarding capabilities</p>
         <div class="cta-buttons">
             <a href="/dashboard" class="btn-large btn-hero">Start Hosting Free</a>
-            <a href="#features" class="btn-large btn-secondary">Explore Features</a>
+            <a href="#domains" class="btn-large btn-secondary">Explore Domains</a>
         </div>
     </section>
 
     <!-- New Features Banner -->
     <section class="new-features">
-        <h2>🎉 Major Platform Enhancements</h2>
+        <h2>🎉 Revolutionary DNS & Domain Features</h2>
         <div class="feature-pills">
-            <div class="feature-pill">👥 User Accounts</div>
-            <div class="feature-pill">🌐 Subdomain Hosting</div>
-            <div class="feature-pill">✏️ Site Editing</div>
-            <div class="feature-pill">🎨 Professional Templates</div>
-            <div class="feature-pill">🔐 Auto Backups</div>
-            <div class="feature-pill">📊 Enhanced Analytics</div>
-            <div class="feature-pill">🌙 Dark Mode Dashboard</div>
-            <div class="feature-pill">🔍 Live Preview</div>
+            <div class="feature-pill">🌐 10 Domain Extensions</div>
+            <div class="feature-pill">🔗 DNS Forwarding</div>
+            <div class="feature-pill">🎯 Custom URLs</div>
+            <div class="feature-pill">⚡ Instant Setup</div>
+            <div class="feature-pill">🔒 Secure Hosting</div>
+            <div class="feature-pill">📊 DNS Management</div>
         </div>
     </section>
 
     <!-- Features Section -->
     <section class="features" id="features">
         <div class="container">
-            <h2>Why Choose Ntandostore Enhanced?</h2>
+            <h2>Why Choose Our DNS-Enhanced Platform?</h2>
             <div class="feature-grid">
                 <div class="feature-card">
                     <span class="new-badge">NEW</span>
+                    <div class="feature-icon">🌐</div>
+                    <h3>10 Domain Extensions</h3>
+                    <p>Choose from .com, .online, .id, .cloud, .net, .store, .blog, .uk, .zw, and .org for your hosting needs.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="new-badge">NEW</span>
+                    <div class="feature-icon">🔗</div>
+                    <h3>DNS Forwarding</h3>
+                    <p>Professional DNS forwarding service that creates custom domains for your sites like site-name.user.ntandostore.com.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="new-badge">NEW</span>
+                    <div class="feature-icon">🎯</div>
+                    <h3>Custom URLs</h3>
+                    <p>Get professional custom URLs for your websites with automatic DNS configuration and management.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="new-badge">NEW</span>
+                    <div class="feature-icon">⚙️</div>
+                    <h3>DNS Management</h3>
+                    <p>Complete DNS control panel to manage your custom domains, enable/disable forwarding, and track DNS records.</p>
+                </div>
+                <div class="feature-card">
                     <div class="feature-icon">👥</div>
                     <h3>User Accounts</h3>
-                    <p>Create your own account with secure authentication. Each user gets their own isolated space to manage multiple websites with full control.</p>
+                    <p>Secure user authentication with dedicated subdomains and domain extension preferences per user.</p>
                 </div>
                 <div class="feature-card">
                     <span class="new-badge">NEW</span>
-                    <div class="feature-icon">🌐</div>
-                    <h3>Subdomain Hosting</h3>
-                    <p>Get your unique subdomain (username-random.ntandostore) and host multiple sites. Access at username-sitename.ntandostore.</p>
+                    <div class="feature-icon">🚀</div>
+                    <h3>Multi-Zone Support</h3>
+                    <p>Support for multiple DNS zones and providers, ensuring reliable and scalable DNS forwarding.</p>
                 </div>
                 <div class="feature-card">
-                    <span class="new-badge">NEW</span>
                     <div class="feature-icon">✏️</div>
                     <h3>Site Editing</h3>
-                    <p>Edit your deployed websites anytime with our built-in editor. Automatic backups ensure you never lose your work.</p>
+                    <p>Edit your deployed websites anytime with automatic backups and DNS updates.</p>
                 </div>
                 <div class="feature-card">
                     <span class="new-badge">NEW</span>
-                    <div class="feature-icon">🎨</div>
-                    <h3>Website Templates</h3>
-                    <p>Choose from professional templates including Portfolio, Business, Blog, and Landing pages. Fully responsive and customizable.</p>
-                </div>
-                <div class="feature-card">
-                    <span class="new-badge">NEW</span>
-                    <div class="feature-icon">🔐</div>
-                    <h3>Automatic Backups</h3>
-                    <p>Every site update creates an automatic backup. Never worry about losing changes - you can always restore previous versions.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Instant Deployment</h3>
-                    <p>Deploy your websites in seconds with our simple upload system. No complex configuration required!</p>
-                </div>
-                <div class="feature-card">
-                    <span class="new-badge">NEW</span>
-                    <div class="feature-icon">🌙</div>
-                    <h3>Dark Mode Dashboard</h3>
-                    <p>Manage your websites in style with our sleek dark mode dashboard. Easy on the eyes and perfect for late-night coding!</p>
-                </div>
-                <div class="feature-card">
-                    <span class="new-badge">NEW</span>
-                    <div class="feature-icon">🔍</div>
-                    <h3>Live Preview</h3>
-                    <p>Preview your websites before going live. Test responsive design and functionality right from your dashboard!</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Visitor Analytics</h3>
-                    <p>Track visitor statistics for all your hosted websites with real-time analytics and insights.</p>
+                    <div class="feature-icon">🔒</div>
+                    <h3>DNS Security</h3>
+                    <p>Secure DNS management with API authentication and automatic SSL certificate management.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Subdomain Examples -->
-    <section class="subdomain-examples" id="subdomains">
+    <!-- Domain Extensions Showcase -->
+    <section class="domain-extensions" id="domains">
         <div class="container">
-            <h2>🌐 Your Subdomain Examples</h2>
-            <p style="text-align: center; color: #666; margin-bottom: 2rem;">Each user gets a unique subdomain and can host multiple sites</p>
+            <h2>🌐 Choose Your Domain Extension</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 2rem;">Select the perfect domain extension for your project during signup</p>
+            <div class="extensions-grid">
+                <div class="extension-card">
+                    <span class="premium-badge">PREMIUM</span>
+                    <div class="extension-badge">.COM</div>
+                    <div class="extension-name">Commercial</div>
+                    <div class="extension-type">Most Popular</div>
+                </div>
+                <div class="extension-card">
+                    <div class="extension-badge">.ONLINE</div>
+                    <div class="extension-name">Online</div>
+                    <div class="extension-type">Digital Presence</div>
+                </div>
+                <div class="extension-card">
+                    <div class="extension-badge">.ID</div>
+                    <div class="extension-name">Identity</div>
+                    <div class="extension-type">Personal Brand</div>
+                </div>
+                <div class="extension-card">
+                    <div class="extension-badge">.CLOUD</div>
+                    <div class="extension-name">Cloud</div>
+                    <div class="extension-type">Tech Projects</div>
+                </div>
+                <div class="extension-card">
+                    <div class="extension-badge">.NET</div>
+                    <div class="extension-name">Network</div>
+                    <div class="extension-type">Tech Focus</div>
+                </div>
+                <div class="extension-card">
+                    <div class="extension-badge">.STORE</div>
+                    <div class="extension-name">Store</div>
+                    <div class="extension-type">E-commerce</div>
+                </div>
+                <div class="extension-card">
+                    <div class="extension-badge">.BLOG</div>
+                    <div class="extension-name">Blog</div>
+                    <div class="extension-type">Content Sites</div>
+                </div>
+                <div class="extension-card">
+                    <div class="extension-badge">.UK</div>
+                    <div class="extension-name">UK</div>
+                    <div class="extension-type">British Focus</div>
+                </div>
+                <div class="extension-card">
+                    <div class="extension-badge">.ZW</div>
+                    <div class="extension-name">Zimbabwe</div>
+                    <div class="extension-type">Local Focus</div>
+                </div>
+                <div class="extension-card">
+                    <div class="extension-badge">.ORG</div>
+                    <div class="extension-name">Organization</div>
+                    <div class="extension-type">Non-profit</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DNS Forwarding Examples -->
+    <section class="dns-examples" id="dns">
+        <div class="container">
+            <h2>🔗 DNS Forwarding Examples</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 2rem;">See how DNS forwarding creates professional custom domains</p>
             <div class="examples-grid">
                 <div class="example-card">
-                    <h4>👤 User Profile</h4>
-                    <div class="example-url">john-quick123.ntandostore</div>
-                    <p>Your unique user subdomain</p>
+                    <div class="example-title">Standard Hosting</div>
+                    <div class="example-url">username-quick123.ntandostore.com/site/</div>
+                    <div class="example-description">Traditional subdomain hosting with site paths</div>
                 </div>
                 <div class="example-card">
-                    <h4>🎨 Portfolio Site</h4>
-                    <div class="example-url">john-quick123/portfolio.ntandostore</div>
-                    <p>Host your portfolio</p>
+                    <div class="example-title">DNS Forwarding</div>
+                    <div class="example-url">mysite.username-quick123.ntandostore.com</div>
+                    <div class="example-description">Professional custom domain with DNS forwarding</div>
                 </div>
                 <div class="example-card">
-                    <h4>💼 Business Site</h4>
-                    <div class="example-url">john-quick123/business.ntandostore</div>
-                    <p>Professional business site</p>
+                    <div class="example-title">Multiple Extensions</div>
+                    <div class="example-url">portfolio.username-quick123.ntandostore.online</div>
+                    <div class="example-description">Choose your preferred domain extension</div>
                 </div>
                 <div class="example-card">
-                    <h4>📝 Blog Site</h4>
-                    <div class="example-url">john-quick123/blog.ntandostore</div>
-                    <p>Share your thoughts</p>
+                    <div class="example-title">Business Sites</div>
+                    <div class="example-url">business.username-quick123.ntandostore.store</div>
+                    <div class="example-description">Perfect for e-commerce and business sites</div>
                 </div>
                 <div class="example-card">
-                    <h4>🚀 Landing Page</h4>
-                    <div class="example-url">john-quick123/app.ntandostore</div>
-                    <p>Promote your app</p>
+                    <div class="example-title">Tech Projects</div>
+                    <div class="example-url">app.username-quick123.ntandostore.cloud</div>
+                    <div class="example-description">Ideal for tech and cloud projects</div>
                 </div>
                 <div class="example-card">
-                    <h4>📱 Personal Site</h4>
-                    <div class="example-url">john-quick123/me.ntandostore</div>
-                    <p>Your personal website</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Templates Showcase -->
-    <section class="templates-showcase" id="templates">
-        <div class="container">
-            <h2>🎨 Professional Website Templates</h2>
-            <div class="templates-grid">
-                <div class="template-card">
-                    <div class="template-preview">🎨</div>
-                    <div class="template-info">
-                        <h3>Portfolio Template</h3>
-                        <p>Perfect for showcasing your work, projects, and skills with a clean, modern design.</p>
-                        <a href="/dashboard" class="template-btn">Use This Template</a>
-                    </div>
-                </div>
-                <div class="template-card">
-                    <div class="template-preview">💼</div>
-                    <div class="template-info">
-                        <h3>Business Template</h3>
-                        <p>Professional business website with services, about section, and call-to-action.</p>
-                        <a href="/dashboard" class="template-btn">Use This Template</a>
-                    </div>
-                </div>
-                <div class="template-card">
-                    <div class="template-preview">📝</div>
-                    <div class="template-info">
-                        <h3>Blog Template</h3>
-                        <p>Clean blog layout perfect for sharing articles, thoughts, and ideas.</p>
-                        <a href="/dashboard" class="template-btn">Use This Template</a>
-                    </div>
-                </div>
-                <div class="template-card">
-                    <div class="template-preview">🚀</div>
-                    <div class="template-info">
-                        <h3>Landing Page Template</h3>
-                        <p>Modern landing page perfect for products, apps, and services with hero sections.</p>
-                        <a href="/dashboard" class="template-btn">Use This Template</a>
-                    </div>
+                    <div class="example-title">Blog Sites</div>
+                    <div class="example-url">blog.username-quick123.ntandostore.blog</div>
+                    <div class="example-description">Perfect for content creators and bloggers</div>
                 </div>
             </div>
         </div>
@@ -654,27 +674,27 @@
     <!-- How It Works -->
     <section class="how-it-works" id="how-it-works">
         <div class="container">
-            <h2>How It Works</h2>
+            <h2>How DNS Forwarding Works</h2>
             <div class="steps">
                 <div class="step">
                     <div class="step-number">1</div>
-                    <h3>Create Account</h3>
-                    <p>Sign up for a free account and get your unique subdomain instantly</p>
+                    <h3>Choose Extension</h3>
+                    <p>Select your preferred domain extension during account signup</p>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
-                    <h3>Choose Template or Code</h3>
-                    <p>Start with a professional template or write your own HTML, CSS, and JavaScript</p>
+                    <h3>Create Website</h3>
+                    <p>Build your website using our editor or upload your own code</p>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
-                    <h3>Deploy Instantly</h3>
-                    <p>Click deploy and your website goes live at your unique subdomain URL</p>
+                    <h3>Enable DNS</h3>
+                    <p>Toggle DNS forwarding to get a custom domain for your site</p>
                 </div>
                 <div class="step">
                     <div class="step-number">4</div>
-                    <h3>Edit & Manage</h3>
-                    <p>Update your sites anytime with automatic backups and track visitor analytics</p>
+                    <h3>Go Live</h3>
+                    <p>Your site is instantly accessible at your custom domain URL</p>
                 </div>
             </div>
         </div>
@@ -693,8 +713,8 @@
                     <p>Sites Hosted</p>
                 </div>
                 <div class="stat-item">
-                    <h3 id="visitsCount">0</h3>
-                    <p>Total Visits</p>
+                    <h3 id="domainsCount">10</h3>
+                    <p>Domain Extensions</p>
                 </div>
                 <div class="stat-item">
                     <h3>100%</h3>
@@ -707,8 +727,8 @@
     <!-- Footer -->
     <footer>
         <div class="footer-content">
-            <p>&copy; 2024 Ntandostore Enhanced - Subdomain Hosting Platform</p>
-            <p>Deploy your websites with user accounts, subdomains, and professional features</p>
+            <p>&copy; 2024 Ntandostore Enhanced - DNS Forwarding & Custom Domain Extensions</p>
+            <p>Deploy your websites with professional DNS forwarding and multiple domain extensions</p>
         </div>
     </footer>
 
@@ -728,13 +748,11 @@
                 // Animate counters
                 animateCounter('usersCount', 0, totalUsers, 1000);
                 animateCounter('sitesCount', 0, totalSites, 1000);
-                animateCounter('visitsCount', 0, totalVisits, 1500);
             } catch (error) {
                 console.error('Failed to load stats:', error);
                 // Show default values if API fails
                 animateCounter('usersCount', 0, 25, 1000);
                 animateCounter('sitesCount', 0, 18, 1000);
-                animateCounter('visitsCount', 0, 342, 1500);
             }
         }
 
@@ -778,7 +796,7 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('.feature-card, .template-card, .step, .example-card').forEach(el => {
+        document.querySelectorAll('.feature-card, .extension-card, .step, .example-card').forEach(el => {
             observer.observe(el);
         });
 
