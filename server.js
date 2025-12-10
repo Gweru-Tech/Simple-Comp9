@@ -794,8 +794,12 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
     user.sites.push(site);
     await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
 
-    const standardUrl = `/${userSubdomain}/${finalSlug}/`;
-    const customUrl = enableDNS ? `https://${finalSlug}.${userSubdomain}` : null;
+    // FIXED: Generate proper URLs for the new structure
+    const username = user.subdomain.split('.')[0];
+    const extension = user.domainExtension.replace('.', '');
+    
+    const standardUrl = `/${finalSlug}/${username}/${extension}/`;
+    const customUrl = enableDNS ? `https://${finalSlug}.${user.subdomain}` : null;
     
     res.json({ 
       success: true, 
@@ -968,7 +972,11 @@ app.put('/api/sites/:siteId', authenticateToken, async (req, res) => {
     
     await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
 
-    const standardUrl = `/${userSubdomain}/${site.slug}/`;
+    // FIXED: Generate proper URLs for the new structure
+    const username = user.subdomain.split('.')[0];
+    const extension = user.domainExtension.replace('.', '');
+    
+    const standardUrl = `/${site.slug}/${username}/${extension}/`;
     const customUrl = site.enableDNS ? `https://${site.slug}.${user.subdomain}` : null;
 
     res.json({ 
@@ -1003,8 +1011,12 @@ app.get('/api/user/sites', authenticateToken, async (req, res) => {
       return res.json([]);
     }
 
+    // FIXED: Generate proper URLs for the new structure
+    const username = user.subdomain.split('.')[0];
+    const extension = user.domainExtension.replace('.', '');
+
     const sites = user.sites.map(site => {
-      const standardUrl = `/${user.subdomain}/${site.slug}/`;
+      const standardUrl = `/${site.slug}/${username}/${extension}/`;
       const customUrl = site.enableDNS ? `https://${site.slug}.${user.subdomain}` : null;
       
       return {
@@ -1059,7 +1071,11 @@ app.get('/api/sites/:siteId', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Site files not found' });
     }
 
-    const standardUrl = `/${user.subdomain}/${site.slug}/`;
+    // FIXED: Generate proper URLs for the new structure
+    const username = user.subdomain.split('.')[0];
+    const extension = user.domainExtension.replace('.', '');
+    
+    const standardUrl = `/${site.slug}/${username}/${extension}/`;
     const customUrl = site.enableDNS ? `https://${site.slug}.${user.subdomain}` : null;
 
     res.json({
@@ -1138,7 +1154,60 @@ app.delete('/api/sites/:siteId', authenticateToken, async (req, res) => {
   }
 });
 
-// Custom domain routing for DNS forwarding
+// NEW: Primary routing for sitename.username.extension structure
+app.get('/:siteName/:username/:extension/', async (req, res, next) => {
+  try {
+    const { siteName, username, extension } = req.params;
+    
+    // Validate extension
+    if (!validateDomainExtension('.' + extension)) {
+      return next();
+    }
+    
+    // Find user by username part of subdomain
+    let users = {};
+    try {
+      const usersData = await fs.readFile(USERS_FILE, 'utf8');
+      users = JSON.parse(usersData);
+    } catch (error) {
+      return next();
+    }
+    
+    // Find user that matches username part of subdomain
+    const user = Object.values(users).find(u => {
+      const userSubdomainParts = u.subdomain.split('.');
+      return userSubdomainParts[0] === username;
+    });
+    
+    if (!user) {
+      return next();
+    }
+    
+    // Find site by site name
+    const site = user.sites.find(s => s.slug === siteName);
+    if (!site) {
+      return next();
+    }
+    
+    // Update visit count
+    site.visits = (site.visits || 0) + 1;
+    await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+    
+    // Serve the file
+    const userDir = path.join(USERS_DIR, user.subdomain, site.slug);
+    const filePath = path.join(userDir, 'index.html');
+    
+    try {
+      res.sendFile(filePath);
+    } catch (error) {
+      next();
+    }
+  } catch (error) {
+    next();
+  }
+});
+
+// Custom domain routing for DNS forwarding (existing)
 app.get('*', async (req, res, next) => {
   try {
     const host = req.get('host');
@@ -1193,12 +1262,12 @@ app.get('*', async (req, res, next) => {
   }
 });
 
-// Serve user subdomain sites
+// Legacy routing for backward compatibility (username/sitename/)
 app.get('/:subdomain/:slug/', async (req, res, next) => {
   try {
     const { subdomain, slug } = req.params;
     
-    // Check if this is a user subdomain
+    // Check if this is a user subdomain (old format for compatibility)
     const userDir = path.join(USERS_DIR, subdomain, slug);
     const filePath = path.join(userDir, 'index.html');
 
@@ -1253,7 +1322,9 @@ app.get('/:subdomain/', async (req, res, next) => {
 
     // Redirect to first site if exists, otherwise to dashboard
     if (user.sites.length > 0) {
-      res.redirect(`/${subdomain}/${user.sites[0].slug}/`);
+      const username = user.subdomain.split('.')[0];
+      const extension = user.domainExtension.replace('.', '');
+      res.redirect(`/${user.sites[0].slug}/${username}/${extension}/`);
     } else {
       res.redirect('/dashboard');
     }
@@ -1316,9 +1387,10 @@ app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
     service: 'Ntandostore Enhanced Free Hosting',
-    features: ['Subdomains', 'User System', 'Site Editing', 'Templates', 'Backups', 'DNS Forwarding', 'Custom Domains'],
+    features: ['Subdomains', 'User System', 'Site Editing', 'Templates', 'Backups', 'DNS Forwarding', 'Custom Domains', 'Enhanced URL Structure'],
     domainExtensions: DOMAIN_CONFIG.extensions,
     dnsEnabled: DNS_CONFIG.enabled,
+    urlStructure: 'sitename.username.extension',
     timestamp: new Date().toISOString() 
   });
 });
@@ -1349,6 +1421,7 @@ app.listen(PORT, () => {
   console.log(`✨ Features: Subdomains, user system, site editing, templates, backups, DNS forwarding`);
   console.log(`🌍 Supported domains: ${DOMAIN_CONFIG.extensions.join(', ')}`);
   console.log(`🔗 DNS Forwarding: ${DNS_CONFIG.enabled ? 'Enabled' : 'Disabled'}`);
+  console.log(`🌐 URL Structure: sitename.username.extension (e.g., ntandomods.dev07-happyspace3393.com)`);
   
   // Log important directories for Render.com deployment
   if (process.env.NODE_ENV === 'production') {
