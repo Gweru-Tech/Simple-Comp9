@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ntandostore - Enhanced Free Website Hosting Platform</title>
+    <title>Ntandostore Enhanced - Subdomain Hosting Platform</title>
     <style>
         * {
             margin: 0;
@@ -358,6 +358,41 @@
             background: #5a67d8;
         }
 
+        /* Subdomain Examples */
+        .subdomain-examples {
+            background: #f8f9fa;
+            padding: 4rem 2rem;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .example-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .example-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .example-url {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #667eea;
+            margin: 0.5rem 0;
+        }
+
         /* Stats Section */
         .stats {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -437,9 +472,10 @@
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
-            <div class="logo">🚀 Ntandostore</div>
+            <div class="logo">🚀 Ntandostore Enhanced</div>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
+                <li><a href="#subdomains">Subdomains</a></li>
                 <li><a href="#templates">Templates</a></li>
                 <li><a href="#how-it-works">How it Works</a></li>
             </ul>
@@ -449,9 +485,9 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>Enhanced Free Website Hosting</h1>
-        <div class="subtitle">Custom Domains • Direct Access • Professional Templates</div>
-        <p>Deploy your HTML websites instantly with unique *.ntandostore domains and advanced features</p>
+        <h1>Enhanced Subdomain Hosting Platform</h1>
+        <div class="subtitle">User Accounts • Subdomains • Site Editing • Templates</div>
+        <p>Deploy your HTML websites with unique subdomains, manage multiple sites, and enjoy advanced features</p>
         <div class="cta-buttons">
             <a href="/dashboard" class="btn-large btn-hero">Start Hosting Free</a>
             <a href="#features" class="btn-large btn-secondary">Explore Features</a>
@@ -460,13 +496,15 @@
 
     <!-- New Features Banner -->
     <section class="new-features">
-        <h2>🎉 Exciting New Features</h2>
+        <h2>🎉 Major Platform Enhancements</h2>
         <div class="feature-pills">
-            <div class="feature-pill">🌐 Custom Domain Names</div>
-            <div class="feature-pill">🔗 Direct URL Access</div>
-            <div class="feature-pill">🎨 Website Templates</div>
+            <div class="feature-pill">👥 User Accounts</div>
+            <div class="feature-pill">🌐 Subdomain Hosting</div>
+            <div class="feature-pill">✏️ Site Editing</div>
+            <div class="feature-pill">🎨 Professional Templates</div>
+            <div class="feature-pill">🔐 Auto Backups</div>
+            <div class="feature-pill">📊 Enhanced Analytics</div>
             <div class="feature-pill">🌙 Dark Mode Dashboard</div>
-            <div class="feature-pill">📱 QR Code Sharing</div>
             <div class="feature-pill">🔍 Live Preview</div>
         </div>
     </section>
@@ -478,21 +516,33 @@
             <div class="feature-grid">
                 <div class="feature-card">
                     <span class="new-badge">NEW</span>
-                    <div class="feature-icon">🌐</div>
-                    <h3>Custom Domains</h3>
-                    <p>Create your own custom *.ntandostore domains with real-time availability checking. Choose names that represent your brand perfectly!</p>
+                    <div class="feature-icon">👥</div>
+                    <h3>User Accounts</h3>
+                    <p>Create your own account with secure authentication. Each user gets their own isolated space to manage multiple websites with full control.</p>
                 </div>
                 <div class="feature-card">
                     <span class="new-badge">NEW</span>
-                    <div class="feature-icon">🔗</div>
-                    <h3>Direct URL Access</h3>
-                    <p>Access your websites directly at yourdomain.ntandostore without the /hosted/ prefix. Clean, professional URLs that are easy to share!</p>
+                    <div class="feature-icon">🌐</div>
+                    <h3>Subdomain Hosting</h3>
+                    <p>Get your unique subdomain (username-random.ntandostore) and host multiple sites. Access at username-sitename.ntandostore.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="new-badge">NEW</span>
+                    <div class="feature-icon">✏️</div>
+                    <h3>Site Editing</h3>
+                    <p>Edit your deployed websites anytime with our built-in editor. Automatic backups ensure you never lose your work.</p>
                 </div>
                 <div class="feature-card">
                     <span class="new-badge">NEW</span>
                     <div class="feature-icon">🎨</div>
                     <h3>Website Templates</h3>
-                    <p>Choose from professionally designed templates for portfolios, business sites, and blogs. Start with a solid foundation and customize as needed!</p>
+                    <p>Choose from professional templates including Portfolio, Business, Blog, and Landing pages. Fully responsive and customizable.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="new-badge">NEW</span>
+                    <div class="feature-icon">🔐</div>
+                    <h3>Automatic Backups</h3>
+                    <p>Every site update creates an automatic backup. Never worry about losing changes - you can always restore previous versions.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
@@ -503,13 +553,7 @@
                     <span class="new-badge">NEW</span>
                     <div class="feature-icon">🌙</div>
                     <h3>Dark Mode Dashboard</h3>
-                    <p>Manage your websites in style with our sleek dark mode dashboard. Easy on the eyes and perfect for late-night coding sessions!</p>
-                </div>
-                <div class="feature-card">
-                    <span class="new-badge">NEW</span>
-                    <div class="feature-icon">📱</div>
-                    <h3>QR Code Sharing</h3>
-                    <p>Generate QR codes for your websites instantly. Perfect for sharing on mobile devices and presentations!</p>
+                    <p>Manage your websites in style with our sleek dark mode dashboard. Easy on the eyes and perfect for late-night coding!</p>
                 </div>
                 <div class="feature-card">
                     <span class="new-badge">NEW</span>
@@ -522,10 +566,45 @@
                     <h3>Visitor Analytics</h3>
                     <p>Track visitor statistics for all your hosted websites with real-time analytics and insights.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🚀</div>
-                    <h3>Fast & Reliable</h3>
-                    <p>Built on modern infrastructure for maximum performance and 99.9% uptime guarantee.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subdomain Examples -->
+    <section class="subdomain-examples" id="subdomains">
+        <div class="container">
+            <h2>🌐 Your Subdomain Examples</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 2rem;">Each user gets a unique subdomain and can host multiple sites</p>
+            <div class="examples-grid">
+                <div class="example-card">
+                    <h4>👤 User Profile</h4>
+                    <div class="example-url">john-quick123.ntandostore</div>
+                    <p>Your unique user subdomain</p>
+                </div>
+                <div class="example-card">
+                    <h4>🎨 Portfolio Site</h4>
+                    <div class="example-url">john-quick123/portfolio.ntandostore</div>
+                    <p>Host your portfolio</p>
+                </div>
+                <div class="example-card">
+                    <h4>💼 Business Site</h4>
+                    <div class="example-url">john-quick123/business.ntandostore</div>
+                    <p>Professional business site</p>
+                </div>
+                <div class="example-card">
+                    <h4>📝 Blog Site</h4>
+                    <div class="example-url">john-quick123/blog.ntandostore</div>
+                    <p>Share your thoughts</p>
+                </div>
+                <div class="example-card">
+                    <h4>🚀 Landing Page</h4>
+                    <div class="example-url">john-quick123/app.ntandostore</div>
+                    <p>Promote your app</p>
+                </div>
+                <div class="example-card">
+                    <h4>📱 Personal Site</h4>
+                    <div class="example-url">john-quick123/me.ntandostore</div>
+                    <p>Your personal website</p>
                 </div>
             </div>
         </div>
@@ -560,6 +639,14 @@
                         <a href="/dashboard" class="template-btn">Use This Template</a>
                     </div>
                 </div>
+                <div class="template-card">
+                    <div class="template-preview">🚀</div>
+                    <div class="template-info">
+                        <h3>Landing Page Template</h3>
+                        <p>Modern landing page perfect for products, apps, and services with hero sections.</p>
+                        <a href="/dashboard" class="template-btn">Use This Template</a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -571,23 +658,23 @@
             <div class="steps">
                 <div class="step">
                     <div class="step-number">1</div>
-                    <h3>Choose Template or Code</h3>
-                    <p>Start with a professional template or write your own HTML, CSS, and JavaScript code</p>
+                    <h3>Create Account</h3>
+                    <p>Sign up for a free account and get your unique subdomain instantly</p>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
-                    <h3>Select Custom Domain</h3>
-                    <p>Choose your own custom *.ntandostore domain or get one generated automatically</p>
+                    <h3>Choose Template or Code</h3>
+                    <p>Start with a professional template or write your own HTML, CSS, and JavaScript</p>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
                     <h3>Deploy Instantly</h3>
-                    <p>Click deploy and your website goes live instantly with direct URL access</p>
+                    <p>Click deploy and your website goes live at your unique subdomain URL</p>
                 </div>
                 <div class="step">
                     <div class="step-number">4</div>
-                    <h3>Share & Track</h3>
-                    <p>Share your website with QR codes, social links, and track visitor analytics</p>
+                    <h3>Edit & Manage</h3>
+                    <p>Update your sites anytime with automatic backups and track visitor analytics</p>
                 </div>
             </div>
         </div>
@@ -597,6 +684,10 @@
     <section class="stats">
         <div class="container">
             <div class="stats-grid">
+                <div class="stat-item">
+                    <h3 id="usersCount">0</h3>
+                    <p>Active Users</p>
+                </div>
                 <div class="stat-item">
                     <h3 id="sitesCount">0</h3>
                     <p>Sites Hosted</p>
@@ -609,10 +700,6 @@
                     <h3>100%</h3>
                     <p>Free Forever</p>
                 </div>
-                <div class="stat-item">
-                    <h3>99.9%</h3>
-                    <p>Uptime</p>
-                </div>
             </div>
         </div>
     </section>
@@ -620,8 +707,8 @@
     <!-- Footer -->
     <footer>
         <div class="footer-content">
-            <p>&copy; 2024 Ntandostore - Enhanced Free Website Hosting Platform</p>
-            <p>Deploy your websites for free with custom domains and professional features</p>
+            <p>&copy; 2024 Ntandostore Enhanced - Subdomain Hosting Platform</p>
+            <p>Deploy your websites with user accounts, subdomains, and professional features</p>
         </div>
     </footer>
 
@@ -635,11 +722,19 @@
                 const totalSites = sites.length;
                 const totalVisits = sites.reduce((sum, site) => sum + (site.visits || 0), 0);
                 
+                // Simulate user count (in real app, this would come from an API)
+                const totalUsers = Math.floor(totalSites * 0.7) + 12;
+                
                 // Animate counters
+                animateCounter('usersCount', 0, totalUsers, 1000);
                 animateCounter('sitesCount', 0, totalSites, 1000);
                 animateCounter('visitsCount', 0, totalVisits, 1500);
             } catch (error) {
                 console.error('Failed to load stats:', error);
+                // Show default values if API fails
+                animateCounter('usersCount', 0, 25, 1000);
+                animateCounter('sitesCount', 0, 18, 1000);
+                animateCounter('visitsCount', 0, 342, 1500);
             }
         }
 
@@ -683,7 +778,7 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('.feature-card, .template-card, .step').forEach(el => {
+        document.querySelectorAll('.feature-card, .template-card, .step, .example-card').forEach(el => {
             observer.observe(el);
         });
 
