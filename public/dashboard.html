@@ -56,7 +56,7 @@
             border-radius: 20px;
             box-shadow: var(--shadow-hover);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             margin: 2rem;
         }
 
@@ -109,7 +109,8 @@
             font-weight: 500;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 0.75rem;
             border: 2px solid var(--border-color);
@@ -120,7 +121,8 @@
             transition: border-color 0.3s;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--primary-color);
         }
@@ -151,6 +153,39 @@
             margin-top: 1rem;
             font-family: monospace;
             color: var(--primary-color);
+        }
+
+        .domain-selector {
+            margin-bottom: 1rem;
+        }
+
+        .domain-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .domain-option {
+            padding: 0.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .domain-option:hover {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .domain-option.selected {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
 
         /* Dashboard Container */
@@ -223,6 +258,11 @@
         .theme-toggle:hover {
             background: var(--secondary-color);
         }
+
+        .btn-logout {
+            background: var(--danger-color);
+            color: white;
+            padding: 0.5注：这是一个很长的代码片段，让我继续完成它。
 
         .btn-logout {
             background: var(--danger-color);
@@ -333,35 +373,6 @@
         .template-btn.active {
             background: var(--primary-color);
             color: white;
-            border-color: var(--primary-color);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            background: var(--card-bg);
-            color: var(--text-color);
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
             border-color: var(--primary-color);
         }
 
@@ -544,6 +555,13 @@
             font-size: 0.9rem;
         }
 
+        .site-custom-url {
+            color: var(--success-color);
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
         .site-actions {
             display: flex;
             gap: 0.5rem;
@@ -691,6 +709,10 @@
                 flex-direction: column;
                 gap: 1rem;
             }
+
+            .domain-options {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Animations */
@@ -723,6 +745,25 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Form elements */
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--text-color);
+            transition: border-color 0.3s;
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
         }
     </style>
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
@@ -766,9 +807,24 @@
                     <input type="password" id="registerPassword" placeholder="Choose a password" required>
                     <small>Minimum 6 characters</small>
                 </div>
+                <div class="form-group">
+                    <label>Preferred Domain Ending</label>
+                    <div class="domain-options" id="domainOptions">
+                        <div class="domain-option selected" data-domain=".ntandostore.com">.com</div>
+                        <div class="domain-option" data-domain=".ntandostore.online">.online</div>
+                        <div class="domain-option" data-domain=".ntandostore.id">.id</div>
+                        <div class="domain-option" data-domain=".ntandostore.cloud">.cloud</div>
+                        <div class="domain-option" data-domain=".ntandostore.net">.net</div>
+                        <div class="domain-option" data-domain=".ntandostore.store">.store</div>
+                        <div class="domain-option" data-domain=".ntandostore.blog">.blog</div>
+                        <div class="domain-option" data-domain=".ntandostore.org">.org</div>
+                        <div class="domain-option" data-domain=".ntandostore.uk">.uk</div>
+                        <div class="domain-option" data-domain=".ntandostore.zw">.zw</div>
+                    </div>
+                </div>
                 <button type="submit" class="btn-auth">Create Account</button>
                 <div class="subdomain-display" id="subdomainPreview" style="display: none;">
-                    Your subdomain: <span id="subdomainText"></span>.ntandostore
+                    Your subdomain: <span id="subdomainText"></span>
                 </div>
             </form>
         </div>
@@ -797,8 +853,8 @@
         <div class="container">
             <!-- Dashboard Header -->
             <div class="dashboard-header">
-                <h1>📊 Enhanced Hosting Dashboard</h1>
-                <p>Create subdomains, manage sites, and deploy with advanced features!</p>
+                <h1>📊 Multiple Domain Hosting Dashboard</h1>
+                <p>Create websites with custom domain endings, manage sites, and deploy with advanced features!</p>
             </div>
 
             <!-- Grid Layout -->
@@ -811,7 +867,7 @@
 
                     <!-- Site URL Display -->
                     <div class="site-url-display" id="siteUrlDisplay">
-                        Your site will be available at: <span id="siteUrlText">your-site.ntandostore</span>
+                        Your site will be available at: <span id="siteUrlText">your-site.ntandostore.com</span>
                     </div>
 
                     <!-- Template Selector -->
@@ -836,7 +892,23 @@
                         <div class="form-group">
                             <label for="siteSlug">Site Slug</label>
                             <input type="text" id="siteSlug" placeholder="my-awesome-site" oninput="updateSiteUrl()">
-                            <small>This will be part of your URL: username-slug.ntandostore</small>
+                            <small>This will be part of your URL: username-sitename.ntandostore.com</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="domainEnding">Domain Ending</label>
+                            <select id="domainEnding" onchange="updateSiteUrl()">
+                                <option value=".ntandostore.com">.ntandostore.com</option>
+                                <option value=".ntandostore.online">.ntandostore.online</option>
+                                <option value=".ntandostore.id">.ntandostore.id</option>
+                                <option value=".ntandostore.cloud">.ntandostore.cloud</option>
+                                <option value=".ntandostore.net">.ntandostore.net</option>
+                                <option value=".ntandostore.store">.ntandostore.store</option>
+                                <option value=".ntandostore.blog">.ntandostore.blog</option>
+                                <option value=".ntandostore.org">.ntandostore.org</option>
+                                <option value=".ntandostore.uk">.ntandostore.uk</option>
+                                <option value=".ntandostore.zw">.ntandostore.zw</option>
+                            </select>
                         </div>
 
                         <!-- Code Editor -->
@@ -895,10 +967,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="feature-item">
                         <div class="feature-header">
-                            <span class="feature-title">🌐 Subdomain Hosting</span>
-                            <button class="feature-toggle" onclick="showFeatureInfo('subdomains')">Learn More</button>
+                            <span class="feature-title">🌐 Multiple Domains</span>
+                            <button class="feature-toggle" onclick="showFeatureInfo('domains')">Learn More</button>
                         </div>
-                        <p>Each user gets a unique subdomain for hosting multiple sites.</p>
+                        <p>Choose from 10+ professional domain endings for your website.</p>
                     </div>
 
                     <div class="feature-item">
@@ -983,6 +1055,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let templates = [];
         let currentUser = null;
         let editingSite = null;
+        let availableDomains = [];
 
         // Check if user is logged in
         function checkAuth() {
@@ -1015,6 +1088,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Load templates and sites
             loadTemplates();
             loadSites();
+            loadDomains();
             loadTheme();
         }
 
@@ -1031,6 +1105,16 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById(tab + 'Form').classList.add('active');
         }
 
+        // Domain selection handler
+        document.querySelectorAll('.domain-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.domain-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+
         // Register form handler
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1038,6 +1122,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const username = document.getElementById('registerUsername').value;
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
+            const selectedDomain = document.querySelector('.domain-option.selected');
+            const preferredDomain = selectedDomain ? selectedDomain.dataset.domain : '.ntandostore.com';
             
             try {
                 const response = await fetch('/api/register', {
@@ -1045,7 +1131,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ username, email, password })
+                    body: JSON.stringify({ username, email, password, preferredDomain })
                 });
                 
                 const result = await response.json();
@@ -1106,6 +1192,17 @@ document.addEventListener('DOMContentLoaded', function() {
             showAuth();
         }
 
+        // Load domains
+        async function loadDomains() {
+            try {
+                const response = await fetch('/api/domains');
+                const data = await response.json();
+                availableDomains = data.domainEndings;
+            } catch (error) {
+                console.error('Failed to load domains:', error);
+            }
+        }
+
         // Load templates
         async function loadTemplates() {
             try {
@@ -1141,8 +1238,9 @@ document.addEventListener('DOMContentLoaded', function() {
         function updateSiteUrl() {
             const siteName = document.getElementById('siteName').value || 'my-site';
             const siteSlug = document.getElementById('siteSlug').value || siteName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            const domainEnding = document.getElementById('domainEnding').value;
             
-            document.getElementById('siteUrlText').textContent = `${currentUser.subdomain}/${siteSlug}.ntandostore`;
+            document.getElementById('siteUrlText').textContent = `${currentUser.subdomain}-${siteSlug}${domainEnding}`;
         }
 
         // Switch between code tabs
@@ -1186,13 +1284,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="site-header">
                                 <div class="site-info">
                                     <h3>${site.name}</h3>
-                                    <div class="site-url">${site.fullUrl}</div>
+                                    <div class="site-url">${site.url}</div>
+                                    <div class="site-custom-url">🌐 ${site.customUrl}</div>
                                 </div>
                                 <div class="site-actions">
                                     <a href="${site.url}" target="_blank" class="btn-visit">👁️ Visit</a>
                                     <button class="btn-edit" onclick="editSite('${site.id}')">✏️ Edit</button>
                                     <button class="btn-preview" onclick="previewSite('${site.url}')">🔍 Preview</button>
-                                    <button class="btn-share" onclick="shareSite('${site.fullUrl}')">📱 Share</button>
+                                    <button class="btn-share" onclick="shareSite('${site.customUrl}')">📱 Share</button>
                                     <button class="btn-delete" onclick="deleteSite('${site.id}')">🗑️ Delete</button>
                                 </div>
                             </div>
@@ -1231,6 +1330,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const siteName = document.getElementById('siteName').value;
             const siteSlug = document.getElementById('siteSlug').value;
+            const domainEnding = document.getElementById('domainEnding').value;
             const html = document.getElementById('html').value;
             const css = document.getElementById('css').value;
             const js = document.getElementById('js').value;
@@ -1246,6 +1346,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify({
                         siteName,
                         siteSlug,
+                        domainEnding,
                         html,
                         css,
                         js
@@ -1255,7 +1356,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const result = await response.json();
                 
                 if (result.success) {
-                    showStatus(`🎉 Success! Your website is live at: ${result.fullUrl}`);
+                    showStatus(`🎉 Success! Your website is live at: ${result.customDomain}`);
                     
                     // Clear form
                     document.getElementById('uploadForm').reset();
@@ -1266,7 +1367,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Show success message
                     setTimeout(() => {
-                        if (confirm(`Website deployed successfully!\n\n${result.fullUrl}\n\nWould you like to visit your new website?`)) {
+                        if (confirm(`Website deployed successfully!\n\nCustom URL: ${result.customDomain}\n\nWould you like to visit your new website?`)) {
                             window.open(result.url, '_blank');
                         }
                     }, 1000);
@@ -1300,6 +1401,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('siteId').value = siteId;
                     document.getElementById('siteName').value = result.site.name;
                     document.getElementById('siteSlug').value = result.site.slug;
+                    document.getElementById('domainEnding').value = result.site.domainEnding || '.ntandostore.com';
                     document.getElementById('html').value = result.html;
                     
                     // Update UI
@@ -1412,8 +1514,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Share site
-        function shareSite(url) {
-            document.getElementById('shareUrl').textContent = url;
+        function shareSite(customUrl) {
+            document.getElementById('shareUrl').textContent = customUrl;
             
             // Generate simple QR code placeholder
             const qrDiv = document.getElementById('qrCode');
@@ -1421,7 +1523,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div style="padding: 20px; background: #f0f0f0; border-radius: 8px;">
                     <p style="font-family: monospace; font-size: 0.8rem; line-height: 1.2;">
                         📱 QR Code for:<br>
-                        ${url}
+                        ${customUrl}
                     </p>
                 </div>
             `;
@@ -1467,7 +1569,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show feature info
         function showFeatureInfo(feature) {
             const info = {
-                subdomains: 'Each user gets a unique subdomain (username-random.ntandostore) where they can host multiple websites. Sites are accessible at username-sitename.ntandostore.',
+                domains: 'Choose from 10+ professional domain endings including .com, .online, .cloud, .store, .blog and more for your website URL.',
                 users: 'Secure user authentication system with JWT tokens. Each user has their own isolated space and can manage multiple websites.',
                 editing: 'Edit your deployed websites anytime. Automatic backups are created before each update, so you can always revert if needed.',
                 templates: 'Choose from professional templates including Portfolio, Business, Blog, and Landing page designs. Each template is fully responsive and customizable.',
