@@ -106,6 +106,15 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use('/hosted', express.static(UPLOADS_DIR));
 app.use('/users', express.static(USERS_DIR));
 
+// Handle specific routes for static files
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+app.get('/dashboard.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
 // Authentication middleware
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -240,7 +249,7 @@ async function checkDomainAvailability(subdomain, extension) {
 
 // Routes
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Dashboard route
@@ -1312,6 +1321,11 @@ app.get('/health', (req, res) => {
     dnsEnabled: DNS_CONFIG.enabled,
     timestamp: new Date().toISOString() 
   });
+});
+
+// Final catch-all route - serve index.html for any unmatched routes
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Graceful shutdown handler
