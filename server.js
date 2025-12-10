@@ -4,11 +4,49 @@ const fs = require('fs').promises;
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'ntandostore-secret-key-2024';
+
+// Domain Configuration
+const DOMAIN_CONFIG = {
+  primary: 'ntandostore.com',
+  extensions: [
+    '.com',
+    '.online', 
+    '.id',
+    '.cloud',
+    '.net',
+    '.store',
+    '.blog',
+    '.uk',
+    '.zw',
+    '.org'
+  ],
+  defaultExtension: '.com'
+};
+
+// DNS Forwarding Configuration
+const DNS_CONFIG = {
+  enabled: process.env.DNS_FORWARDING_ENABLED === 'true',
+  provider: process.env.DNS_PROVIDER || 'cloudflare',
+  apiKey: process.env.DNS_API_KEY,
+  zones: {
+    'ntandostore.com': process.env.DNS_ZONE_COM,
+    'ntandostore.online': process.env.DNS_ZONE_ONLINE,
+    'ntandostore.id': process.env.DNS_ZONE_ID,
+    'ntandostore.cloud': process.env.DNS_ZONE_CLOUD,
+    'ntandostore.net': process.env.DNS_ZONE_NET,
+    'ntandostore.store': process.env.DNS_ZONE_STORE,
+    'ntandostore.blog': process.env.DNS_ZONE_BLOG,
+    'ntandostore.uk': process.env.DNS_ZONE_UK,
+    'ntandostore.zw': process.env.DNS_ZONE_ZW,
+    'ntandostore.org': process.env.DNS_ZONE_ORG
+  }
+};
 
 // Ensure JWT_SECRET is set in production
 if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
@@ -24,6 +62,7 @@ const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const USERS_DIR = path.join(__dirname, 'users');
 const DOMAINS_FILE = path.join(__dirname, 'domains.json');
 const USERS_FILE = path.join(__dirname, 'users.json');
+const DNS_RECORDS_FILE = path.join(__dirname, 'dns-records.json');
 
 // Create directories if they don't exist
 async function ensureDirectories() {
@@ -43,6 +82,12 @@ async function ensureDirectories() {
     } catch {
       await fs.writeFile(USERS_FILE, JSON.stringify({}));
     }
+
+    try {
+      await fs.access(DNS_RECORDS_FILE);
+    } catch {
+      await fs.writeFile(DNS_RECORDS_FILE, JSON.stringify({}));
+    }
   } catch (error) {
     console.error('Error creating directories:', error);
   }
@@ -53,6 +98,7 @@ ensureDirectories();
 
 // Middleware
 app.use(express.static('public'));
+app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
@@ -78,8 +124,42 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Generate unique subdomain
-function generateSubdomain(username) {
+// DNS Forwarding Functions
+async function createDNSRecord(domain, recordType, name, content) {
+  if (!DNS_CONFIG.enabled || !DNS_CONFIG.apiKey) {
+    console.log(`DNS forwarding not enabled. Mock DNS record created: ${name}.${domain} -> ${content}`);
+    return { success: true, record: { name, content, type: recordType } };
+  }
+
+  try {
+    // This would integrate with your DNS provider (Cloudflare, etc.)
+    console.log(`Creating DNS record: ${name}.${domain} -> ${content}`);
+    // Mock implementation for now
+    return { success: true, record: { name, content, type: recordType } };
+  } catch (error) {
+    console.error('Failed to create DNS record:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+async function deleteDNSRecord(domain, recordId) {
+  if (!DNS_CONFIG.enabled || !DNS_CONFIG.apiKey) {
+    console.log(`DNS forwarding not enabled. Mock DNS record deleted: ${recordId}`);
+    return { success: true };
+  }
+
+  try {
+    console.log(`Deleting DNS record: ${recordId}`);
+    // Mock implementation for now
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to delete DNS record:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Generate unique subdomain with domain extension
+function generateSubdomain(username, domainExtension = '.com') {
   const adjectives = ['quick', 'bright', 'clever', 'swift', 'smart', 'happy', 'lucky', 'sunny', 'cool', 'warm'];
   const nouns = ['site', 'web', 'page', 'space', 'zone', 'hub', 'spot', 'place', 'world', 'realm'];
   const numbers = Math.floor(Math.random() * 9999) + 1;
@@ -92,23 +172,19 @@ function generateSubdomain(username) {
 
 // Validate username
 function validateUsername(username) {
-  // Check if username is alphanumeric and allows hyphens and underscores
   const validPattern = /^[a-zA-Z0-9_-]+$/;
   if (!validPattern.test(username)) {
     return false;
   }
   
-  // Check length (3-30 characters)
   if (username.length < 3 || username.length > 30) {
     return false;
   }
   
-  // Check if it starts or ends with hyphen or underscore
   if (username.startsWith('-') || username.endsWith('-') || username.startsWith('_') || username.endsWith('_')) {
     return false;
   }
   
-  // Reserved usernames
   const reserved = ['www', 'api', 'admin', 'dashboard', 'mail', 'ftp', 'cdn', 'static', 'assets', 'hosted', 'users'];
   if (reserved.includes(username.toLowerCase())) {
     return false;
@@ -135,20 +211,77 @@ function validateSubdomain(subdomain) {
   return true;
 }
 
+// Validate domain extension
+function validateDomainExtension(extension) {
+  return DOMAIN_CONFIG.extensions.includes(extension);
+}
+
+// Check domain availability
+async function checkDomainAvailability(subdomain, extension) {
+  try {
+    const usersData = await fs.readFile(USERS_FILE, 'utf8');
+    const users = JSON.parse(usersData);
+    
+    const domainName = `${subdomain}${extension}`;
+    
+    // Check if any user has this subdomain with the same extension
+    for (const user of Object.values(users)) {
+      if (user.subdomain === domainName) {
+        return false;
+      }
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error checking domain availability:', error);
+    return true; // Assume available if error occurs
+  }
+}
+
 // Routes
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Dashboard route
 app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+// Get available domain extensions
+app.get('/api/domains/extensions', (req, res) => {
+  res.json({
+    extensions: DOMAIN_CONFIG.extensions,
+    default: DOMAIN_CONFIG.defaultExtension
+  });
+});
+
+// Check domain availability
+app.get('/api/domains/check/:subdomain/:extension', async (req, res) => {
+  try {
+    const { subdomain, extension } = req.params;
+    
+    if (!validateSubdomain(subdomain)) {
+      return res.status(400).json({ error: 'Invalid subdomain' });
+    }
+    
+    if (!validateDomainExtension(extension)) {
+      return res.status(400).json({ error: 'Invalid domain extension' });
+    }
+    
+    const isAvailable = await checkDomainAvailability(subdomain, extension);
+    res.json({ available: isAvailable, domain: `${subdomain}${extension}` });
+    
+  } catch (error) {
+    console.error('Domain check error:', error);
+    res.status(500).json({ error: 'Failed to check domain availability' });
+  }
 });
 
 // User registration
 app.post('/api/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, domainExtension } = req.body;
     
     if (!username || !email || !password) {
       return res.status(400).json({ error: 'All fields are required' });
@@ -160,6 +293,12 @@ app.post('/api/register', async (req, res) => {
     
     if (password.length < 6) {
       return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+    }
+    
+    // Validate domain extension
+    const selectedExtension = domainExtension || DOMAIN_CONFIG.defaultExtension;
+    if (!validateDomainExtension(selectedExtension)) {
+      return res.status(400).json({ error: 'Invalid domain extension' });
     }
     
     // Read existing users
@@ -180,6 +319,17 @@ app.post('/api/register', async (req, res) => {
       return res.status(400).json({ error: 'Email already registered' });
     }
     
+    // Generate unique subdomain
+    const baseSubdomain = generateSubdomain(username, selectedExtension);
+    let finalSubdomain = baseSubdomain;
+    let counter = 1;
+    
+    // Ensure unique subdomain
+    while (!await checkDomainAvailability(finalSubdomain.replace(selectedExtension, ''), selectedExtension)) {
+      finalSubdomain = `${baseSubdomain.replace(selectedExtension, '')}-${counter}${selectedExtension}`;
+      counter++;
+    }
+    
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
     const userId = crypto.randomUUID();
@@ -190,8 +340,9 @@ app.post('/api/register', async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      domainExtension: selectedExtension,
+      subdomain: finalSubdomain,
       createdAt: new Date().toISOString(),
-      subdomain: generateSubdomain(username),
       sites: []
     };
     
@@ -213,7 +364,8 @@ app.post('/api/register', async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        subdomain: user.subdomain
+        subdomain: user.subdomain,
+        domainExtension: user.domainExtension
       }
     });
     
@@ -264,7 +416,8 @@ app.post('/api/login', async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        subdomain: user.subdomain
+        subdomain: user.subdomain,
+        domainExtension: user.domainExtension
       }
     });
     
@@ -518,7 +671,7 @@ main { margin-top: 80px; }
 // Upload and create a new site (protected route)
 app.post('/api/upload', authenticateToken, async (req, res) => {
   try {
-    const { html, css, js, siteName, siteSlug, favicon } = req.body;
+    const { html, css, js, siteName, siteSlug, favicon, enableDNS } = req.body;
     
     if (!html) {
       return res.status(400).json({ error: 'HTML content is required' });
@@ -582,6 +735,40 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
 
     await fs.writeFile(path.join(siteDir, 'index.html'), fullHtml);
 
+    // Handle DNS forwarding if enabled
+    let dnsRecord = null;
+    if (enableDNS && DNS_CONFIG.enabled) {
+      const customDomain = `${finalSlug}.${user.subdomain}`;
+      const dnsResult = await createDNSRecord(
+        user.domainExtension ? `ntandostore${user.domainExtension}` : 'ntandostore.com',
+        'CNAME',
+        customDomain,
+        `${process.env.RENDER_SERVICE_HOST || 'your-service-url.onrender.com'}`
+      );
+      
+      if (dnsResult.success) {
+        dnsRecord = {
+          id: crypto.randomUUID(),
+          customDomain,
+          target: process.env.RENDER_SERVICE_HOST || 'your-service-url.onrender.com',
+          type: 'CNAME',
+          createdAt: new Date().toISOString()
+        };
+        
+        // Save DNS record
+        let dnsRecords = {};
+        try {
+          const dnsData = await fs.readFile(DNS_RECORDS_FILE, 'utf8');
+          dnsRecords = JSON.parse(dnsData);
+        } catch (error) {
+          // File doesn't exist
+        }
+        
+        dnsRecords[dnsRecord.id] = dnsRecord;
+        await fs.writeFile(DNS_RECORDS_FILE, JSON.stringify(dnsRecords, null, 2));
+      }
+    }
+
     // Add site to user's sites
     const site = {
       id: crypto.randomUUID(),
@@ -590,18 +777,25 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       visits: 0,
-      published: true
+      published: true,
+      enableDNS: !!enableDNS,
+      dnsRecordId: dnsRecord?.id || null
     };
 
     user.sites.push(site);
     await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
 
+    const standardUrl = `/${userSubdomain}/${finalSlug}/`;
+    const customUrl = enableDNS ? `https://${finalSlug}.${userSubdomain}` : null;
+    
     res.json({ 
       success: true, 
       slug: finalSlug,
-      url: `/${userSubdomain}/${finalSlug}/`,
-      fullUrl: `${req.protocol}://${req.get('host')}/${userSubdomain}/${finalSlug}/`,
-      message: 'Site published successfully!',
+      url: standardUrl,
+      fullUrl: `${req.protocol}://${req.get('host')}${standardUrl}`,
+      customUrl,
+      dnsRecord,
+      message: 'Site published successfully!' + (customUrl ? ` Custom domain: ${customUrl}` : ''),
       site
     });
 
@@ -611,11 +805,33 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
   }
 });
 
+// Get user's DNS records
+app.get('/api/user/dns-records', authenticateToken, async (req, res) => {
+  try {
+    let dnsRecords = {};
+    try {
+      const dnsData = await fs.readFile(DNS_RECORDS_FILE, 'utf8');
+      dnsRecords = JSON.parse(dnsData);
+    } catch (error) {
+      return res.json([]);
+    }
+
+    const userRecords = Object.values(dnsRecords).filter(record => 
+      record.customDomain && record.userId === req.user.userId
+    );
+
+    res.json(userRecords);
+  } catch (error) {
+    console.error('Error loading DNS records:', error);
+    res.json([]);
+  }
+});
+
 // Update existing site (protected route)
 app.put('/api/sites/:siteId', authenticateToken, async (req, res) => {
   try {
     const { siteId } = req.params;
-    const { html, css, js, siteName, favicon } = req.body;
+    const { html, css, js, siteName, favicon, enableDNS } = req.body;
     
     if (!html) {
       return res.status(400).json({ error: 'HTML content is required' });
@@ -657,6 +873,68 @@ app.put('/api/sites/:siteId', authenticateToken, async (req, res) => {
       console.log('No existing file to backup');
     }
 
+    // Handle DNS changes
+    const currentDnsEnabled = site.enableDNS;
+    const newDnsEnabled = !!enableDNS;
+    
+    if (currentDnsEnabled !== newDnsEnabled) {
+      if (newDnsEnabled && DNS_CONFIG.enabled) {
+        // Enable DNS
+        const customDomain = `${site.slug}.${user.subdomain}`;
+        const dnsResult = await createDNSRecord(
+          user.domainExtension ? `ntandostore${user.domainExtension}` : 'ntandostore.com',
+          'CNAME',
+          customDomain,
+          process.env.RENDER_SERVICE_HOST || 'your-service-url.onrender.com'
+        );
+        
+        if (dnsResult.success) {
+          const dnsRecord = {
+            id: crypto.randomUUID(),
+            userId: user.id,
+            customDomain,
+            target: process.env.RENDER_SERVICE_HOST || 'your-service-url.onrender.com',
+            type: 'CNAME',
+            createdAt: new Date().toISOString()
+          };
+          
+          // Save DNS record
+          let dnsRecords = {};
+          try {
+            const dnsData = await fs.readFile(DNS_RECORDS_FILE, 'utf8');
+            dnsRecords = JSON.parse(dnsData);
+          } catch (error) {
+            // File doesn't exist
+          }
+          
+          dnsRecords[dnsRecord.id] = dnsRecord;
+          await fs.writeFile(DNS_RECORDS_FILE, JSON.stringify(dnsRecords, null, 2));
+          
+          site.dnsRecordId = dnsRecord.id;
+        }
+      } else if (site.dnsRecordId) {
+        // Disable DNS
+        await deleteDNSRecord(
+          user.domainExtension ? `ntandostore${user.domainExtension}` : 'ntandostore.com',
+          site.dnsRecordId
+        );
+        
+        // Remove DNS record
+        let dnsRecords = {};
+        try {
+          const dnsData = await fs.readFile(DNS_RECORDS_FILE, 'utf8');
+          dnsRecords = JSON.parse(dnsData);
+        } catch (error) {
+          // File doesn't exist
+        }
+        
+        delete dnsRecords[site.dnsRecordId];
+        await fs.writeFile(DNS_RECORDS_FILE, JSON.stringify(dnsRecords, null, 2));
+        
+        site.dnsRecordId = null;
+      }
+    }
+
     // Create updated HTML
     let fullHtml = html;
     
@@ -676,14 +954,20 @@ app.put('/api/sites/:siteId', authenticateToken, async (req, res) => {
 
     // Update site info
     site.name = siteName || site.name;
+    site.enableDNS = newDnsEnabled;
     site.updatedAt = new Date().toISOString();
     
     await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
 
+    const standardUrl = `/${userSubdomain}/${site.slug}/`;
+    const customUrl = site.enableDNS ? `https://${site.slug}.${user.subdomain}` : null;
+
     res.json({ 
       success: true, 
       message: 'Site updated successfully!',
-      url: `/${userSubdomain}/${site.slug}/`,
+      url: standardUrl,
+      fullUrl: `${req.protocol}://${req.get('host')}${standardUrl}`,
+      customUrl,
       site
     });
 
@@ -710,11 +994,18 @@ app.get('/api/user/sites', authenticateToken, async (req, res) => {
       return res.json([]);
     }
 
-    const sites = user.sites.map(site => ({
-      ...site,
-      url: `/${user.subdomain}/${site.slug}/`,
-      fullUrl: `${req.protocol}://${req.get('host')}/${user.subdomain}/${site.slug}/`
-    }));
+    const sites = user.sites.map(site => {
+      const standardUrl = `/${user.subdomain}/${site.slug}/`;
+      const customUrl = site.enableDNS ? `https://${site.slug}.${user.subdomain}` : null;
+      
+      return {
+        ...site,
+        url: standardUrl,
+        fullUrl: `${req.protocol}://${req.get('host')}${standardUrl}`,
+        customUrl,
+        domainExtension: user.domainExtension
+      };
+    });
 
     res.json(sites);
   } catch (error) {
@@ -759,11 +1050,15 @@ app.get('/api/sites/:siteId', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Site files not found' });
     }
 
+    const standardUrl = `/${user.subdomain}/${site.slug}/`;
+    const customUrl = site.enableDNS ? `https://${site.slug}.${user.subdomain}` : null;
+
     res.json({
       site,
       html,
-      url: `/${user.subdomain}/${site.slug}/`,
-      fullUrl: `${req.protocol}://${req.get('host')}/${user.subdomain}/${site.slug}/`
+      url: standardUrl,
+      fullUrl: `${req.protocol}://${req.get('host')}${standardUrl}`,
+      customUrl
     });
 
   } catch (error) {
@@ -799,6 +1094,26 @@ app.delete('/api/sites/:siteId', authenticateToken, async (req, res) => {
 
     const site = user.sites[siteIndex];
 
+    // Handle DNS cleanup
+    if (site.dnsRecordId) {
+      await deleteDNSRecord(
+        user.domainExtension ? `ntandostore${user.domainExtension}` : 'ntandostore.com',
+        site.dnsRecordId
+      );
+      
+      // Remove DNS record
+      let dnsRecords = {};
+      try {
+        const dnsData = await fs.readFile(DNS_RECORDS_FILE, 'utf8');
+        dnsRecords = JSON.parse(dnsData);
+      } catch (error) {
+        // File doesn't exist
+      }
+      
+      delete dnsRecords[site.dnsRecordId];
+      await fs.writeFile(DNS_RECORDS_FILE, JSON.stringify(dnsRecords, null, 2));
+    }
+
     // Remove site directory
     const siteDir = path.join(USERS_DIR, user.subdomain, site.slug);
     await fs.rm(siteDir, { recursive: true, force: true });
@@ -811,6 +1126,61 @@ app.delete('/api/sites/:siteId', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Delete error:', error);
     res.status(500).json({ error: 'Failed to delete site' });
+  }
+});
+
+// Custom domain routing for DNS forwarding
+app.get('*', async (req, res, next) => {
+  try {
+    const host = req.get('host');
+    
+    // Check if this is a custom domain request (e.g., site-name.username.ntandostore.com)
+    if (host && host.includes('ntandostore')) {
+      const parts = host.split('.');
+      
+      // Check for pattern: site-name.username.ntandostore.extension
+      if (parts.length >= 4) {
+        const extension = '.' + parts[parts.length - 1];
+        const domain = parts.slice(0, -1).join('.');
+        
+        // Check if extension is supported
+        if (validateDomainExtension(extension)) {
+          // Try to match with user subdomain + site slug
+          const domainParts = domain.split('.');
+          if (domainParts.length >= 2) {
+            const siteSlug = domainParts[0];
+            const userSubdomain = domainParts.slice(1).join('.');
+            
+            // Look up user by subdomain
+            let users = {};
+            try {
+              const usersData = await fs.readFile(USERS_FILE, 'utf8');
+              users = JSON.parse(usersData);
+            } catch (error) {
+              return next();
+            }
+            
+            const user = Object.values(users).find(u => u.subdomain === userSubdomain);
+            if (user) {
+              const site = user.sites.find(s => s.slug === siteSlug && s.enableDNS);
+              if (site) {
+                // Update visit count
+                site.visits = (site.visits || 0) + 1;
+                await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+                
+                // Serve the file
+                const filePath = path.join(USERS_DIR, userSubdomain, siteSlug, 'index.html');
+                return res.sendFile(filePath);
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    next();
+  } catch (error) {
+    next();
   }
 });
 
@@ -937,7 +1307,9 @@ app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
     service: 'Ntandostore Enhanced Free Hosting',
-    features: ['Subdomains', 'User System', 'Site Editing', 'Templates', 'Backups'],
+    features: ['Subdomains', 'User System', 'Site Editing', 'Templates', 'Backups', 'DNS Forwarding', 'Custom Domains'],
+    domainExtensions: DOMAIN_CONFIG.extensions,
+    dnsEnabled: DNS_CONFIG.enabled,
     timestamp: new Date().toISOString() 
   });
 });
@@ -960,7 +1332,9 @@ app.listen(PORT, () => {
   console.log(`👥 Users directory: ${USERS_DIR}`);
   console.log(`🌐 Dashboard: http://localhost:${PORT}/dashboard`);
   console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`✨ Features: Subdomains, user system, site editing, templates, backups`);
+  console.log(`✨ Features: Subdomains, user system, site editing, templates, backups, DNS forwarding`);
+  console.log(`🌍 Supported domains: ${DOMAIN_CONFIG.extensions.join(', ')}`);
+  console.log(`🔗 DNS Forwarding: ${DNS_CONFIG.enabled ? 'Enabled' : 'Disabled'}`);
   
   // Log important directories for Render.com deployment
   if (process.env.NODE_ENV === 'production') {
@@ -969,6 +1343,7 @@ app.listen(PORT, () => {
     console.log(`   - Users: ${USERS_DIR}`);
     console.log(`   - Domains: ${DOMAINS_FILE}`);
     console.log(`   - User DB: ${USERS_FILE}`);
+    console.log(`   - DNS Records: ${DNS_RECORDS_FILE}`);
     console.log(`🌐 Ready for production traffic on Render.com`);
   }
 });

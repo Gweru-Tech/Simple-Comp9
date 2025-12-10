@@ -13,6 +13,60 @@ services:
         value: production
       - key: JWT_SECRET
         value: "ntandostore-production-secret-key-2024-please-change-this"
+      # DNS Configuration
+      - key: DNS_FORWARDING_ENABLED
+        value: "false"  # Set to "true" when DNS is configured
+      - key: DNS_PROVIDER
+        value: "cloudflare"
+      # Add your DNS API keys here when ready
+      - key: DNS_API_KEY
+        value: ""
+      # DNS Zone IDs for each domain
+      - key: DNS_ZONE_COM
+        value: ""
+      - key: DNS_ZONE_ONLINE
+        value: ""
+      - key: DNS_ZONE_ID
+        value: ""
+      - key: DNS_ZONE_CLOUD
+        value: ""
+      - key: DNS_ZONE_NET
+        value: ""
+      - key: DNS_ZONE_STORE
+        value: ""
+      - key: DNS_ZONE_BLOG
+        value: ""
+      - key: DNS_ZONE_UK
+        value: ""
+      - key: DNS_ZONE_ZW
+        value: ""
+      - key: DNS_ZONE_ORG
+        value: ""
+    # Domain mappings - you'll need to configure these in Render dashboard
+    domains:
+      - name: ntandostore.com
+        type: primary
+      - name: www.ntandostore.com
+        type: redirect
+        to: ntandostore.com
+      - name: ntandostore.online
+        type: alias
+      - name: ntandostore.id
+        type: alias
+      - name: ntandostore.cloud
+        type: alias
+      - name: ntandostore.net
+        type: alias
+      - name: ntandostore.store
+        type: alias
+      - name: ntandostore.blog
+        type: alias
+      - name: ntandostore.uk
+        type: alias
+      - name: ntandostore.zw
+        type: alias
+      - name: ntandostore.org
+        type: alias
     disk:
       name: ntandostore-data
       mountPath: /workspace
