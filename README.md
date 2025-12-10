@@ -1,255 +1,200 @@
-# Ntandostore Enhanced - Subdomain Hosting Platform
+# Ntandostore Enhanced - Multiple Domain Hosting Platform
 
-A powerful free website hosting platform with user accounts, subdomain support, site editing, and advanced features.
+🚀 **Deploy your websites with FREE custom domains!** Choose from 10+ professional domain endings and manage your sites with our advanced dashboard.
 
-## 🚀 Major Enhancements
+## ✨ Features
 
-### New Features Added:
-- 👥 **User Authentication System** - Secure registration and login
-- 🌐 **Subdomain Hosting** - Each user gets unique subdomain (username-random.ntandostore)
-- ✏️ **Site Editing** - Edit deployed sites with automatic backups
-- 🎨 **Professional Templates** - Portfolio, Business, Blog, and Landing page templates
-- 🔐 **Automatic Backups** - Backups created before each site update
-- 📊 **Enhanced Analytics** - Track visits and site performance
-- 🌙 **Dark Mode Dashboard** - Modern UI with light/dark theme toggle
-- 🔍 **Live Preview** - Preview sites before deployment
-- 📱 **QR Code Sharing** - Generate QR codes for easy mobile sharing
+### 🌐 Multiple Domain Endings
+Choose from 10+ professional domain endings:
+- `.ntandostore.com` - Professional business domain
+- `.ntandostore.online` - Perfect for online presence
+- `.ntandostore.id` - Personal identity domain
+- `.ntandostore.cloud` - Ideal for tech services
+- `.ntandostore.net` - Network and services
+- `.ntandostore.store` - E-commerce websites
+- `.ntandostore.blog` - Bloggers and writers
+- `.ntandostore.org` - Organizations
+- `.ntandostore.uk` - UK-based sites
+- `.ntandostore.zw` - African regional presence
 
-## 🌐 URL Structure
+### 👥 User Management System
+- **Secure Authentication** - JWT-based login system
+- **User Accounts** - Each user gets isolated space
+- **Multiple Sites** - Host unlimited websites per account
+- **Session Management** - Secure token-based sessions
 
-### New Subdomain System:
-- **User Root**: `username-random123.ntandostore`
-- **Site Pages**: `username-random123/sitename.ntandostore`
-- **Direct Access**: Clean URLs without `/hosted/` prefix
+### ✏️ Advanced Site Management
+- **Built-in Editor** - Edit HTML, CSS, and JavaScript online
+- **Live Preview** - See changes before publishing
+- **Automatic Backups** - Every update creates a backup
+- **Version History** - Restore previous versions anytime
 
-### Example URLs:
-```
-https://john-quick5678.ntandostore/
-https://john-quick5678/portfolio.ntandostore/
-https://john-quick5678/business.ntandostore/
-https://john-quick5678/blog.ntandostore/
-```
+### 🎨 Professional Templates
+- **Portfolio Template** - Showcase your work
+- **Business Template** - Professional company sites
+- **Blog Template** - Clean blog layout
+- **Landing Page** - Modern marketing pages
 
-## 🏗️ Architecture
+### 🌙 Enhanced Dashboard
+- **Dark Mode** - Easy on the eyes for late-night work
+- **Real-time Analytics** - Track visitor statistics
+- **Site Management** - Organize and manage all your sites
+- **Mobile Responsive** - Works perfectly on all devices
 
-### Backend Enhancements:
-- **User System**: JWT authentication, secure password hashing
-- **File Storage**: Organized by user subdomains in `/users/` directory
-- **API Routes**: RESTful APIs for user management and site CRUD operations
-- **Backup System**: Automatic versioning with timestamps
+## 🚀 Quick Start
 
-### Frontend Enhancements:
-- **Authentication UI**: Login/Register forms with validation
-- **Dashboard**: Complete site management interface
-- **Code Editor**: HTML/CSS/JS editor with syntax highlighting
-- **Template Gallery**: Visual template selection and preview
+### Deploy on Render.com (Recommended)
 
-## 📋 API Endpoints
+1. **Clone or Download** this repository
+2. **Create Account** on [Render.com](https://render.com)
+3. **Connect GitHub** or upload the files manually
+4. **Configure Environment Variables**:
+   ```
+   NODE_ENV=production
+   JWT_SECRET=your-secret-key-here
+   ```
+5. **Deploy** - Click "Create Web Service"
+6. **Your platform is live!** 🎉
 
-### Authentication:
-- `POST /api/register` - User registration
-- `POST /api/login` - User login
-- `GET /api/user/sites` - Get user's sites (protected)
+### Local Development
 
-### Site Management:
-- `POST /api/upload` - Create new site (protected)
-- `PUT /api/sites/:siteId` - Update existing site (protected)
-- `GET /api/sites/:siteId` - Get site for editing (protected)
-- `DELETE /api/sites/:siteId` - Delete site (protected)
-- `GET /api/templates` - Get available templates
-
-### Site Access:
-- `GET /:subdomain/:slug/` - Serve user sites
-- `GET /:subdomain/` - User subdomain root
-
-## 🎨 Available Templates
-
-1. **Portfolio Template** (`portfolio`)
-   - Clean design for showcasing work
-   - Project grid layout
-   - Contact section
-
-2. **Business Template** (`business`)
-   - Professional corporate design
-   - Services section
-   - Call-to-action buttons
-
-3. **Blog Template** (`blog`)
-   - Article-focused layout
-   - Meta information display
-   - Read more functionality
-
-4. **Landing Page Template** (`landing`)
-   - Modern hero section
-   - Feature highlights
-   - Conversion-focused design
-
-## 🔐 Security Features
-
-- **JWT Authentication**: Secure token-based auth
-- **Password Hashing**: bcrypt encryption
-- **Input Validation**: Sanitized user inputs
-- **Rate Limiting**: Prevent abuse
-- **CORS**: Proper cross-origin handling
-
-## 📁 File Structure
-
-```
-/
-├── server.js                 # Main Express server
-├── package.json              # Dependencies
-├── public/
-│   ├── index.html           # Landing page
-│   └── dashboard.html       # Enhanced dashboard
-├── users/                   # User directories
-│   └── username-random123/
-│       ├── site1/
-│       │   ├── index.html
-│       │   └── backups/
-│       └── site2/
-└── uploads/                 # Legacy hosted sites (backward compatible)
-```
-
-## 🚀 Getting Started
-
-### Installation:
 ```bash
+# Clone the repository
+git clone <repository-url>
+cd ntandostore-enhanced
+
+# Install dependencies
 npm install
-```
 
-### Environment Variables:
-```bash
-JWT_SECRET=your-secret-key-here
-PORT=3000
-```
-
-### Start the server:
-```bash
-npm start
-# or for development
+# Start development server
 npm run dev
+
+# Or start production server
+npm start
 ```
 
-## 👤 User Account Features
+## 📁 Project Structure
 
-### Registration:
-- Username: 3-30 characters (letters, numbers, hyphens, underscores)
-- Email: Valid email address required
-- Password: Minimum 6 characters
-- Auto-generated subdomain: `username-random123.ntandostore`
-
-### Dashboard Features:
-- Site management (create, edit, delete)
-- Template selection
-- Live preview
-- QR code generation
-- Visit analytics
-- Dark mode toggle
-
-## 📝 Site Management
-
-### Create Site:
-1. Choose template or start from scratch
-2. Enter site name and slug
-3. Write HTML/CSS/JS code
-4. Deploy instantly
-
-### Edit Site:
-1. Click "Edit" on any site
-2. Modify code in the editor
-3. Automatic backup created
-4. Update with one click
-
-### Site Features:
-- Real-time visit tracking
-- Last updated timestamp
-- Backup management
-- QR code sharing
-- Mobile responsive
-
-## 🔧 Technical Details
-
-### Dependencies:
-- **express**: Web framework
-- **bcrypt**: Password hashing
-- **jsonwebtoken**: JWT authentication
-- **fs/promises**: File system operations
-
-### Storage:
-- User data: `users.json`
-- Domain data: `domains.json` (legacy)
-- Site files: Organized by subdomain
-
-### Authentication Flow:
-1. User registers/logs in
-2. JWT token generated and stored
-3. Token sent with API requests
-4. Server validates and processes requests
-
-## 🌍 Deployment
-
-### Render.com Ready:
-- Health check endpoint: `/health`
-- Auto-deployment configured
-- Environment variable support
-
-### Production Considerations:
-- Set strong `JWT_SECRET`
-- Configure rate limiting
-- Set up monitoring
-- Regular backups
-
-## 🔄 Backward Compatibility
-
-The enhanced platform maintains full backward compatibility:
-- Old `/hosted/` routes still work
-- Existing sites continue to function
-- API endpoints preserved
-- Database migration not required
-
-## 📊 Monitoring
-
-### Health Check:
-```json
-GET /health
-{
-  "status": "OK",
-  "service": "Ntandostore Enhanced Free Hosting",
-  "features": ["Subdomains", "User System", "Site Editing", "Templates", "Backups"],
-  "timestamp": "2024-01-01T00:00:00.000Z"
-}
+```
+ntandostore-enhanced/
+├── server.js              # Main Express server
+├── package.json            # Node.js dependencies
+├── render.yaml            # Render.com deployment config
+├── README.md              # This file
+└── public/                # Static files
+    ├── index.html         # Landing page
+    └── dashboard.html     # User dashboard
 ```
 
-## 🎯 Use Cases
+## 🔧 Technical Stack
 
-### For Individuals:
-- Portfolio websites
-- Personal blogs
-- Resume sites
-- Project showcases
+- **Backend**: Node.js + Express.js
+- **Authentication**: JWT (JSON Web Tokens)
+- **Security**: bcrypt for password hashing
+- **Storage**: File-based with JSON databases
+- **Frontend**: Vanilla JavaScript + HTML5 + CSS3
+- **Deployment**: Render.com compatible
 
-### For Small Businesses:
-- Landing pages
-- Product showcases
-- Service descriptions
-- Contact pages
+## 🌐 API Endpoints
 
-### For Developers:
-- Quick prototypes
-- Demo sites
-- Testing environments
-- Client previews
+### Authentication
+- `POST /api/register` - Create new user account
+- `POST /api/login` - User login
 
-## 🔮 Future Enhancements
+### Domain Management
+- `GET /api/domains` - Get available domain endings
 
-Potential upcoming features:
-- Custom domain mapping
-- SSL certificates
-- Team collaboration
-- Advanced analytics
-- API integrations
-- CDN integration
+### Templates
+- `GET /api/templates` - Get website templates
 
-## 📞 Support
+### Site Management
+- `POST /api/upload` - Create new website
+- `GET /api/user/sites` - Get user's websites
+- `GET /api/sites/:id` - Get site for editing
+- `PUT /api/sites/:id` - Update website
+- `DELETE /api/sites/:id` - Delete website
 
-The enhanced Ntandostore platform provides a complete solution for free website hosting with modern features and professional tools. Enjoy building your web presence!
+### System
+- `GET /health` - Health check endpoint
+
+## 🎯 How It Works
+
+1. **Sign Up** - Create your free account
+2. **Choose Domain** - Select your preferred domain ending
+3. **Create Website** - Use templates or custom code
+4. **Deploy Instantly** - Your site goes live immediately
+5. **Manage & Edit** - Update anytime with automatic backups
+
+## 🔒 Security Features
+
+- **JWT Authentication** - Secure token-based login
+- **Password Hashing** - bcrypt encryption
+- **User Isolation** - Each user has separate space
+- **Session Management** - Automatic token expiration
+- **Input Validation** - Protection against XSS/SQL injection
+
+## 📊 Analytics & Features
+
+- **Visitor Tracking** - Real-time visit counters
+- **Site Statistics** - Creation and update dates
+- **Backup System** - Automatic version control
+- **Dark Mode** - Eye-friendly interface
+- **Mobile Responsive** - Works on all devices
+
+## 🛠️ Configuration
+
+### Environment Variables
+```env
+NODE_ENV=production
+JWT_SECRET=your-secret-key-change-this
+```
+
+### Available Domains
+The platform supports these domain endings:
+- .com, .online, .id, .cloud, .net, .store, .blog, .org, .uk, .zw
+
+## 🌟 Sample Website URLs
+
+```
+username-quick123.ntandostore.com    # Business site
+john-smart456.ntandostore.online      # Portfolio
+mary-cool789.ntandostore.blog         # Personal blog
+tech-team321.ntandostore.cloud        # Tech startup
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+If you need help:
+- 📧 Create an issue on GitHub
+- 📖 Check the documentation
+- 🌐 Visit our platform at [ntandostore.com](https://ntandostore.com)
+
+## 🎉 Deploy Now!
+
+Ready to get your free custom domain website? 
+
+**🚀 Deploy on Render.com in 2 minutes:**
+1. Click the "Deploy to Render" button
+2. Connect your GitHub account
+3. Set your JWT_SECRET environment variable
+4. Deploy and start creating!
+
+**Your professional website with custom domain awaits!** 🌐✨
+
+---
+
+⭐ **Star this repo if it helped you!** ⭐
+
+Made with ❤️ by SuperNinja AI

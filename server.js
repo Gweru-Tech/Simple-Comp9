@@ -10,11 +10,24 @@ const PORT = process.env.PORT || 3000;
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'ntandostore-secret-key-2024';
 
+// Multiple domain endings
+const DOMAIN_ENDINGS = [
+  '.ntandostore.com',
+  '.ntandostore.online', 
+  '.ntandostore.id',
+  '.ntandostore.cloud',
+  '.ntandostore.net',
+  '.ntandostore.store',
+  '.ntandostore.blog',
+  '.ntandostore.uk',
+  '.ntandostore.zw',
+  '.ntandostore.org'
+];
+
 // Ensure JWT_SECRET is set in production
 if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
   console.error('JWT_SECRET environment variable is required in production');
   console.error('Please set JWT_SECRET in your Render.com environment variables');
-  // Use a fallback for initial deployment but warn strongly
   console.warn('⚠️  Using fallback JWT_SECRET - PLEASE SET PROPERLY IN RENDER DASHBOARD!');
   process.env.JWT_SECRET = 'ntandostore-emergency-fallback-' + Date.now();
 }
@@ -78,7 +91,7 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Generate unique subdomain
+// Generate unique subdomain with multiple domain endings
 function generateSubdomain(username) {
   const adjectives = ['quick', 'bright', 'clever', 'swift', 'smart', 'happy', 'lucky', 'sunny', 'cool', 'warm'];
   const nouns = ['site', 'web', 'page', 'space', 'zone', 'hub', 'spot', 'place', 'world', 'realm'];
@@ -88,6 +101,24 @@ function generateSubdomain(username) {
   const noun = nouns[Math.floor(Math.random() * nouns.length)];
   
   return `${username}-${adjective}${noun}${numbers}`;
+}
+
+// Generate unique custom domain
+function generateCustomDomain(username, siteName) {
+  const cleanUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const cleanSiteName = siteName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/^-+|-+$/g, '');
+  const randomSuffix = Math.floor(Math.random() * 999) + 1;
+  
+  const baseDomain = `${cleanUsername}-${cleanSiteName}-${randomSuffix}`;
+  
+  // Randomly select a domain ending
+  const randomEnding = DOMAIN_ENDINGS[Math.floor(Math.random() * DOMAIN_ENDINGS.length)];
+  
+  return {
+    subdomain: baseDomain,
+    fullDomain: baseDomain + randomEnding,
+    ending: randomEnding
+  };
 }
 
 // Validate username
@@ -148,7 +179,7 @@ app.get('/dashboard', (req, res) => {
 // User registration
 app.post('/api/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, preferredDomain } = req.body;
     
     if (!username || !email || !password) {
       return res.status(400).json({ error: 'All fields are required' });
@@ -184,6 +215,9 @@ app.post('/api/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const userId = crypto.randomUUID();
     
+    // Generate custom domain
+    const domainInfo = generateCustomDomain(username, 'site');
+    
     // Create user
     const user = {
       id: userId,
@@ -192,6 +226,7 @@ app.post('/api/register', async (req, res) => {
       password: hashedPassword,
       createdAt: new Date().toISOString(),
       subdomain: generateSubdomain(username),
+      customDomain: domainInfo,
       sites: []
     };
     
@@ -213,8 +248,10 @@ app.post('/api/register', async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        subdomain: user.subdomain
-      }
+        subdomain: user.subdomain,
+        customDomain: user.customDomain
+      },
+      availableDomains: DOMAIN_ENDINGS
     });
     
   } catch (error) {
@@ -264,14 +301,24 @@ app.post('/api/login', async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        subdomain: user.subdomain
-      }
+        subdomain: user.subdomain,
+        customDomain: user.customDomain
+      },
+      availableDomains: DOMAIN_ENDINGS
     });
     
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed' });
   }
+});
+
+// Get available domains
+app.get('/api/domains', (req, res) => {
+  res.json({ 
+    domainEndings: DOMAIN_ENDINGS,
+    count: DOMAIN_ENDINGS.length
+  });
 });
 
 // Get available templates
@@ -518,7 +565,7 @@ main { margin-top: 80px; }
 // Upload and create a new site (protected route)
 app.post('/api/upload', authenticateToken, async (req, res) => {
   try {
-    const { html, css, js, siteName, siteSlug, favicon } = req.body;
+    const { html, css, js, siteName, siteSlug, favicon, domainEnding } = req.body;
     
     if (!html) {
       return res.status(400).json({ error: 'HTML content is required' });
@@ -562,6 +609,10 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
     const siteDir = path.join(USERS_DIR, userSubdomain, finalSlug);
     await fs.mkdir(siteDir, { recursive: true });
 
+    // Generate custom domain for this site
+    const selectedEnding = domainEnding || user.customDomain.ending;
+    const siteDomainInfo = generateCustomDomain(user.username, siteName);
+    
     // Create index.html with favicon if provided
     let fullHtml = html;
     
@@ -587,6 +638,8 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
       id: crypto.randomUUID(),
       name: siteName || 'Untitled Site',
       slug: finalSlug,
+      customDomain: siteDomainInfo.fullDomain,
+      domainEnding: selectedEnding,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       visits: 0,
@@ -599,6 +652,7 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
     res.json({ 
       success: true, 
       slug: finalSlug,
+      customDomain: site.customDomain,
       url: `/${userSubdomain}/${finalSlug}/`,
       fullUrl: `${req.protocol}://${req.get('host')}/${userSubdomain}/${finalSlug}/`,
       message: 'Site published successfully!',
@@ -684,6 +738,7 @@ app.put('/api/sites/:siteId', authenticateToken, async (req, res) => {
       success: true, 
       message: 'Site updated successfully!',
       url: `/${userSubdomain}/${site.slug}/`,
+      customDomain: site.customDomain,
       site
     });
 
@@ -713,7 +768,8 @@ app.get('/api/user/sites', authenticateToken, async (req, res) => {
     const sites = user.sites.map(site => ({
       ...site,
       url: `/${user.subdomain}/${site.slug}/`,
-      fullUrl: `${req.protocol}://${req.get('host')}/${user.subdomain}/${site.slug}/`
+      fullUrl: `${req.protocol}://${req.get('host')}/${user.subdomain}/${site.slug}/`,
+      customUrl: `https://${site.customDomain}`
     }));
 
     res.json(sites);
@@ -763,7 +819,8 @@ app.get('/api/sites/:siteId', authenticateToken, async (req, res) => {
       site,
       html,
       url: `/${user.subdomain}/${site.slug}/`,
-      fullUrl: `${req.protocol}://${req.get('host')}/${user.subdomain}/${site.slug}/`
+      fullUrl: `${req.protocol}://${req.get('host')}/${user.subdomain}/${site.slug}/`,
+      customUrl: `https://${site.customDomain}`
     });
 
   } catch (error) {
@@ -937,7 +994,8 @@ app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
     service: 'Ntandostore Enhanced Free Hosting',
-    features: ['Subdomains', 'User System', 'Site Editing', 'Templates', 'Backups'],
+    features: ['Multiple Domains', 'User System', 'Site Editing', 'Templates', 'Backups'],
+    domainEndings: DOMAIN_ENDINGS,
     timestamp: new Date().toISOString() 
   });
 });
@@ -960,7 +1018,8 @@ app.listen(PORT, () => {
   console.log(`👥 Users directory: ${USERS_DIR}`);
   console.log(`🌐 Dashboard: http://localhost:${PORT}/dashboard`);
   console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`✨ Features: Subdomains, user system, site editing, templates, backups`);
+  console.log(`✨ Features: Multiple domains, user system, site editing, templates, backups`);
+  console.log(`🌍 Available domains: ${DOMAIN_ENDINGS.join(', ')}`);
   
   // Log important directories for Render.com deployment
   if (process.env.NODE_ENV === 'production') {
