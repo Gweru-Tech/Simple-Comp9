@@ -1,7 +1,7 @@
 services:
   # Web Service
   - type: web
-    name: ntandostore-enhanced
+    name: ntandostore
     env: node
     plan: free
     buildCommand: "npm install"
