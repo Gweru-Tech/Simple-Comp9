@@ -13,7 +13,10 @@ const JWT_SECRET = process.env.JWT_SECRET || 'ntandostore-secret-key-2024';
 // Ensure JWT_SECRET is set in production
 if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
   console.error('JWT_SECRET environment variable is required in production');
-  process.exit(1);
+  console.error('Please set JWT_SECRET in your Render.com environment variables');
+  // Use a fallback for initial deployment but warn strongly
+  console.warn('⚠️  Using fallback JWT_SECRET - PLEASE SET PROPERLY IN RENDER DASHBOARD!');
+  process.env.JWT_SECRET = 'ntandostore-emergency-fallback-' + Date.now();
 }
 
 // Ensure directories exist

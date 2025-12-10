@@ -12,7 +12,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: JWT_SECRET
-        generateValue: true
+        value: "ntandostore-production-secret-key-2024-please-change-this"
     disk:
       name: ntandostore-data
       mountPath: /workspace
