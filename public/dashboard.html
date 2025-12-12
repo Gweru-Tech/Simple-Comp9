@@ -4,767 +4,176 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Ntando Hosting</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
-            --accent-color: #2563eb;
-            --success-color: #10b981;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
-            --text-dark: #1a202c;
-            --text-light: #718096;
-            --bg-light: #f7fafc;
-            --bg-dark: #2d3748;
-            --white: #ffffff;
-            --border-color: #e2e8f0;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
-            --gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --secondary: #2563eb;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #ffffff;
+            --bg-light: #f9fafb;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-dark);
-            background: var(--bg-light);
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* Header */
-        header {
-            background: var(--white);
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem 1rem;
-            background: var(--bg-light);
-            border-radius: 25px;
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-weight: 600;
-        }
-
-        .btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: var(--gradient);
-            color: var(--white);
-        }
-
-        .btn-secondary {
-            background: var(--bg-light);
-            color: var(--text-dark);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-danger {
-            background: var(--danger-color);
-            color: var(--white);
-        }
-
-        .btn-success {
-            background: var(--success-color);
-            color: var(--white);
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow);
-        }
-
-        /* Main Layout */
-        .dashboard-layout {
-            display: flex;
-            min-height: calc(100vh - 80px);
-        }
-
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: var(--text); background: var(--bg-light); }
+        
+        /* Layout */
+        .dashboard-container { display: flex; min-height: 100vh; }
+        
         /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background: var(--white);
-            border-right: 1px solid var(--border-color);
-            padding: 2rem 0;
-        }
-
-        .nav-menu {
-            list-style: none;
-        }
-
-        .nav-item {
-            margin-bottom: 0.5rem;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 2rem;
-            color: var(--text-dark);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-link:hover {
-            background: var(--bg-light);
-            color: var(--primary-color);
-        }
-
-        .nav-link.active {
-            background: var(--gradient);
-            color: var(--white);
-        }
-
-        .nav-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--primary-color);
-        }
-
+        .sidebar { width: 250px; background: var(--text); color: white; padding: 1rem 0; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-header { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-logo { font-size: 1.5rem; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; }
+        .user-info { padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .user-name { font-weight: 600; margin-bottom: 0.25rem; }
+        .user-domain { font-size: 0.875rem; opacity: 0.8; font-family: monospace; }
+        .nav-menu { list-style: none; }
+        .nav-item { margin-bottom: 0.5rem; }
+        .nav-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; color: rgba(255,255,255,0.8); text-decoration: none; transition: all 0.3s; }
+        .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+        .nav-link.active { background: var(--primary); color: white; }
+        
         /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            overflow-y: auto;
-        }
-
-        .page-header {
-            margin-bottom: 2rem;
-        }
-
-        .page-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
-        }
-
-        .page-subtitle {
-            color: var(--text-light);
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .tab {
-            padding: 1rem 1.5rem;
-            background: none;
-            border: none;
-            border-bottom: 2px solid transparent;
-            color: var(--text-light);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .tab:hover {
-            color: var(--text-dark);
-        }
-
-        .tab.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
-        /* Tab Content */
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
+        .main-content { flex: 1; margin-left: 250px; padding: 2rem; }
+        .header { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 1.875rem; }
+        .header-actions { display: flex; gap: 1rem; align-items: center; }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3); }
+        .btn-secondary { background: white; color: var(--text); border: 1px solid var(--border); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        
+        /* Content Sections */
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        
         /* Sites Grid */
-        .sites-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .site-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .site-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .site-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 1rem;
-        }
-
-        .site-info h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0.25rem;
-            color: var(--text-dark);
-        }
-
-        .site-url {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .site-url:hover {
-            color: var(--primary-color);
-        }
-
-        .site-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .icon-btn {
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: var(--bg-light);
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .icon-btn:hover {
-            background: var(--primary-color);
-            color: var(--white);
-        }
-
-        .site-stats {
-            display: flex;
-            gap: 2rem;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .stat {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-value {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        /* Editor */
-        .editor-container {
-            background: var(--white);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .editor-toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 1.5rem;
-            background: var(--bg-light);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .editor-tabs {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .editor-tab {
-            padding: 0.5rem 1rem;
-            background: none;
-            border: none;
-            border-bottom: 2px solid transparent;
-            color: var(--text-light);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .editor-tab.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
-        .editor-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .CodeMirror {
-            height: 500px;
-            font-size: 14px;
-        }
-
-        /* Templates */
-        .templates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .template-card {
-            background: var(--white);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .template-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .template-preview {
-            height: 200px;
-            background: var(--gradient);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .template-preview iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            transform: scale(0.5);
-            transform-origin: 0 0;
-            width: 200%;
-            height: 200%;
-        }
-
-        .template-info {
-            padding: 1.5rem;
-        }
-
-        .template-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .template-description {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .template-category {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background: var(--bg-light);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-
-        /* Forms */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            background: var(--white);
-            cursor: pointer;
-        }
-
-        .domain-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .domain-option {
-            padding: 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .domain-option:hover {
-            border-color: var(--primary-color);
-        }
-
-        .domain-option.selected {
-            border-color: var(--primary-color);
-            background: rgba(102, 126, 234, 0.1);
-        }
-
-        .domain-option.premium {
-            position: relative;
-        }
-
-        .premium-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--warning-color);
-            color: var(--white);
-            padding: 0.25rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .modal-header {
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-light);
-        }
-
-        /* Toast Notifications */
-        .toast-container {
-            position: fixed;
-            top: 100px;
-            right: 2rem;
-            z-index: 2000;
-        }
-
-        .toast {
-            background: var(--white);
-            border-radius: 8px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            min-width: 300px;
-            animation: slideIn 0.3s ease;
-        }
-
-        .toast.success {
-            border-left: 4px solid var(--success-color);
-        }
-
-        .toast.error {
-            border-left: 4px solid var(--danger-color);
-        }
-
-        .toast.warning {
-            border-left: 4px solid var(--warning-color);
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(0, 0, 0, 0.1);
-            border-top: 2px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        .sites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .site-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.3s; }
+        .site-card:hover { transform: translateY(-4px); }
+        .site-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem; }
+        .site-name { font-size: 1.25rem; font-weight: 600; }
+        .site-status { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .status-live { background: #d1fae5; color: #065f46; }
+        .site-urls { margin-bottom: 1rem; }
+        .url-item { font-family: monospace; font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem; }
+        .url-primary { color: var(--primary); font-weight: 500; }
+        .site-stats { display: flex; gap: 2rem; margin-bottom: 1rem; padding: 1rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 0.875rem; color: var(--text-light); }
+        .site-actions { display: flex; gap: 0.5rem; }
+        .btn-small { padding: 0.5rem 1rem; font-size: 0.875rem; }
+        
+        /* Create Site Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; }
+        .modal-content { background: white; margin: 2% auto; padding: 2rem; border-radius: 12px; max-width: 900px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .modal-close { font-size: 1.5rem; cursor: pointer; color: var(--text-light); }
+        
+        /* Editor Tabs */
+        .editor-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
+        .editor-tab { padding: 0.75rem 1.5rem; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; }
+        .editor-tab.active { border-bottom-color: var(--primary); color: var(--primary); }
+        .editor-content { display: none; }
+        .editor-content.active { display: block; }
+        
+        /* Form Elements */
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; font-family: inherit; }
+        .form-group textarea { min-height: 200px; font-family: 'Monaco', 'Menlo', monospace; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        
+        /* Templates Grid */
+        .templates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
+        .template-card { border: 2px solid var(--border); border-radius: 12px; padding: 1.5rem; cursor: pointer; transition: all 0.3s; text-align: center; }
+        .template-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .template-card.selected { border-color: var(--primary); background: #f0f4ff; }
+        .template-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .template-name { font-weight: 600; margin-bottom: 0.5rem; }
+        .template-desc { font-size: 0.875rem; color: var(--text-light); }
+        
+        /* Analytics */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .stat-card h3 { font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.5rem; }
+        .stat-card .value { font-size: 2rem; font-weight: bold; color: var(--primary); }
+        
+        /* Profile Settings */
+        .settings-section { background: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; }
+        .settings-section h2 { margin-bottom: 1.5rem; }
+        
+        /* Toast Notification */
+        .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--text); color: white; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 3000; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+        
         /* Responsive */
-        @media (max-width: 1024px) {
-            .dashboard-layout {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                order: 2;
-            }
-
-            .main-content {
-                order: 1;
-            }
-        }
-
         @media (max-width: 768px) {
-            .header-content {
-                padding: 1rem;
-            }
-
-            .main-content {
-                padding: 1rem;
-            }
-
-            .sites-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .templates-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .editor-toolbar {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
-
-        /* Hidden utility */
-        .hidden {
-            display: none !important;
-        }
-
-        /* Loading overlay */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-        }
-
-        .loading-content {
-            text-align: center;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid var(--border-color);
-            border-top: 3px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; }
+            .sites-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="header-content">
-            <a href="/" class="logo">🚀 Ntando Hosting</a>
-            <div class="user-menu">
-                <div class="user-info">
-                    <div class="user-avatar" id="userAvatar">U</div>
-                    <span id="username">User</span>
-                </div>
-                <button class="btn btn-secondary" onclick="logout()">Logout</button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Dashboard Layout -->
-    <div class="dashboard-layout">
+    <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">🚀 Ntando</div>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-name" id="userName">Loading...</div>
+                <div class="user-domain" id="userDomain">Loading...</div>
+            </div>
+            
             <nav>
                 <ul class="nav-menu">
                     <li class="nav-item">
-                        <a href="#" class="nav-link active" data-tab="sites">
-                            <span>📁</span> My Sites
+                        <a href="#" class="nav-link active" onclick="showSection('sites')">
+                            📱 My Sites
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" data-tab="create">
-                            <span>➕</span> Create New Site
+                        <a href="#" class="nav-link" onclick="showSection('create')">
+                            ➕ Create Site
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" data-tab="templates">
-                            <span>🎨</span> Templates
+                        <a href="#" class="nav-link" onclick="showSection('templates')">
+                            🎨 Templates
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" data-tab="editor">
-                            <span>✏️</span> Code Editor
+                        <a href="#" class="nav-link" onclick="showSection('analytics')">
+                            📊 Analytics
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" data-tab="analytics">
-                            <span>📊</span> Analytics
+                        <a href="#" class="nav-link" onclick="showSection('domains')">
+                            🌐 Domains
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" data-tab="settings">
-                            <span>⚙️</span> Settings
+                        <a href="#" class="nav-link" onclick="showSection('settings')">
+                            ⚙️ Settings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/" class="nav-link" onclick="logout()">
+                            🚪 Logout
                         </a>
                     </li>
                 </ul>
@@ -773,583 +182,504 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- My Sites Tab -->
-            <div class="tab-content active" id="sites-tab">
-                <div class="page-header">
-                    <h1 class="page-title">My Sites</h1>
-                    <p class="page-subtitle">Manage and monitor your hosted websites</p>
+            <!-- Header -->
+            <div class="header">
+                <h1 id="pageTitle">My Sites</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="showSection('create')">
+                        ➕ Create New Site
+                    </button>
+                    <button class="btn btn-secondary" onclick="showSection('templates')">
+                        🎨 Browse Templates
+                    </button>
                 </div>
+            </div>
 
+            <!-- Sites Section -->
+            <section id="sites" class="content-section active">
                 <div class="sites-grid" id="sitesGrid">
                     <!-- Sites will be loaded here -->
                 </div>
+            </section>
 
-                <div style="text-align: center; padding: 3rem; display: none;" id="noSites">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">🌐</div>
-                    <h3>No sites yet</h3>
-                    <p class="page-subtitle">Create your first website to get started</p>
-                    <button class="btn btn-primary" style="margin-top: 1rem;" onclick="switchTab('create')">
-                        Create Your First Site
-                    </button>
-                </div>
-            </div>
-
-            <!-- Create New Site Tab -->
-            <div class="tab-content" id="create-tab">
-                <div class="page-header">
-                    <h1 class="page-title">Create New Site</h1>
-                    <p class="page-subtitle">Launch a new website in minutes</p>
-                </div>
-
-                <form id="createSiteForm">
-                    <div class="form-group">
-                        <label class="form-label">Site Name</label>
-                        <input type="text" class="form-input" id="siteName" placeholder="My Awesome Website" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Choose Your Domain Extension</label>
-                        <div class="domain-options" id="domainOptions">
-                            <!-- Domain options will be loaded here -->
+            <!-- Create Site Section -->
+            <section id="create" class="content-section">
+                <div class="settings-section">
+                    <h2>Create New Site</h2>
+                    <form id="createSiteForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="siteName">Site Name</label>
+                                <input type="text" id="siteName" required placeholder="My Awesome Site">
+                            </div>
+                            <div class="form-group">
+                                <label for="siteSlug">Site URL</label>
+                                <input type="text" id="siteSlug" placeholder="my-awesome-site">
+                                <small style="color: var(--text-light);">Will be accessible at: yoursite.ntando.app</small>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Site URL (Auto-generated)</label>
-                        <input type="text" class="form-input" id="siteUrl" readonly placeholder="Your site URL will appear here">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <input type="checkbox" id="enableDNS"> Enable DNS forwarding (Premium)
-                        </label>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">
-                        <span>Create Site</span>
-                        <div class="spinner hidden" id="createSpinner"></div>
-                    </button>
-                </form>
-            </div>
-
-            <!-- Templates Tab -->
-            <div class="tab-content" id="templates-tab">
-                <div class="page-header">
-                    <h1 class="page-title">Templates</h1>
-                    <p class="page-subtitle">Choose a professional template to get started quickly</p>
+                        
+                        <div class="editor-tabs">
+                            <div class="editor-tab active" onclick="switchEditorTab('html')">HTML</div>
+                            <div class="editor-tab" onclick="switchEditorTab('css')">CSS</div>
+                            <div class="editor-tab" onclick="switchEditorTab('js')">JavaScript</div>
+                        </div>
+                        
+                        <div id="htmlEditor" class="editor-content active">
+                            <div class="form-group">
+                                <label for="htmlContent">HTML Content</label>
+                                <textarea id="htmlContent" placeholder="<!DOCTYPE html>&#10;<html>&#10;<head>&#10;    <title>Your Site</title>&#10;<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>&#10;<body>&#10;    <h1>Hello World!</h1>&#10;</body>&#10;</html>"><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Site</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 2rem; }
+        h1 { color: #667eea; }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>Welcome to My Site!</h1>
+    <p>This is your new website hosted on Ntando.</p>
+</body>
+</html></textarea>
+                            </div>
+                        </div>
+                        
+                        <div id="cssEditor" class="editor-content">
+                            <div class="form-group">
+                                <label for="cssContent">CSS Content</label>
+                                <textarea id="cssContent" placeholder="/* Add your custom CSS here */"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div id="jsEditor" class="editor-content">
+                            <div class="form-group">
+                                <label for="jsContent">JavaScript Content</label>
+                                <textarea id="jsContent" placeholder="// Add your JavaScript here"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="enableDNS"> Enable DNS Forwarding (Advanced)
+                            </label>
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem;">
+                            <button type="submit" class="btn btn-primary">🚀 Publish Site</button>
+                            <button type="button" class="btn btn-secondary" onclick="previewSite()">👁️ Preview</button>
+                        </div>
+                    </form>
                 </div>
+            </section>
 
+            <!-- Templates Section -->
+            <section id="templates" class="content-section">
                 <div class="templates-grid" id="templatesGrid">
                     <!-- Templates will be loaded here -->
                 </div>
-            </div>
+            </section>
 
-            <!-- Code Editor Tab -->
-            <div class="tab-content" id="editor-tab">
-                <div class="page-header">
-                    <h1 class="page-title">Code Editor</h1>
-                    <p class="page-subtitle">Edit your website code in real-time</p>
-                </div>
-
-                <div style="display: none;" id="editorPlaceholder">
-                    <div style="text-align: center; padding: 3rem;">
-                        <div style="font-size: 4rem; margin-bottom: 1rem;">✏️</div>
-                        <h3>Select a site to edit</h3>
-                        <p class="page-subtitle">Choose a site from your sites list to start editing</p>
+            <!-- Analytics Section -->
+            <section id="analytics" class="content-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Sites</h3>
+                        <div class="value" id="totalSites">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Visits</h3>
+                        <div class="value" id="totalVisits">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Sites</h3>
+                        <div class="value" id="activeSites">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Storage Used</h3>
+                        <div class="value" id="storageUsed">0 MB</div>
                     </div>
                 </div>
+            </section>
 
-                <div class="editor-container" id="editorContainer" style="display: none;">
-                    <div class="editor-toolbar">
-                        <div class="editor-tabs">
-                            <button class="editor-tab active" data-editor="html">HTML</button>
-                            <button class="editor-tab" data-editor="css">CSS</button>
-                            <button class="editor-tab" data-editor="js">JavaScript</button>
-                        </div>
-                        <div class="editor-actions">
-                            <button class="btn btn-secondary" onclick="previewSite()">Preview</button>
-                            <button class="btn btn-primary" onclick="saveSite()">
-                                <span>Save Changes</span>
-                                <div class="spinner hidden" id="saveSpinner"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <textarea id="htmlEditor"></textarea>
-                    <textarea id="cssEditor" style="display: none;"></textarea>
-                    <textarea id="jsEditor" style="display: none;"></textarea>
-                </div>
-            </div>
-
-            <!-- Analytics Tab -->
-            <div class="tab-content" id="analytics-tab">
-                <div class="page-header">
-                    <h1 class="page-title">Analytics</h1>
-                    <p class="page-subtitle">Track your website performance and visitor statistics</p>
-                </div>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
-                    <div style="background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow);">
-                        <h3 style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 0.5rem;">Total Visits</h3>
-                        <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);" id="totalVisits">0</div>
-                    </div>
-                    <div style="background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow);">
-                        <h3 style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 0.5rem;">Total Sites</h3>
-                        <div style="font-size: 2rem; font-weight: 700; color: var(--success-color);" id="totalSites">0</div>
-                    </div>
-                    <div style="background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow);">
-                        <h3 style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 0.5rem;">Avg. Visits/Site</h3>
-                        <div style="font-size: 2rem; font-weight: 700; color: var(--warning-color);" id="avgVisits">0</div>
+            <!-- Domains Section -->
+            <section id="domains" class="content-section">
+                <div class="settings-section">
+                    <h2>Your Domain Extensions</h2>
+                    <div id="domainsInfo">
+                        <!-- Domain info will be loaded here -->
                     </div>
                 </div>
+            </section>
 
-                <div style="background: var(--white); padding: 2rem; border-radius: 12px; box-shadow: var(--shadow);">
-                    <h3>Recent Activity</h3>
-                    <div id="activityFeed">
-                        <p style="color: var(--text-light); text-align: center; padding: 2rem;">No recent activity</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Settings Tab -->
-            <div class="tab-content" id="settings-tab">
-                <div class="page-header">
-                    <h1 class="page-title">Settings</h1>
-                    <p class="page-subtitle">Manage your account and preferences</p>
-                </div>
-
-                <div style="background: var(--white); padding: 2rem; border-radius: 12px; box-shadow: var(--shadow);">
-                    <h3>Account Information</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <div class="settings-section">
+                    <h2>Profile Settings</h2>
+                    <form id="settingsForm">
                         <div class="form-group">
-                            <label class="form-label">Username</label>
-                            <input type="text" class="form-input" id="settingsUsername" readonly>
+                            <label for="username">Username</label>
+                            <input type="text" id="username" readonly>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-input" id="settingsEmail" readonly>
+                            <label for="email">Email</label>
+                            <input type="email" id="email" readonly>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Subdomain</label>
-                            <input type="text" class="form-input" id="settingsSubdomain" readonly>
+                            <label for="primaryDomain">Primary Domain</label>
+                            <input type="text" id="primaryDomain" readonly>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Account Type</label>
-                            <input type="text" class="form-input" id="settingsAccountType" readonly>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 2rem;">
-                        <button class="btn btn-primary">Change Password</button>
-                        <button class="btn btn-danger">Delete Account</button>
-                    </div>
+                    </form>
                 </div>
-            </div>
+            </section>
         </main>
     </div>
 
-    <!-- Modal -->
-    <div class="modal" id="modal">
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Edit Site Modal -->
+    <div id="editModal" class="modal">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">&times;</button>
             <div class="modal-header">
-                <h2 class="modal-title" id="modalTitle">Modal Title</h2>
+                <h2>Edit Site</h2>
+                <span class="modal-close" onclick="closeEditModal()">&times;</span>
             </div>
-            <div class="modal-body" id="modalBody">
-                Modal content goes here
-            </div>
+            <form id="editSiteForm">
+                <input type="hidden" id="editSiteId">
+                <div class="form-group">
+                    <label for="editSiteName">Site Name</label>
+                    <input type="text" id="editSiteName" required>
+                </div>
+                
+                <div class="editor-tabs">
+                    <div class="editor-tab active" onclick="switchEditEditorTab('html')">HTML</div>
+                    <div class="editor-tab" onclick="switchEditEditorTab('css')">CSS</div>
+                    <div class="editor-tab" onclick="switchEditEditorTab('js')">JavaScript</div>
+                </div>
+                
+                <div id="editHtmlEditor" class="editor-content active">
+                    <div class="form-group">
+                        <label for="editHtmlContent">HTML Content</label>
+                        <textarea id="editHtmlContent"></textarea>
+                    </div>
+                </div>
+                
+                <div id="editCssEditor" class="editor-content">
+                    <div class="form-group">
+                        <label for="editCssContent">CSS Content</label>
+                        <textarea id="editCssContent"></textarea>
+                    </div>
+                </div>
+                
+                <div id="editJsEditor" class="editor-content">
+                    <div class="form-group">
+                        <label for="editJsContent">JavaScript Content</label>
+                        <textarea id="editJsContent"></textarea>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
-
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <p>Loading...</p>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
 
     <script>
         // Global variables
         let currentUser = null;
         let userSites = [];
         let templates = [];
-        let currentEditingSite = null;
-        let htmlEditor, cssEditor, jsEditor;
-        let selectedDomain = '.app';
+        let selectedTemplate = null;
 
-        // Initialize the dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('📱 Dashboard page loaded');
-            initializeDashboard();
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            await loadUserData();
+            await loadSites();
+            await loadTemplates();
+            await loadDomainInfo();
+            updateAnalytics();
         });
 
-        async function initializeDashboard() {
-            console.log('🚀 Initializing dashboard...');
-            showLoading(true);
+        // Check authentication
+        async function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/';
+                return;
+            }
             
+            // Verify token is valid by trying to load user data
             try {
-                // Check if user is logged in
-                console.log('🔍 Checking for authentication token...');
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    console.log('❌ No token found, showing login prompt');
-                    document.body.innerHTML = `
-                        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial, sans-serif;">
-                            <div style="text-align: center; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                                <h2 style="color: #667eea; margin-bottom: 1rem;">Authentication Required</h2>
-                                <p style="color: #666; margin-bottom: 2rem;">Please sign in to access the dashboard.</p>
-                                <button onclick="window.location.href='/'" class="btn" style="background: #667eea; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer;">
-                                    Go to Login
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    return;
+                const userData = JSON.parse(localStorage.getItem('user') || '{}');
+                if (!userData.username) {
+                    throw new Error('Invalid user data');
                 }
+            } catch (error) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/';
+            }
+        }
 
-                console.log('✅ Token found, parsing user info...');
-                // Parse JWT token to get user info
-                const userInfo = parseJWT(token);
-                if (!userInfo) {
-                    console.log('❌ Invalid token, logging out');
-                    logout();
-                    return;
-                }
-
-                console.log('✅ User info parsed:', userInfo);
-                currentUser = userInfo;
-                updateUserUI();
-
-                console.log('🔧 Initializing CodeMirror editors...');
-                // Initialize CodeMirror editors
-                initializeEditors();
-
-                console.log('📊 Loading dashboard data...');
-                // Load data
-                const loadPromises = [
-                    loadSites(),
-                    loadTemplates(),
-                    loadDomainExtensions()
-                ];
+        // Load user data
+        async function loadUserData() {
+            try {
+                const userData = JSON.parse(localStorage.getItem('user') || '{}');
+                currentUser = userData;
                 
-                await Promise.all(loadPromises);
-
-                console.log('⚙️ Setting up event listeners...');
-                // Setup event listeners
-                setupEventListeners();
-
-                console.log('📈 Updating analytics...');
-                // Update analytics
-                updateAnalytics();
-
-                console.log('✅ Dashboard initialization complete!');
-
+                document.getElementById('userName').textContent = userData.username || 'User';
+                document.getElementById('userDomain').textContent = userData.subdomain || 'Loading...';
+                document.getElementById('username').value = userData.username || '';
+                document.getElementById('email').value = userData.email || '';
+                document.getElementById('primaryDomain').value = userData.subdomain || '';
             } catch (error) {
-                console.error('❌ Dashboard initialization error:', error);
-                showToast('Error loading dashboard: ' + error.message, 'error');
-                showLoading(false);
+                console.error('Error loading user data:', error);
             }
         }
 
-        function parseJWT(token) {
-            try {
-                const base64Url = token.split('.')[1];
-                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-                return JSON.parse(jsonPayload);
-            } catch (error) {
-                console.error('Error parsing JWT:', error);
-                return null;
-            }
-        }
-
-        function updateUserUI() {
-            document.getElementById('username').textContent = currentUser.username;
-            document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
-            
-            // Update settings
-            document.getElementById('settingsUsername').value = currentUser.username;
-            document.getElementById('settingsAccountType').value = 'Free Plan';
-        }
-
-        function initializeEditors() {
-            htmlEditor = CodeMirror.fromTextArea(document.getElementById('htmlEditor'), {
-                mode: 'xml',
-                theme: 'monokai',
-                lineNumbers: true,
-                autoCloseTags: true,
-                autoCloseBrackets: true
-            });
-
-            cssEditor = CodeMirror.fromTextArea(document.getElementById('cssEditor'), {
-                mode: 'css',
-                theme: 'monokai',
-                lineNumbers: true,
-                autoCloseBrackets: true
-            });
-
-            jsEditor = CodeMirror.fromTextArea(document.getElementById('jsEditor'), {
-                mode: 'javascript',
-                theme: 'monokai',
-                lineNumbers: true,
-                autoCloseBrackets: true
-            });
-        }
-
-        function setupEventListeners() {
-            // Navigation
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const tabName = this.dataset.tab;
-                    switchTab(tabName);
-                });
-            });
-
-            // Editor tabs
-            document.querySelectorAll('.editor-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const editorType = this.dataset.editor;
-                    switchEditor(editorType);
-                });
-            });
-
-            // Create site form
-            document.getElementById('createSiteForm').addEventListener('submit', createSite);
-        }
-
-        function switchTab(tabName) {
-            // Update navigation
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-
-            // Update content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(`${tabName}-tab`).classList.add('active');
-        }
-
-        function switchEditor(editorType) {
-            // Update tabs
-            document.querySelectorAll('.editor-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelector(`[data-editor="${editorType}"]`).classList.add('active');
-
-            // Show/hide editors
-            document.getElementById('htmlEditor').style.display = editorType === 'html' ? 'block' : 'none';
-            document.getElementById('cssEditor').style.display = editorType === 'css' ? 'block' : 'none';
-            document.getElementById('jsEditor').style.display = editorType === 'js' ? 'block' : 'none';
-
-            // Refresh editor
-            if (editorType === 'html') htmlEditor.refresh();
-            if (editorType === 'css') cssEditor.refresh();
-            if (editorType === 'js') jsEditor.refresh();
-        }
-
+        // Load user sites
         async function loadSites() {
-            console.log('📍 Loading user sites...');
             try {
                 const token = localStorage.getItem('token');
-                console.log('🔑 Making request to /api/user/sites with token...');
-                
                 const response = await fetch('/api/user/sites', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
-
-                console.log('📡 Sites API response status:', response.status);
                 
                 if (response.ok) {
                     userSites = await response.json();
-                    console.log('✅ Sites loaded successfully:', userSites);
                     renderSites();
                 } else {
-                    const errorText = await response.text();
-                    console.error('❌ Sites API error:', response.status, errorText);
-                    throw new Error(`Failed to load sites: ${response.status} ${errorText}`);
+                    showToast('Failed to load sites', 'error');
                 }
             } catch (error) {
-                console.error('❌ Error loading sites:', error);
-                userSites = [];
-                renderSites();
+                console.error('Error loading sites:', error);
+                showToast('Network error', 'error');
             }
         }
 
+        // Render sites
         function renderSites() {
-            const sitesGrid = document.getElementById('sitesGrid');
-            const noSites = document.getElementById('noSites');
-
+            const grid = document.getElementById('sitesGrid');
+            
             if (userSites.length === 0) {
-                sitesGrid.style.display = 'none';
-                noSites.style.display = 'block';
-                return;
-            }
-
-            sitesGrid.style.display = 'grid';
-            noSites.style.display = 'none';
-
-            sitesGrid.innerHTML = userSites.map(site => `
-                <div class="site-card">
-                    <div class="site-header">
-                        <div class="site-info">
-                            <h3>${site.name}</h3>
-                            <a href="${site.fullUrl}" target="_blank" class="site-url">
-                                ${site.fullUrl} 🔗
-                            </a>
-                        </div>
-                        <div class="site-actions">
-                            <button class="icon-btn" onclick="editSite('${site.id}')" title="Edit">✏️</button>
-                            <button class="icon-btn" onclick="deleteSite('${site.id}')" title="Delete">🗑️</button>
-                        </div>
-                    </div>
-                    <div class="site-stats">
-                        <div class="stat">
-                            <span class="stat-label">Visits</span>
-                            <span class="stat-value">${site.visits || 0}</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-label">Created</span>
-                            <span class="stat-value">${new Date(site.createdAt).toLocaleDateString()}</span>
-                        </div>
-                    </div>
-                    ${site.customUrl ? `<div style="margin-top: 0.5rem;"><a href="${site.customUrl}" target="_blank" style="font-size: 0.8rem; color: var(--success-color);">🌐 ${site.customUrl}</a></div>` : ''}
-                </div>
-            `).join('');
-        }
-
-        async function loadTemplates() {
-            console.log('🎨 Loading templates...');
-            try {
-                const response = await fetch('/api/templates');
-                console.log('📡 Templates API response status:', response.status);
-                
-                if (response.ok) {
-                    templates = await response.json();
-                    console.log('✅ Templates loaded successfully:', templates);
-                    renderTemplates();
-                } else {
-                    const errorText = await response.text();
-                    console.error('❌ Templates API error:', response.status, errorText);
-                }
-            } catch (error) {
-                console.error('❌ Error loading templates:', error);
-            }
-        }
-
-        function renderTemplates() {
-            const templatesGrid = document.getElementById('templatesGrid');
-            
-            templatesGrid.innerHTML = templates.map(template => `
-                <div class="template-card" onclick="useTemplate('${template.id}')">
-                    <div class="template-preview">
-                        <iframe srcdoc="${template.html + (template.css ? '<style>' + template.css + '</style>' : '')}"></iframe>
-                    </div>
-                    <div class="template-info">
-                        <div class="template-name">${template.name}</div>
-                        <div class="template-description">${template.description}</div>
-                        <div class="template-category">${template.category}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function loadDomainExtensions() {
-            console.log('🌐 Loading domain extensions...');
-            try {
-                const response = await fetch('/api/domains/extensions');
-                console.log('📡 Domain extensions API response status:', response.status);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('✅ Domain extensions loaded successfully:', data);
-                    renderDomainOptions(data);
-                } else {
-                    const errorText = await response.text();
-                    console.error('❌ Domain extensions API error:', response.status, errorText);
-                }
-            } catch (error) {
-                console.error('❌ Error loading domain extensions:', error);
-            }
-        }
-
-        function renderDomainOptions(data) {
-            const domainOptions = document.getElementById('domainOptions');
-            
-            domainOptions.innerHTML = data.extensions.map(ext => {
-                const isPremium = data.customSubdomains && data.customSubdomains[ext] && data.customSubdomains[ext].premium;
-                const isSelected = ext === data.default;
-                
-                return `
-                    <div class="domain-option ${isSelected ? 'selected' : ''} ${isPremium ? 'premium' : ''}" 
-                         onclick="selectDomain('${ext}')"
-                         data-extension="${ext}">
-                        ${isPremium ? '<div class="premium-badge">PRO</div>' : ''}
-                        <div style="font-weight: 600; margin-bottom: 0.25rem;">${ext}</div>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">
-                            ${isPremium ? 'Premium' : 'Free'}
-                        </div>
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: white; border-radius: 12px;">
+                        <h2 style="margin-bottom: 1rem;">No sites yet</h2>
+                        <p style="color: var(--text-light); margin-bottom: 2rem;">Create your first site to get started!</p>
+                        <button class="btn btn-primary" onclick="showSection('create')">➕ Create Your First Site</button>
                     </div>
                 `;
-            }).join('');
-
-            // Update site URL placeholder
-            updateSiteUrl();
-        }
-
-        function selectDomain(extension) {
-            selectedDomain = extension;
-            
-            // Update UI
-            document.querySelectorAll('.domain-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            document.querySelector(`[data-extension="${extension}"]`).classList.add('selected');
-            
-            updateSiteUrl();
-        }
-
-        function updateSiteUrl() {
-            const siteName = document.getElementById('siteName').value;
-            const username = currentUser.username.toLowerCase().replace(/[^a-z0-9]/g, '');
-            
-            if (siteName) {
-                const cleanSiteName = siteName.toLowerCase().replace(/[^a-z0-9]/g, '-');
-                document.getElementById('siteUrl').value = `${cleanSiteName}.${username}${selectedDomain}`;
-            }
-        }
-
-        document.getElementById('siteName').addEventListener('input', updateSiteUrl);
-
-        async function createSite(e) {
-            e.preventDefault();
-            
-            const siteName = document.getElementById('siteName').value;
-            const enableDNS = document.getElementById('enableDNS').checked;
-            
-            if (!siteName) {
-                showToast('Please enter a site name', 'error');
                 return;
             }
+            
+            grid.innerHTML = userSites.map(site => `
+                <div class="site-card">
+                    <div class="site-header">
+                        <div>
+                            <div class="site-name">${site.name}</div>
+                            <div class="site-urls">
+                                <div class="url-item url-primary">${site.primaryDomain}</div>
+                                ${site.aliasDomains.map(alias => `<div class="url-item">${alias}</div>`).join('')}
+                            </div>
+                        </div>
+                        <span class="site-status status-live">🟢 Live</span>
+                    </div>
+                    
+                    <div class="site-stats">
+                        <div class="stat">
+                            <div class="stat-value">${site.visits || 0}</div>
+                            <div class="stat-label">Visits</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${new Date(site.createdAt).toLocaleDateString()}</div>
+                            <div class="stat-label">Created</div>
+                        </div>
+                    </div>
+                    
+                    <div class="site-actions">
+                        <button class="btn btn-primary btn-small" onclick="window.open('${site.fullUrl}', '_blank')">👁️ View</button>
+                        <button class="btn btn-secondary btn-small" onclick="editSite('${site.id}')">✏️ Edit</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteSite('${site.id}')">🗑️ Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-            const spinner = document.getElementById('createSpinner');
-            spinner.classList.remove('hidden');
+        // Load templates
+        async function loadTemplates() {
+            try {
+                const response = await fetch('/api/templates');
+                if (response.ok) {
+                    templates = await response.json();
+                    renderTemplates();
+                }
+            } catch (error) {
+                console.error('Error loading templates:', error);
+            }
+        }
 
+        // Render templates
+        function renderTemplates() {
+            const grid = document.getElementById('templatesGrid');
+            
+            grid.innerHTML = templates.map(template => `
+                <div class="template-card" onclick="selectTemplate('${template.id}')" data-template-id="${template.id}">
+                    <div class="template-icon">🎨</div>
+                    <div class="template-name">${template.name}</div>
+                    <div class="template-desc">${template.description}</div>
+                </div>
+            `).join('');
+        }
+
+        // Select template
+        function selectTemplate(templateId) {
+            selectedTemplate = templates.find(t => t.id === templateId);
+            
+            // Update UI
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-template-id="${templateId}"]`).classList.add('selected');
+            
+            // Switch to create section and populate form
+            showSection('create');
+            if (selectedTemplate) {
+                document.getElementById('htmlContent').value = selectedTemplate.html;
+                document.getElementById('siteName').value = selectedTemplate.name;
+                document.getElementById('siteSlug').value = selectedTemplate.id + '-' + Date.now();
+            }
+        }
+
+        // Load domain info
+        async function loadDomainInfo() {
+            try {
+                const response = await fetch('/api/domains/extensions');
+                if (response.ok) {
+                    const domainInfo = await response.json();
+                    renderDomainInfo(domainInfo);
+                }
+            } catch (error) {
+                console.error('Error loading domain info:', error);
+            }
+        }
+
+        // Render domain info
+        function renderDomainInfo(domainInfo) {
+            const container = document.getElementById('domainsInfo');
+            
+            container.innerHTML = `
+                <div style="margin-bottom: 2rem;">
+                    <h3>Your Primary Domain</h3>
+                    <p style="font-family: monospace; font-size: 1.2rem; color: var(--primary);">${currentUser?.subdomain || 'Loading...'}</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h3>Available Domain Extensions</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                        ${domainInfo.extensions.map(ext => {
+                            const isPremium = domainInfo.customSubdomains[ext]?.premium;
+                            return `
+                                <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; ${isPremium ? 'background: #fef3c7;' : ''}">
+                                    <div style="font-family: monospace; font-weight: bold;">${ext}</div>
+                                    <div style="font-size: 0.875rem; color: var(--text-light);">
+                                        ${isPremium ? '⭐ Premium' : 'Standard'}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Your Site URLs Structure</h3>
+                    <p style="color: var(--text-light);">Your sites will be available at:</p>
+                    <div style="font-family: monospace; background: var(--bg-light); padding: 1rem; border-radius: 8px; margin-top: 0.5rem;">
+                        yoursite.ntando.app<br>
+                        yoursite.ntl.cloud<br>
+                        yoursite.ntando.zw<br>
+                        yoursite.ntandostore.com
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update analytics
+        function updateAnalytics() {
+            const totalSites = userSites.length;
+            const totalVisits = userSites.reduce((sum, site) => sum + (site.visits || 0), 0);
+            const activeSites = userSites.filter(site => site.published !== false).length;
+            
+            document.getElementById('totalSites').textContent = totalSites;
+            document.getElementById('totalVisits').textContent = totalVisits;
+            document.getElementById('activeSites').textContent = activeSites;
+            document.getElementById('storageUsed').textContent = '0 MB'; // TODO: Calculate actual storage
+        }
+
+        // Show section
+        function showSection(sectionId) {
+            // Update nav
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update page title
+            const titles = {
+                'sites': 'My Sites',
+                'create': 'Create Site',
+                'templates': 'Templates',
+                'analytics': 'Analytics',
+                'domains': 'Domains',
+                'settings': 'Settings'
+            };
+            document.getElementById('pageTitle').textContent = titles[sectionId] || 'Dashboard';
+        }
+
+        // Switch editor tab
+        function switchEditorTab(tab) {
+            document.querySelectorAll('#create .editor-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#create .editor-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Editor').classList.add('active');
+        }
+
+        // Switch edit editor tab
+        function switchEditEditorTab(tab) {
+            document.querySelectorAll('#editModal .editor-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#editModal .editor-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById('edit' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Editor').classList.add('active');
+        }
+
+        // Create site form submission
+        document.getElementById('createSiteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                siteName: document.getElementById('siteName').value,
+                siteSlug: document.getElementById('siteSlug').value,
+                html: document.getElementById('htmlContent').value,
+                css: document.getElementById('cssContent').value,
+                js: document.getElementById('jsContent').value,
+                enableDNS: document.getElementById('enableDNS').checked
+            };
+            
             try {
                 const token = localStorage.getItem('token');
                 const response = await fetch('/api/upload', {
@@ -1358,235 +688,185 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({
-                        siteName: siteName,
-                        html: '<!DOCTYPE html><html><head><title>' + siteName + '</title><script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
-</head><body><h1>Welcome to ' + siteName + '</h1><p>Your site is ready!</p></body></html>',
-                        css: 'body { font-family: Arial, sans-serif; margin: 40px; } h1 { color: #667eea; }',
-                        enableDNS: enableDNS
-                    })
+                    body: JSON.stringify(formData)
                 });
-
+                
                 const result = await response.json();
-
-                if (response.ok) {
-                    showToast('Site created successfully!', 'success');
-                    document.getElementById('createSiteForm').reset();
+                
+                if (result.success) {
+                    showToast(`Site published successfully! ${result.message}`, 'success');
                     await loadSites();
-                    switchTab('sites');
-                    
-                    if (result.customUrl) {
-                        showToast(`Custom domain: ${result.customUrl}`, 'success');
-                    }
+                    showSection('sites');
+                    // Reset form
+                    document.getElementById('createSiteForm').reset();
+                    document.getElementById('htmlContent').value = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Site</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 2rem; }
+        h1 { color: #667eea; }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>Welcome to My Site!</h1>
+    <p>This is your new website hosted on Ntando.</p>
+</body>
+</html>`;
                 } else {
                     showToast(result.error || 'Failed to create site', 'error');
                 }
             } catch (error) {
-                console.error('Error creating site:', error);
-                showToast('Failed to create site', 'error');
-            } finally {
-                spinner.classList.add('hidden');
+                showToast('Network error. Please try again.', 'error');
             }
-        }
+        });
 
+        // Edit site
         async function editSite(siteId) {
             try {
                 const token = localStorage.getItem('token');
                 const response = await fetch(`/api/sites/${siteId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
-
+                
                 if (response.ok) {
                     const data = await response.json();
-                    currentEditingSite = data.site;
                     
-                    // Load code into editors
-                    htmlEditor.setValue(data.html);
-                    cssEditor.setValue('');
-                    jsEditor.setValue('');
+                    // Populate edit form
+                    document.getElementById('editSiteId').value = data.site.id;
+                    document.getElementById('editSiteName').value = data.site.name;
+                    document.getElementById('editHtmlContent').value = data.html;
                     
-                    // Show editor
-                    document.getElementById('editorPlaceholder').style.display = 'none';
-                    document.getElementById('editorContainer').style.display = 'block';
-                    
-                    switchTab('editor');
-                    showToast('Loaded site for editing', 'success');
+                    // Show modal
+                    document.getElementById('editModal').style.display = 'block';
                 } else {
                     showToast('Failed to load site', 'error');
                 }
             } catch (error) {
-                console.error('Error loading site for editing:', error);
-                showToast('Failed to load site', 'error');
+                showToast('Network error', 'error');
             }
         }
 
-        async function saveSite() {
-            if (!currentEditingSite) return;
+        // Close edit modal
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
 
-            const spinner = document.getElementById('saveSpinner');
-            spinner.classList.remove('hidden');
-
+        // Edit site form submission
+        document.getElementById('editSiteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                siteName: document.getElementById('editSiteName').value,
+                html: document.getElementById('editHtmlContent').value,
+                css: document.getElementById('editCssContent').value,
+                js: document.getElementById('editJsContent').value
+            };
+            
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`/api/sites/${currentEditingSite.id}`, {
+                const siteId = document.getElementById('editSiteId').value;
+                
+                const response = await fetch(`/api/sites/${siteId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({
-                        html: htmlEditor.getValue(),
-                        css: cssEditor.getValue(),
-                        js: jsEditor.getValue(),
-                        siteName: currentEditingSite.name
-                    })
+                    body: JSON.stringify(formData)
                 });
-
-                const result = await response.json();
-
+                
                 if (response.ok) {
-                    showToast('Site saved successfully!', 'success');
+                    showToast('Site updated successfully!', 'success');
+                    closeEditModal();
                     await loadSites();
                 } else {
-                    showToast(result.error || 'Failed to save site', 'error');
+                    const error = await response.json();
+                    showToast(error.error || 'Failed to update site', 'error');
                 }
             } catch (error) {
-                console.error('Error saving site:', error);
-                showToast('Failed to save site', 'error');
-            } finally {
-                spinner.classList.add('hidden');
+                showToast('Network error', 'error');
             }
-        }
+        });
 
-        function previewSite() {
-            const html = htmlEditor.getValue();
-            const css = cssEditor.getValue();
-            const js = jsEditor.getValue();
-            
-            let preview = html;
-            if (css) {
-                preview = preview.replace('<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
-</head>', '<style>' + css + '</style><script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
-</head>');
-            }
-            if (js) {
-                preview = preview.replace('</body>', '<script>' + js + '</script></body>');
-            }
-            
-            const previewWindow = window.open('', '_blank');
-            previewWindow.document.write(preview);
-            previewWindow.document.close();
-        }
-
+        // Delete site
         async function deleteSite(siteId) {
             if (!confirm('Are you sure you want to delete this site? This action cannot be undone.')) {
                 return;
             }
-
+            
             try {
                 const token = localStorage.getItem('token');
                 const response = await fetch(`/api/sites/${siteId}`, {
                     method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
-
-                const result = await response.json();
-
+                
                 if (response.ok) {
                     showToast('Site deleted successfully', 'success');
                     await loadSites();
                 } else {
-                    showToast(result.error || 'Failed to delete site', 'error');
+                    showToast('Failed to delete site', 'error');
                 }
             } catch (error) {
-                console.error('Error deleting site:', error);
-                showToast('Failed to delete site', 'error');
+                showToast('Network error', 'error');
             }
         }
 
-        function useTemplate(templateId) {
-            const template = templates.find(t => t.id === templateId);
-            if (!template) return;
-
-            currentEditingSite = null;
-            htmlEditor.setValue(template.html);
-            cssEditor.setValue(template.css || '');
-            jsEditor.setValue(template.js || '');
+        // Preview site
+        function previewSite() {
+            const html = document.getElementById('htmlContent').value;
+            const css = document.getElementById('cssContent').value;
+            const js = document.getElementById('jsContent').value;
             
-            document.getElementById('editorPlaceholder').style.display = 'none';
-            document.getElementById('editorContainer').style.display = 'block';
+            let previewHtml = html;
             
-            switchTab('editor');
-            showToast('Template loaded! Save it as a new site.', 'success');
-        }
-
-        function updateAnalytics() {
-            const totalVisits = userSites.reduce((sum, site) => sum + (site.visits || 0), 0);
-            const totalSites = userSites.length;
-            const avgVisits = totalSites > 0 ? Math.round(totalVisits / totalSites) : 0;
-
-            document.getElementById('totalVisits').textContent = totalVisits.toLocaleString();
-            document.getElementById('totalSites').textContent = totalSites;
-            document.getElementById('avgVisits').textContent = avgVisits;
-
-            // Update settings with user subdomain
-            if (currentUser && currentUser.subdomain) {
-                document.getElementById('settingsSubdomain').value = currentUser.subdomain;
-                document.getElementById('settingsEmail').value = currentUser.email || 'user@example.com';
+            // Add CSS
+            if (css) {
+                previewHtml = previewHtml.replace('<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>', `<style>${css}</style><script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>`);
             }
+            
+            // Add JavaScript
+            if (js) {
+                previewHtml = previewHtml.replace('</body>', `<script>${js}</script></body>`);
+            }
+            
+            // Open in new window
+            const previewWindow = window.open('', '_blank');
+            previewWindow.document.write(previewHtml);
+            previewWindow.document.close();
         }
 
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Logout
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = '/';
         }
 
-        function showToast(message, type = 'success') {
-            const toastContainer = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            
-            const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : '!';
-            toast.innerHTML = `<span style="font-size: 1.2rem;">${icon}</span><span>${message}</span>`;
-            
-            toastContainer.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideIn 0.3s ease reverse';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        function showLoading(show) {
-            const overlay = document.getElementById('loadingOverlay');
-            overlay.style.display = show ? 'flex' : 'none';
-        }
-
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
-        }
-
-        function showModal(title, content) {
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalBody').innerHTML = content;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        // Add some polish
-        document.addEventListener('keydown', function(e) {
-            // Ctrl/Cmd + S to save
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                if (currentEditingSite) {
-                    saveSite();
-                }
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const editModal = document.getElementById('editModal');
+            if (event.target == editModal) {
+                closeEditModal();
             }
-        });
+        }
     </script>
 </body>
 </html>

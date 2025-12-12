@@ -3,475 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ntando Hosting - Free Website Hosting with Custom Subdomains</title>
-    <meta name="description" content="Get free website hosting with custom subdomains like yoursite.ntando.app, yoursite.ntl.cloud, or yoursite.ntando.zw. No credit card required.">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    <title>Ntando - Free Web Hosting with Custom Domains</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
-            --accent-color: #2563eb;
-            --text-dark: #1a202c;
-            --text-light: #718096;
-            --bg-light: #f7fafc;
-            --white: #ffffff;
-            --gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.15);
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --secondary: #2563eb;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #ffffff;
+            --bg-light: #f9fafb;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-dark);
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: var(--text); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
         /* Header */
-        header {
-            background: var(--white);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--text-dark);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-color);
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: var(--gradient);
-            color: var(--white);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-        }
-
-        .btn-outline:hover {
-            background: var(--primary-color);
-            color: var(--white);
-        }
-
+        header { background: var(--bg); box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: fixed; width: 100%; top: 0; z-index: 1000; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo { font-size: 1.5rem; font-weight: bold; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-links a { color: var(--text); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3); }
+        .btn-secondary { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-secondary:hover { background: var(--primary); color: white; }
+        
         /* Hero Section */
-        .hero {
-            background: var(--gradient);
-            color: var(--white);
-            padding: 8rem 0 4rem;
-            margin-top: 80px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .domain-examples {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .domain-badge {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
+        #hero { padding: 8rem 0 4rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; }
+        #hero h1 { font-size: 3.5rem; margin-bottom: 1rem; font-weight: 800; }
+        #hero p { font-size: 1.3rem; margin-bottom: 2rem; opacity: 0.9; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .domains-showcase { margin-top: 3rem; padding: 2rem; background: rgba(255,255,255,0.1); border-radius: 12px; backdrop-filter: blur(10px); }
+        .domains-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .domain-item { padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 6px; font-family: monospace; }
+        
         /* Features Section */
-        .features {
-            padding: 6rem 0;
-            background: var(--bg-light);
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 3rem;
-            color: var(--text-dark);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background: var(--white);
-            padding: 2.5rem;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            display: block;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-dark);
-        }
-
-        .feature-card p {
-            color: var(--text-light);
-            line-height: 1.7;
-        }
-
-        /* Pricing Section */
-        .pricing {
-            padding: 6rem 0;
-        }
-
-        .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .pricing-card {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 2.5rem;
-            box-shadow: var(--shadow);
-            text-align: center;
-            position: relative;
-            transition: transform 0.3s ease;
-        }
-
-        .pricing-card.featured {
-            border: 2px solid var(--primary-color);
-            transform: scale(1.05);
-        }
-
-        .pricing-card.featured::before {
-            content: 'POPULAR';
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary-color);
-            color: var(--white);
-            padding: 0.25rem 1rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .pricing-card.featured:hover {
-            transform: scale(1.05) translateY(-5px);
-        }
-
-        .price {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            margin: 1rem 0;
-        }
-
-        .price .currency {
-            font-size: 1.5rem;
-            vertical-align: super;
-        }
-
-        .price .period {
-            font-size: 1rem;
-            color: var(--text-light);
-        }
-
-        /* Stats Section */
-        .stats {
-            background: var(--gradient);
-            color: var(--white);
-            padding: 4rem 0;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            text-align: center;
-        }
-
-        .stat-item h3 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-item p {
-            opacity: 0.9;
-        }
-
-        /* CTA Section */
-        .cta {
-            background: var(--bg-light);
-            padding: 6rem 0;
-            text-align: center;
-        }
-
-        .cta h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-dark);
-        }
-
-        .cta p {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
+        #features { padding: 4rem 0; background: var(--bg-light); }
+        #features h2 { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .feature { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s; }
+        .feature:hover { transform: translateY(-5px); }
+        .feature-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .feature h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        
+        /* Auth Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; }
+        .modal-content { background: white; margin: 5% auto; padding: 2rem; border-radius: 12px; max-width: 400px; position: relative; }
+        .close { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
+        .form-group select { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
+        .tabs { display: flex; margin-bottom: 2rem; border-bottom: 1px solid var(--border); }
+        .tab { padding: 1rem; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; }
+        .tab.active { border-bottom-color: var(--primary); color: var(--primary); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
         /* Footer */
-        footer {
-            background: var(--text-dark);
-            color: var(--white);
-            padding: 3rem 0 1rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h4 {
-            margin-bottom: 1rem;
-            color: var(--white);
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-section a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section a:hover {
-            color: var(--white);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        /* Mobile Responsive */
-        .mobile-menu {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        .mobile-menu span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background: var(--text-dark);
-            margin: 5px 0;
-            transition: 0.3s;
-        }
-
+        footer { background: var(--text); color: white; padding: 3rem 0 1rem; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .footer-section h4 { margin-bottom: 1rem; }
+        .footer-section ul { list-style: none; }
+        .footer-section a { color: rgba(255,255,255,0.8); text-decoration: none; }
+        .footer-section a:hover { color: white; }
+        .footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: var(--white);
-                flex-direction: column;
-                padding: 1rem 2rem;
-                box-shadow: var(--shadow);
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .mobile-menu {
-                display: block;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            .domain-examples {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .pricing-card.featured {
-                transform: none;
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fade-in {
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        /* Loading spinner */
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 3px solid var(--white);
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-left: 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            .nav-links { display: none; }
+            #hero h1 { font-size: 2rem; }
+            #hero p { font-size: 1rem; }
+            .hero-buttons { flex-direction: column; align-items: center; }
         }
     </style>
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
@@ -479,173 +88,75 @@
 <body>
     <!-- Header -->
     <header>
-        <nav>
-            <div class="logo">🚀 Ntando Hosting</div>
-            <ul class="nav-links" id="navLinks">
+        <nav class="container">
+            <div class="logo">🚀 Ntando</div>
+            <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#stats">Statistics</a></li>
-                <li><a href="/dashboard" class="btn btn-primary">Get Started</a></li>
+                <li><a href="#domains">Domains</a></li>
+                <li><a href="#" onclick="openModal()">Login</a></li>
+                <li><a href="#" onclick="openModal()" class="btn btn-primary">Get Started</a></li>
             </ul>
-            <button class="mobile-menu" id="mobileMenu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
         </nav>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section id="hero">
         <div class="container">
-            <div class="hero-content animate-fade-in">
-                <h1>Free Website Hosting with Custom Subdomains</h1>
-                <p>Launch your website today with beautiful custom subdomains. No credit card required, no setup fees.</p>
-                
-                <div class="domain-examples">
-                    <div class="domain-badge">yoursite.ntando.app</div>
-                    <div class="domain-badge">yoursite.ntl.cloud</div>
-                    <div class="domain-badge">yoursite.ntando.zw</div>
-                </div>
-                
-                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <button onclick="showAuthModal()" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
-                        Start Building Free
-                    </button>
-                    <a href="#features" class="btn btn-outline" style="font-size: 1.1rem; padding: 1rem 2rem;">
-                        Learn More
-                    </a>
+            <h1>Free Web Hosting with Custom Domains</h1>
+            <p>Deploy your website instantly with beautiful subdomains and professional hosting</p>
+            <div class="hero-buttons">
+                <button onclick="openModal()" class="btn btn-primary" style="background: white; color: var(--primary);">Start Free</button>
+                <button onclick="document.getElementById('features').scrollIntoView()" class="btn btn-secondary" style="border-color: white; color: white;">Learn More</button>
+            </div>
+            
+            <div class="domains-showcase">
+                <h3>Your Sites Will Be Available At:</h3>
+                <div class="domains-grid">
+                    <div class="domain-item">yoursite.ntando.app</div>
+                    <div class="domain-item">yoursite.ntl.cloud</div>
+                    <div class="domain-item">yoursite.ntando.zw</div>
+                    <div class="domain-item">yoursite.ntandostore.com</div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="features" id="features">
+    <section id="features">
         <div class="container">
-            <h2 class="section-title">Why Choose Ntando Hosting?</h2>
+            <h2>Why Choose Ntando Hosting?</h2>
             <div class="features-grid">
-                <div class="feature-card">
-                    <span class="feature-icon">🌐</span>
-                    <h3>Custom Subdomains</h3>
-                    <p>Get beautiful subdomains like yoursite.ntando.app, yoursite.ntl.cloud, or yoursite.ntando.zw for your projects.</p>
+                <div class="feature">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Multiple Domains</h3>
+                    <p>Get your site on multiple premium domains automatically with DNS forwarding</p>
                 </div>
-                <div class="feature-card">
-                    <span class="feature-icon">⚡</span>
-                    <h3>Lightning Fast</h3>
-                    <p>Built on modern infrastructure with global CDN for blazing fast load times anywhere in the world.</p>
-                </div>
-                <div class="feature-card">
-                    <span class="feature-icon">🔒</span>
-                    <h3>Secure & Reliable</h3>
-                    <p>Free SSL certificates, DDoS protection, and 99.9% uptime guarantee to keep your site safe and online.</p>
-                </div>
-                <div class="feature-card">
-                    <span class="feature-icon">📱</span>
-                    <h3>Mobile Responsive</h3>
-                    <p>All hosted sites automatically adapt to any screen size for perfect mobile experience.</p>
-                </div>
-                <div class="feature-card">
-                    <span class="feature-icon">🎨</span>
-                    <h3>Beautiful Templates</h3>
-                    <p>Choose from dozens of professional templates for portfolio, business, blog, and landing pages.</p>
-                </div>
-                <div class="feature-card">
-                    <span class="feature-icon">🚀</span>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
                     <h3>Instant Deployment</h3>
-                    <p>Upload your HTML/CSS/JS and go live instantly. No complex setup or configuration needed.</p>
+                    <p>Deploy your website in seconds with our streamlined upload process</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Beautiful Templates</h3>
+                    <p>Choose from professionally designed templates or create your own</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analytics</h3>
+                    <p>Track your site visitors and performance with built-in analytics</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure Hosting</h3>
+                    <p>Your sites are hosted securely with SSL certificates included</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Ready</h3>
+                    <p>All templates are responsive and work perfectly on all devices</p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="stats" id="stats">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <h3 id="siteCount">10,000+</h3>
-                    <p>Websites Hosted</p>
-                </div>
-                <div class="stat-item">
-                    <h3>99.9%</h3>
-                    <p>Uptime</p>
-                </div>
-                <div class="stat-item">
-                    <h3>24/7</h3>
-                    <p>Support</p>
-                </div>
-                <div class="stat-item">
-                    <h3>Free</h3>
-                    <p>Forever</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section class="pricing" id="pricing">
-        <div class="container">
-            <h2 class="section-title">Simple, Transparent Pricing</h2>
-            <div class="pricing-cards">
-                <div class="pricing-card">
-                    <h3>Free</h3>
-                    <div class="price">
-                        <span class="currency">$</span>0<span class="period">/month</span>
-                    </div>
-                    <ul style="list-style: none; padding: 0; margin: 2rem 0;">
-                        <li style="padding: 0.5rem 0;">✓ Custom Subdomains</li>
-                        <li style="padding: 0.5rem 0;">✓ 3 Sites per Account</li>
-                        <li style="padding: 0.5rem 0;">✓ 100MB Storage</li>
-                        <li style="padding: 0.5rem 0;">✓ Free SSL Certificate</li>
-                        <li style="padding: 0.5rem 0;">✓ Community Support</li>
-                    </ul>
-                    <button onclick="showAuthModal()" class="btn btn-outline" style="width: 100%;">Get Started</button>
-                </div>
-                
-                <div class="pricing-card featured">
-                    <h3>Pro</h3>
-                    <div class="price">
-                        <span class="currency">$</span>9<span class="period">/month</span>
-                    </div>
-                    <ul style="list-style: none; padding: 0; margin: 2rem 0;">
-                        <li style="padding: 0.5rem 0;">✓ Everything in Free</li>
-                        <li style="padding: 0.5rem 0;">✓ Unlimited Sites</li>
-                        <li style="padding: 0.5rem 0;">✓ 10GB Storage</li>
-                        <li style="padding: 0.5rem 0;">✓ Custom Domains</li>
-                        <li style="padding: 0.5rem 0;">✓ Priority Support</li>
-                        <li style="padding: 0.5rem 0;">✓ Analytics & Insights</li>
-                    </ul>
-                    <button onclick="showAuthModal()" class="btn btn-primary" style="width: 100%;">Start Free Trial</button>
-                </div>
-                
-                <div class="pricing-card">
-                    <h3>Business</h3>
-                    <div class="price">
-                        <span class="currency">$</span>29<span class="period">/month</span>
-                    </div>
-                    <ul style="list-style: none; padding: 0; margin: 2rem 0;">
-                        <li style="padding: 0.5rem 0;">✓ Everything in Pro</li>
-                        <li style="padding: 0.5rem 0;">✓ 100GB Storage</li>
-                        <li style="padding: 0.5rem 0;">✓ Team Collaboration</li>
-                        <li style="padding: 0.5rem 0;">✓ Advanced Security</li>
-                        <li style="padding: 0.5rem 0;">✓ Dedicated Support</li>
-                        <li style="padding: 0.5rem 0;">✓ Custom Integrations</li>
-                    </ul>
-                    <a href="/dashboard" class="btn btn-outline" style="width: 100%;">Contact Sales</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <h2>Ready to Launch Your Website?</h2>
-            <p>Join thousands of developers and creators who trust Ntando Hosting for their projects.</p>
-            <button onclick="showAuthModal()" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2rem;">
-                Start Building Now - It's Free
-            </button>
         </div>
     </section>
 
@@ -657,7 +168,7 @@
                     <h4>Product</h4>
                     <ul>
                         <li><a href="#features">Features</a></li>
-                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#domains">Domains</a></li>
                         <li><a href="/dashboard">Dashboard</a></li>
                         <li><a href="/api/templates">Templates</a></li>
                     </ul>
@@ -665,10 +176,10 @@
                 <div class="footer-section">
                     <h4>Support</h4>
                     <ul>
+                        <li><a href="/health">System Status</a></li>
                         <li><a href="#">Documentation</a></li>
-                        <li><a href="#">Community</a></li>
+                        <li><a href="#">API Reference</a></li>
                         <li><a href="#">Contact</a></li>
-                        <li><a href="#">Status Page</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -676,417 +187,172 @@
                     <ul>
                         <li><a href="#">About</a></li>
                         <li><a href="#">Blog</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Connect</h4>
-                    <ul>
-                        <li><a href="#">Twitter</a></li>
-                        <li><a href="#">GitHub</a></li>
-                        <li><a href="#">Discord</a></li>
-                        <li><a href="#">Email Newsletter</a></li>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Ntando Hosting. All rights reserved. Made with ❤️ for developers.</p>
+                <p>&copy; 2024 Ntando Hosting. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('login')">Login</div>
+                <div class="tab" onclick="switchTab('register')">Register</div>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="loginTab" class="tab-content active">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                </form>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerTab" class="tab-content">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerUsername">Username</label>
+                        <input type="text" id="registerUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="domainExtension">Domain Extension</label>
+                        <select id="domainExtension">
+                            <option value=".app">.app (Premium)</option>
+                            <option value=".cloud">.cloud (Premium)</option>
+                            <option value=".zw">.zw (Premium)</option>
+                            <option value=".com">.com</option>
+                            <option value=".online">.online</option>
+                            <option value=".store">.store</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Mobile menu toggle
-        const mobileMenu = document.getElementById('mobileMenu');
-        const navLinks = document.getElementById('navLinks');
-        
-        mobileMenu.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
+        // Modal functions
+        function openModal() {
+            document.getElementById('authModal').style.display = 'block';
+        }
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                    // Close mobile menu if open
-                    navLinks.classList.remove('active');
-                }
-            });
-        });
+        function closeModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
 
-        // Animate stats on scroll
-        const animateValue = (element, start, end, duration) => {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                element.textContent = Math.floor(progress * (end - start) + start).toLocaleString() + '+';
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        };
-
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-fade-in');
-                    
-                    // Animate stats when visible
-                    if (entry.target.id === 'stats') {
-                        const siteCount = document.getElementById('siteCount');
-                        animateValue(siteCount, 0, 10000, 2000);
-                    }
-                }
-            });
-        }, observerOptions);
-
-        // Observe elements
-        document.querySelectorAll('.feature-card, .pricing-card, .stats').forEach(el => {
-            observer.observe(el);
-        });
-
-        // Header scroll effect
-        let lastScroll = 0;
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            const currentScroll = window.pageYOffset;
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
             
-            if (currentScroll > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-                header.style.backdropFilter = 'blur(10px)';
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'login') {
+                tabs[0].classList.add('active');
+                document.getElementById('loginTab').classList.add('active');
             } else {
-                header.style.background = '#ffffff';
-                header.style.backdropFilter = 'none';
+                tabs[1].classList.add('active');
+                document.getElementById('registerTab').classList.add('active');
             }
-            
-            lastScroll = currentScroll;
-        });
-
-        // Add some interactive effects
-        document.querySelectorAll('.btn').forEach(button => {
-            button.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-2px)';
-            });
-            
-            button.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
-
-        // Console welcome message
-        console.log('%c🚀 Welcome to Ntando Hosting!', 'font-size: 20px; color: #667eea; font-weight: bold;');
-        console.log('%cBuild amazing websites with custom subdomains like yoursite.ntando.app', 'font-size: 14px; color: #718096;');
-
-        // Auth Modal Functions
-        function showAuthModal() {
-            document.getElementById('authModal').classList.add('active');
-            showLoginForm();
         }
 
-        function closeAuthModal() {
-            document.getElementById('authModal').classList.remove('active');
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('authModal');
+            if (event.target == modal) {
+                closeModal();
+            }
         }
 
-        function showLoginForm() {
-            document.getElementById('authModalTitle').textContent = 'Sign In';
-            document.getElementById('loginForm').style.display = 'block';
-            document.getElementById('registerForm').style.display = 'none';
-        }
-
-        function showRegisterForm() {
-            document.getElementById('authModalTitle').textContent = 'Sign Up';
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('registerForm').style.display = 'block';
-        }
-
-        // Login Form Handler
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
-            const spinner = document.getElementById('loginSpinner');
-
-            spinner.classList.remove('hidden');
-
+            
             try {
                 const response = await fetch('/api/login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
                 });
-
+                
                 const data = await response.json();
-
-                if (response.ok) {
+                
+                if (data.success) {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
-                    showToast('Login successful! Redirecting to dashboard...', 'success');
-                    setTimeout(() => {
-                        window.location.href = '/dashboard';
-                    }, 1500);
+                    window.location.href = '/dashboard';
                 } else {
-                    showToast(data.error || 'Login failed', 'error');
+                    alert(data.error || 'Login failed');
                 }
             } catch (error) {
-                console.error('Login error:', error);
-                showToast('Login failed. Please try again.', 'error');
-            } finally {
-                spinner.classList.add('hidden');
+                alert('Network error. Please try again.');
             }
         });
 
-        // Register Form Handler
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        // Register form submission
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
             const username = document.getElementById('registerUsername').value;
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
-            const spinner = document.getElementById('registerSpinner');
-
-            spinner.classList.remove('hidden');
-
+            const domainExtension = document.getElementById('domainExtension').value;
+            
             try {
                 const response = await fetch('/api/register', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, email, password })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password, domainExtension })
                 });
-
+                
                 const data = await response.json();
-
-                if (response.ok) {
+                
+                if (data.success) {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
-                    showToast('Registration successful! Redirecting to dashboard...', 'success');
-                    setTimeout(() => {
-                        window.location.href = '/dashboard';
-                    }, 1500);
+                    window.location.href = '/dashboard';
                 } else {
-                    showToast(data.error || 'Registration failed', 'error');
+                    alert(data.error || 'Registration failed');
                 }
             } catch (error) {
-                console.error('Registration error:', error);
-                showToast('Registration failed. Please try again.', 'error');
-            } finally {
-                spinner.classList.add('hidden');
+                alert('Network error. Please try again.');
             }
         });
 
         // Check if user is already logged in
-        const token = localStorage.getItem('token');
-        if (token) {
-            console.log('✅ User already logged in');
-            // Update dashboard button to show logged in state
-            const dashboardBtn = document.querySelector('a[href="/dashboard"]');
-            if (dashboardBtn) {
-                const user = JSON.parse(localStorage.getItem('user') || '{}');
-                dashboardBtn.textContent = '👤 Dashboard';
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                window.location.href = '/dashboard';
             }
-        }
-    </script>
-
-    <!-- Auth Modal -->
-    <div class="modal" id="authModal">
-        <div class="modal-content" style="max-width: 500px;">
-            <button class="modal-close" onclick="closeAuthModal()">&times;</button>
-            <div class="modal-header">
-                <h2 class="modal-title" id="authModalTitle">Sign In</h2>
-            </div>
-            <div class="modal-body" id="authModalBody">
-                <!-- Login Form -->
-                <form id="loginForm" style="display: block;">
-                    <div class="form-group">
-                        <label class="form-label">Username</label>
-                        <input type="text" class="form-input" id="loginUsername" placeholder="Enter your username" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        Sign In
-                        <div class="spinner hidden" id="loginSpinner"></div>
-                    </button>
-                    <p style="text-align: center; margin-top: 1rem;">
-                        Don't have an account? 
-                        <a href="#" onclick="showRegisterForm()" style="color: var(--primary-color);">Sign Up</a>
-                    </p>
-                </form>
-
-                <!-- Register Form -->
-                <form id="registerForm" style="display: none;">
-                    <div class="form-group">
-                        <label class="form-label">Username</label>
-                        <input type="text" class="form-input" id="registerUsername" placeholder="Choose a username" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-input" id="registerEmail" placeholder="Enter your email" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <input type="password" class="form-input" id="registerPassword" placeholder="Create a password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        Sign Up
-                        <div class="spinner hidden" id="registerSpinner"></div>
-                    </button>
-                    <p style="text-align: center; margin-top: 1rem;">
-                        Already have an account? 
-                        <a href="#" onclick="showLoginForm()" style="color: var(--primary-color);">Sign In</a>
-                    </p>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <p>Loading...</p>
-        </div>
-    </div>
-
-    <!-- Form Styles -->
-    <style>
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .toast-container {
-            position: fixed;
-            top: 100px;
-            right: 2rem;
-            z-index: 2000;
-        }
-
-        .toast {
-            background: var(--white);
-            border-radius: 8px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            min-width: 300px;
-            animation: slideIn 0.3s ease;
-        }
-
-        .toast.success {
-            border-left: 4px solid var(--success-color);
-        }
-
-        .toast.error {
-            border-left: 4px solid var(--danger-color);
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-        }
-
-        .loading-content {
-            text-align: center;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid var(--border-color);
-            border-top: 3px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-
-    <script>
-        // Toast notification function
-        function showToast(message, type = 'success') {
-            const toastContainer = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            
-            const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : '!';
-            toast.innerHTML = `<span style="font-size: 1.2rem;">${icon}</span><span>${message}</span>`;
-            
-            toastContainer.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideIn 0.3s ease reverse';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
+        });
     </script>
 </body>
 </html>
