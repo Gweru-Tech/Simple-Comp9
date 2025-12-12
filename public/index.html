@@ -509,9 +509,9 @@
                 </div>
                 
                 <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="/dashboard" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    <button onclick="showAuthModal()" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
                         Start Building Free
-                    </a>
+                    </button>
                     <a href="#features" class="btn btn-outline" style="font-size: 1.1rem; padding: 1rem 2rem;">
                         Learn More
                     </a>
@@ -600,7 +600,7 @@
                         <li style="padding: 0.5rem 0;">✓ Free SSL Certificate</li>
                         <li style="padding: 0.5rem 0;">✓ Community Support</li>
                     </ul>
-                    <a href="/dashboard" class="btn btn-outline" style="width: 100%;">Get Started</a>
+                    <button onclick="showAuthModal()" class="btn btn-outline" style="width: 100%;">Get Started</button>
                 </div>
                 
                 <div class="pricing-card featured">
@@ -616,7 +616,7 @@
                         <li style="padding: 0.5rem 0;">✓ Priority Support</li>
                         <li style="padding: 0.5rem 0;">✓ Analytics & Insights</li>
                     </ul>
-                    <a href="/dashboard" class="btn btn-primary" style="width: 100%;">Start Free Trial</a>
+                    <button onclick="showAuthModal()" class="btn btn-primary" style="width: 100%;">Start Free Trial</button>
                 </div>
                 
                 <div class="pricing-card">
@@ -643,9 +643,9 @@
         <div class="container">
             <h2>Ready to Launch Your Website?</h2>
             <p>Join thousands of developers and creators who trust Ntando Hosting for their projects.</p>
-            <a href="/dashboard" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2rem;">
+            <button onclick="showAuthModal()" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2rem;">
                 Start Building Now - It's Free
-            </a>
+            </button>
         </div>
     </section>
 
@@ -791,6 +791,302 @@
         // Console welcome message
         console.log('%c🚀 Welcome to Ntando Hosting!', 'font-size: 20px; color: #667eea; font-weight: bold;');
         console.log('%cBuild amazing websites with custom subdomains like yoursite.ntando.app', 'font-size: 14px; color: #718096;');
+
+        // Auth Modal Functions
+        function showAuthModal() {
+            document.getElementById('authModal').classList.add('active');
+            showLoginForm();
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+
+        function showLoginForm() {
+            document.getElementById('authModalTitle').textContent = 'Sign In';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+        }
+
+        function showRegisterForm() {
+            document.getElementById('authModalTitle').textContent = 'Sign Up';
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+        }
+
+        // Login Form Handler
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const spinner = document.getElementById('loginSpinner');
+
+            spinner.classList.remove('hidden');
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    showToast('Login successful! Redirecting to dashboard...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1500);
+                } else {
+                    showToast(data.error || 'Login failed', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast('Login failed. Please try again.', 'error');
+            } finally {
+                spinner.classList.add('hidden');
+            }
+        });
+
+        // Register Form Handler
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const spinner = document.getElementById('registerSpinner');
+
+            spinner.classList.remove('hidden');
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    showToast('Registration successful! Redirecting to dashboard...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1500);
+                } else {
+                    showToast(data.error || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showToast('Registration failed. Please try again.', 'error');
+            } finally {
+                spinner.classList.add('hidden');
+            }
+        });
+
+        // Check if user is already logged in
+        const token = localStorage.getItem('token');
+        if (token) {
+            console.log('✅ User already logged in');
+            // Update dashboard button to show logged in state
+            const dashboardBtn = document.querySelector('a[href="/dashboard"]');
+            if (dashboardBtn) {
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                dashboardBtn.textContent = '👤 Dashboard';
+            }
+        }
+    </script>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title" id="authModalTitle">Sign In</h2>
+            </div>
+            <div class="modal-body" id="authModalBody">
+                <!-- Login Form -->
+                <form id="loginForm" style="display: block;">
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-input" id="loginUsername" placeholder="Enter your username" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Sign In
+                        <div class="spinner hidden" id="loginSpinner"></div>
+                    </button>
+                    <p style="text-align: center; margin-top: 1rem;">
+                        Don't have an account? 
+                        <a href="#" onclick="showRegisterForm()" style="color: var(--primary-color);">Sign Up</a>
+                    </p>
+                </form>
+
+                <!-- Register Form -->
+                <form id="registerForm" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-input" id="registerUsername" placeholder="Choose a username" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="registerEmail" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="registerPassword" placeholder="Create a password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Sign Up
+                        <div class="spinner hidden" id="registerSpinner"></div>
+                    </button>
+                    <p style="text-align: center; margin-top: 1rem;">
+                        Already have an account? 
+                        <a href="#" onclick="showLoginForm()" style="color: var(--primary-color);">Sign In</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Form Styles -->
+    <style>
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            right: 2rem;
+            z-index: 2000;
+        }
+
+        .toast {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 300px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger-color);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+    <script>
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : '!';
+            toast.innerHTML = `<span style="font-size: 1.2rem;">${icon}</span><span>${message}</span>`;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
     </script>
 </body>
 </html>

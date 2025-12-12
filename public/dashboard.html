@@ -988,50 +988,74 @@
 
         // Initialize the dashboard
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('📱 Dashboard page loaded');
             initializeDashboard();
         });
 
         async function initializeDashboard() {
+            console.log('🚀 Initializing dashboard...');
             showLoading(true);
             
             try {
                 // Check if user is logged in
+                console.log('🔍 Checking for authentication token...');
                 const token = localStorage.getItem('token');
                 if (!token) {
-                    window.location.href = '/';
+                    console.log('❌ No token found, showing login prompt');
+                    document.body.innerHTML = `
+                        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial, sans-serif;">
+                            <div style="text-align: center; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                                <h2 style="color: #667eea; margin-bottom: 1rem;">Authentication Required</h2>
+                                <p style="color: #666; margin-bottom: 2rem;">Please sign in to access the dashboard.</p>
+                                <button onclick="window.location.href='/'" class="btn" style="background: #667eea; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer;">
+                                    Go to Login
+                                </button>
+                            </div>
+                        </div>
+                    `;
                     return;
                 }
 
+                console.log('✅ Token found, parsing user info...');
                 // Parse JWT token to get user info
                 const userInfo = parseJWT(token);
                 if (!userInfo) {
+                    console.log('❌ Invalid token, logging out');
                     logout();
                     return;
                 }
 
+                console.log('✅ User info parsed:', userInfo);
                 currentUser = userInfo;
                 updateUserUI();
 
+                console.log('🔧 Initializing CodeMirror editors...');
                 // Initialize CodeMirror editors
                 initializeEditors();
 
+                console.log('📊 Loading dashboard data...');
                 // Load data
-                await Promise.all([
+                const loadPromises = [
                     loadSites(),
                     loadTemplates(),
                     loadDomainExtensions()
-                ]);
+                ];
+                
+                await Promise.all(loadPromises);
 
+                console.log('⚙️ Setting up event listeners...');
                 // Setup event listeners
                 setupEventListeners();
 
+                console.log('📈 Updating analytics...');
                 // Update analytics
                 updateAnalytics();
 
+                console.log('✅ Dashboard initialization complete!');
+
             } catch (error) {
-                console.error('Dashboard initialization error:', error);
-                showToast('Error loading dashboard', 'error');
-            } finally {
+                console.error('❌ Dashboard initialization error:', error);
+                showToast('Error loading dashboard: ' + error.message, 'error');
                 showLoading(false);
             }
         }
@@ -1138,22 +1162,30 @@
         }
 
         async function loadSites() {
+            console.log('📍 Loading user sites...');
             try {
                 const token = localStorage.getItem('token');
+                console.log('🔑 Making request to /api/user/sites with token...');
+                
                 const response = await fetch('/api/user/sites', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
 
+                console.log('📡 Sites API response status:', response.status);
+                
                 if (response.ok) {
                     userSites = await response.json();
+                    console.log('✅ Sites loaded successfully:', userSites);
                     renderSites();
                 } else {
-                    throw new Error('Failed to load sites');
+                    const errorText = await response.text();
+                    console.error('❌ Sites API error:', response.status, errorText);
+                    throw new Error(`Failed to load sites: ${response.status} ${errorText}`);
                 }
             } catch (error) {
-                console.error('Error loading sites:', error);
+                console.error('❌ Error loading sites:', error);
                 userSites = [];
                 renderSites();
             }
@@ -1202,14 +1234,21 @@
         }
 
         async function loadTemplates() {
+            console.log('🎨 Loading templates...');
             try {
                 const response = await fetch('/api/templates');
+                console.log('📡 Templates API response status:', response.status);
+                
                 if (response.ok) {
                     templates = await response.json();
+                    console.log('✅ Templates loaded successfully:', templates);
                     renderTemplates();
+                } else {
+                    const errorText = await response.text();
+                    console.error('❌ Templates API error:', response.status, errorText);
                 }
             } catch (error) {
-                console.error('Error loading templates:', error);
+                console.error('❌ Error loading templates:', error);
             }
         }
 
@@ -1231,14 +1270,21 @@
         }
 
         async function loadDomainExtensions() {
+            console.log('🌐 Loading domain extensions...');
             try {
                 const response = await fetch('/api/domains/extensions');
+                console.log('📡 Domain extensions API response status:', response.status);
+                
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('✅ Domain extensions loaded successfully:', data);
                     renderDomainOptions(data);
+                } else {
+                    const errorText = await response.text();
+                    console.error('❌ Domain extensions API error:', response.status, errorText);
                 }
             } catch (error) {
-                console.error('Error loading domain extensions:', error);
+                console.error('❌ Error loading domain extensions:', error);
             }
         }
 
