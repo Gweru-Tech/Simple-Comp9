@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ntandostore Enhanced - Professional Domain Structure</title>
+    <title>Ntando Hosting - Free Website Hosting with Custom Subdomains</title>
+    <meta name="description" content="Get free website hosting with custom subdomains like yoursite.ntando.app, yoursite.ntl.cloud, or yoursite.ntando.zw. No credit card required.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
     <style>
         * {
             margin: 0;
@@ -11,404 +13,292 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #2563eb;
+            --text-dark: #1a202c;
+            --text-light: #718096;
+            --bg-light: #f7fafc;
+            --white: #ffffff;
+            --gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-
-        /* Navigation */
-        nav {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #667eea;
-        }
-
-        .btn-primary {
-            background: #667eea;
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border: none;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            background: #5a67d8;
-            transform: translateY(-2px);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 4rem 2rem;
-            text-align: center;
-            color: white;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        .hero .subtitle {
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
-            opacity: 0.9;
-            animation: fadeInUp 0.8s ease 0.1s both;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.8;
-            animation: fadeInUp 0.8s ease 0.2s both;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            animation: fadeInUp 0.8s ease 0.4s both;
-        }
-
-        .btn-large {
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            border-radius: 30px;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .btn-hero {
-            background: white;
-            color: #667eea;
-        }
-
-        .btn-hero:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            color: #667eea;
-        }
-
-        /* New Features Banner */
-        .new-features {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            text-align: center;
-            color: white;
-        }
-
-        .new-features h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-pills {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .feature-pill {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            backdrop-filter: blur(5px);
-        }
-
-        /* Features Section */
-        .features {
-            background: white;
-            padding: 4rem 2rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 2rem;
         }
 
-        .features h2 {
+        /* Header */
+        header {
+            background: var(--white);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient);
+            color: var(--white);
+            padding: 8rem 0 4rem;
+            margin-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .domain-examples {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .domain-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 0;
+            background: var(--bg-light);
+        }
+
+        .section-title {
             text-align: center;
             font-size: 2.5rem;
+            font-weight: 800;
             margin-bottom: 3rem;
-            color: #333;
+            color: var(--text-dark);
         }
 
-        .feature-grid {
+        .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
 
         .feature-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
             text-align: center;
-            padding: 2rem;
-            border-radius: 15px;
-            background: #f8f9fa;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            transform: translateY(-100%);
-            transition: transform 0.3s;
-        }
-
-        .feature-card:hover::before {
-            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
         }
 
         .feature-icon {
             font-size: 3rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            display: block;
         }
 
         .feature-card h3 {
             font-size: 1.5rem;
             margin-bottom: 1rem;
-            color: #333;
+            color: var(--text-dark);
         }
 
         .feature-card p {
-            color: #666;
-            line-height: 1.6;
+            color: var(--text-light);
+            line-height: 1.7;
         }
 
-        .new-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: #ed8936;
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: bold;
+        /* Pricing Section */
+        .pricing {
+            padding: 6rem 0;
         }
 
-        /* URL Structure Showcase */
-        .url-structure {
-            background: #f8f9fa;
-            padding: 4rem 2rem;
-        }
-
-        .url-examples {
+        .pricing-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
+            margin-top: 3rem;
         }
 
-        .url-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            border-left: 4px solid #667eea;
-            transition: all 0.3s;
-        }
-
-        .url-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .url-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 1rem;
-        }
-
-        .url-example {
-            font-family: 'Courier New', monospace;
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            color: #667eea;
-            font-weight: bold;
+        .pricing-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
             text-align: center;
-            border: 2px solid #e2e8f0;
-        }
-
-        .url-description {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        /* Domain Extensions Showcase */
-        .domain-extensions {
-            background: white;
-            padding: 4rem 2rem;
-        }
-
-        .extensions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .extension-card {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s;
             position: relative;
+            transition: transform 0.3s ease;
         }
 
-        .extension-card:hover {
-            border-color: #667eea;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        .pricing-card.featured {
+            border: 2px solid var(--primary-color);
+            transform: scale(1.05);
         }
 
-        .extension-badge {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 0.5rem;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .extension-name {
-            color: #333;
-            font-weight: bold;
-            margin-bottom: 0.25rem;
-        }
-
-        .extension-type {
-            color: #666;
-            font-size: 0.8rem;
-        }
-
-        .premium-badge {
+        .pricing-card.featured::before {
+            content: 'POPULAR';
             position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #f6ad55;
-            color: white;
-            padding: 0.2rem 0.5rem;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: bold;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
 
-        /* How it Works */
-        .how-it-works {
-            background: #f8f9fa;
-            padding: 4rem 2rem;
+        .pricing-card:hover {
+            transform: translateY(-5px);
         }
 
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-5px);
         }
 
-        .step {
-            text-align: center;
-            position: relative;
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 1rem 0;
         }
 
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .price .currency {
             font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 auto 1rem;
+            vertical-align: super;
         }
 
-        .step h3 {
-            margin-bottom: 0.5rem;
-            color: #333;
-        }
-
-        .step p {
-            color: #666;
+        .price .period {
+            font-size: 1rem;
+            color: var(--text-light);
         }
 
         /* Stats Section */
         .stats {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 3rem 2rem;
+            background: var(--gradient);
+            color: var(--white);
+            padding: 4rem 0;
         }
 
         .stats-grid {
@@ -420,6 +310,7 @@
 
         .stat-item h3 {
             font-size: 2.5rem;
+            font-weight: 800;
             margin-bottom: 0.5rem;
         }
 
@@ -427,17 +318,127 @@
             opacity: 0.9;
         }
 
-        /* Footer */
-        footer {
-            background: #2c3e50;
-            color: white;
-            padding: 2rem;
+        /* CTA Section */
+        .cta {
+            background: var(--bg-light);
+            padding: 6rem 0;
             text-align: center;
         }
 
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: var(--white);
+            padding: 3rem 0 1rem;
+        }
+
         .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Mobile Responsive */
+        .mobile-menu {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: var(--text-dark);
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--white);
+                flex-direction: column;
+                padding: 1rem 2rem;
+                box-shadow: var(--shadow);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .domain-examples {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
         }
 
         /* Animations */
@@ -452,101 +453,68 @@
             }
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
 
-            .subtitle {
-                font-size: 1.1rem !important;
-            }
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid var(--white);
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+        }
 
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .feature-pills {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .extensions-grid {
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <div class="logo">🚀 Ntandostore Enhanced</div>
-            <ul class="nav-links">
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">🚀 Ntando Hosting</div>
+            <ul class="nav-links" id="navLinks">
                 <li><a href="#features">Features</a></li>
-                <li><a href="#url-structure">URL Structure</a></li>
-                <li><a href="#domains">Domain Extensions</a></li>
-                <li><a href="#how-it-works">How it Works</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#stats">Statistics</a></li>
+                <li><a href="/dashboard" class="btn btn-primary">Get Started</a></li>
             </ul>
-            <a href="/dashboard" class="btn-primary">Get Started</a>
-        </div>
-    </nav>
+            <button class="mobile-menu" id="mobileMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>Professional Domain Structure</h1>
-        <div class="subtitle">sitename.username.extension • Clean URLs • Professional Hosting</div>
-        <p>Deploy your websites with professional domain URLs like ntandomods.dev07-happyspace3393.com</p>
-        <div class="cta-buttons">
-            <a href="/dashboard" class="btn-large btn-hero">Start Hosting Free</a>
-            <a href="#url-structure" class="btn-large btn-secondary">See Examples</a>
-        </div>
-    </section>
-
-    <!-- New Features Banner -->
-    <section class="new-features">
-        <h2>🎉 Revolutionary URL Structure</h2>
-        <div class="feature-pills">
-            <div class="feature-pill">🌐 Professional URLs</div>
-            <div class="feature-pill">🔗 Clean Structure</div>
-            <div class="feature-pill">🎯 Site-First Format</div>
-            <div class="feature-pill">⚡ Instant Setup</div>
-            <div class="feature-pill">🔒 Secure Hosting</div>
-            <div class="feature-pill">📊 Multiple Extensions</div>
-        </div>
-    </section>
-
-    <!-- URL Structure Showcase -->
-    <section class="url-structure" id="url-structure">
         <div class="container">
-            <h2>🌐 Professional URL Structure</h2>
-            <p style="text-align: center; color: #666; margin-bottom: 2rem;">Clean, professional URLs that put your site name first</p>
-            <div class="url-examples">
-                <div class="url-card">
-                    <div class="url-title">✅ New Structure</div>
-                    <div class="url-example">ntandomods.dev07-happyspace3393.com</div>
-                    <div class="url-description">Professional site-first URL structure with your site name prominently displayed</div>
+            <div class="hero-content animate-fade-in">
+                <h1>Free Website Hosting with Custom Subdomains</h1>
+                <p>Launch your website today with beautiful custom subdomains. No credit card required, no setup fees.</p>
+                
+                <div class="domain-examples">
+                    <div class="domain-badge">yoursite.ntando.app</div>
+                    <div class="domain-badge">yoursite.ntl.cloud</div>
+                    <div class="domain-badge">yoursite.ntando.zw</div>
                 </div>
-                <div class="url-card">
-                    <div class="url-title">✅ With Extensions</div>
-                    <div class="url-example">portfolio.dev07-happyspace3393.zw</div>
-                    <div class="url-description">Choose from multiple domain extensions for your specific needs</div>
-                </div>
-                <div class="url-card">
-                    <div class="url-title">✅ Business Sites</div>
-                    <div class="url-example">business.dev07-happyspace3393.store</div>
-                    <div class="url-description">Perfect domain extensions for different types of websites</div>
-                </div>
-                <div class="url-card">
-                    <div class="url-title">✅ Tech Projects</div>
-                    <div class="url-example">app.dev07-happyspace3393.cloud</div>
-                    <div class="url-description">Ideal for technical projects and cloud applications</div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/dashboard" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                        Start Building Free
+                    </a>
+                    <a href="#features" class="btn btn-outline" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                        Learn More
+                    </a>
                 </div>
             </div>
         </div>
@@ -555,216 +523,187 @@
     <!-- Features Section -->
     <section class="features" id="features">
         <div class="container">
-            <h2>Why Choose Our Professional URL Structure?</h2>
-            <div class="feature-grid">
+            <h2 class="section-title">Why Choose Ntando Hosting?</h2>
+            <div class="features-grid">
                 <div class="feature-card">
-                    <span class="new-badge">NEW</span>
-                    <div class="feature-icon">🌐</div>
-                    <h3>Site-First URLs</h3>
-                    <p>Your site name comes first in the URL structure, making it more professional and memorable.</p>
-                </div>
-                <div class="feature-card">
-                    <span class="new-badge">NEW</span>
-                    <div class="feature-icon">🔗</div>
-                    <h3>Clean Structure</h3>
-                    <p>Consistent sitename.username.extension format that's easy to remember and share.</p>
+                    <span class="feature-icon">🌐</span>
+                    <h3>Custom Subdomains</h3>
+                    <p>Get beautiful subdomains like yoursite.ntando.app, yoursite.ntl.cloud, or yoursite.ntando.zw for your projects.</p>
                 </div>
                 <div class="feature-card">
-                    <span class="new-badge">NEW</span>
-                    <div class="feature-icon">🎯</div>
-                    <h3>Professional Look</h3>
-                    <p>Impress clients and visitors with professional domain URLs for your projects.</p>
+                    <span class="feature-icon">⚡</span>
+                    <h3>Lightning Fast</h3>
+                    <p>Built on modern infrastructure with global CDN for blazing fast load times anywhere in the world.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">👥</div>
-                    <h3>User Accounts</h3>
-                    <p>Secure user authentication with dedicated subdomains and multiple site support.</p>
+                    <span class="feature-icon">🔒</span>
+                    <h3>Secure & Reliable</h3>
+                    <p>Free SSL certificates, DDoS protection, and 99.9% uptime guarantee to keep your site safe and online.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">✏️</div>
-                    <h3>Site Editing</h3>
-                    <p>Edit your deployed websites anytime with automatic backups and instant updates.</p>
+                    <span class="feature-icon">📱</span>
+                    <h3>Mobile Responsive</h3>
+                    <p>All hosted sites automatically adapt to any screen size for perfect mobile experience.</p>
                 </div>
                 <div class="feature-card">
-                    <span class="new-badge">NEW</span>
-                    <div class="feature-icon">🚀</div>
-                    <h3>Multi-Zone Support</h3>
-                    <p>Support for multiple domain extensions and zones for maximum flexibility.</p>
+                    <span class="feature-icon">🎨</span>
+                    <h3>Beautiful Templates</h3>
+                    <p>Choose from dozens of professional templates for portfolio, business, blog, and landing pages.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
-                    <h3>Website Templates</h3>
-                    <p>Professional templates for portfolios, business, blogs, and landing pages.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Secure Hosting</h3>
-                    <p>Enterprise-grade security with SSL support and protected user environments.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Domain Extensions Showcase -->
-    <section class="domain-extensions" id="domains">
-        <div class="container">
-            <h2>🌐 Choose Your Domain Extension</h2>
-            <p style="text-align: center; color: #666; margin-bottom: 2rem;">Select the perfect domain extension for your project during signup</p>
-            <div class="extensions-grid">
-                <div class="extension-card">
-                    <span class="premium-badge">PREMIUM</span>
-                    <div class="extension-badge">.COM</div>
-                    <div class="extension-name">Commercial</div>
-                    <div class="extension-type">Most Popular</div>
-                </div>
-                <div class="extension-card">
-                    <div class="extension-badge">.ONLINE</div>
-                    <div class="extension-name">Online</div>
-                    <div class="extension-type">Digital Presence</div>
-                </div>
-                <div class="extension-card">
-                    <div class="extension-badge">.ID</div>
-                    <div class="extension-name">Identity</div>
-                    <div class="extension-type">Personal Brand</div>
-                </div>
-                <div class="extension-card">
-                    <div class="extension-badge">.CLOUD</div>
-                    <div class="extension-name">Cloud</div>
-                    <div class="extension-type">Tech Projects</div>
-                </div>
-                <div class="extension-card">
-                    <div class="extension-badge">.NET</div>
-                    <div class="extension-name">Network</div>
-                    <div class="extension-type">Tech Focus</div>
-                </div>
-                <div class="extension-card">
-                    <div class="extension-badge">.STORE</div>
-                    <div class="extension-name">Store</div>
-                    <div class="extension-type">E-commerce</div>
-                </div>
-                <div class="extension-card">
-                    <div class="extension-badge">.BLOG</div>
-                    <div class="extension-name">Blog</div>
-                    <div class="extension-type">Content Sites</div>
-                </div>
-                <div class="extension-card">
-                    <div class="extension-badge">.UK</div>
-                    <div class="extension-name">UK</div>
-                    <div class="extension-type">British Focus</div>
-                </div>
-                <div class="extension-card">
-                    <div class="extension-badge">.ZW</div>
-                    <div class="extension-name">Zimbabwe</div>
-                    <div class="extension-type">Local Focus</div>
-                </div>
-                <div class="extension-card">
-                    <div class="extension-badge">.ORG</div>
-                    <div class="extension-name">Organization</div>
-                    <div class="extension-type">Non-profit</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="container">
-            <h2>How Professional URL Structure Works</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Choose Extension</h3>
-                    <p>Select your preferred domain extension during account signup</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Create Website</h3>
-                    <p>Build your website using our editor or upload your own code</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Get Professional URL</h3>
-                    <p>Instantly get a clean URL like sitename.username.extension</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Go Live</h3>
-                    <p>Your site is instantly accessible with a professional URL</p>
+                    <span class="feature-icon">🚀</span>
+                    <h3>Instant Deployment</h3>
+                    <p>Upload your HTML/CSS/JS and go live instantly. No complex setup or configuration needed.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Stats Section -->
-    <section class="stats">
+    <section class="stats" id="stats">
         <div class="container">
             <div class="stats-grid">
                 <div class="stat-item">
-                    <h3 id="usersCount">0</h3>
-                    <p>Active Users</p>
+                    <h3 id="siteCount">10,000+</h3>
+                    <p>Websites Hosted</p>
                 </div>
                 <div class="stat-item">
-                    <h3 id="sitesCount">0</h3>
-                    <p>Sites Hosted</p>
+                    <h3>99.9%</h3>
+                    <p>Uptime</p>
                 </div>
                 <div class="stat-item">
-                    <h3 id="domainsCount">10</h3>
-                    <p>Domain Extensions</p>
+                    <h3>24/7</h3>
+                    <p>Support</p>
                 </div>
                 <div class="stat-item">
-                    <h3>100%</h3>
-                    <p>Free Forever</p>
+                    <h3>Free</h3>
+                    <p>Forever</p>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Simple, Transparent Pricing</h2>
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">
+                        <span class="currency">$</span>0<span class="period">/month</span>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 2rem 0;">
+                        <li style="padding: 0.5rem 0;">✓ Custom Subdomains</li>
+                        <li style="padding: 0.5rem 0;">✓ 3 Sites per Account</li>
+                        <li style="padding: 0.5rem 0;">✓ 100MB Storage</li>
+                        <li style="padding: 0.5rem 0;">✓ Free SSL Certificate</li>
+                        <li style="padding: 0.5rem 0;">✓ Community Support</li>
+                    </ul>
+                    <a href="/dashboard" class="btn btn-outline" style="width: 100%;">Get Started</a>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <h3>Pro</h3>
+                    <div class="price">
+                        <span class="currency">$</span>9<span class="period">/month</span>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 2rem 0;">
+                        <li style="padding: 0.5rem 0;">✓ Everything in Free</li>
+                        <li style="padding: 0.5rem 0;">✓ Unlimited Sites</li>
+                        <li style="padding: 0.5rem 0;">✓ 10GB Storage</li>
+                        <li style="padding: 0.5rem 0;">✓ Custom Domains</li>
+                        <li style="padding: 0.5rem 0;">✓ Priority Support</li>
+                        <li style="padding: 0.5rem 0;">✓ Analytics & Insights</li>
+                    </ul>
+                    <a href="/dashboard" class="btn btn-primary" style="width: 100%;">Start Free Trial</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Business</h3>
+                    <div class="price">
+                        <span class="currency">$</span>29<span class="period">/month</span>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 2rem 0;">
+                        <li style="padding: 0.5rem 0;">✓ Everything in Pro</li>
+                        <li style="padding: 0.5rem 0;">✓ 100GB Storage</li>
+                        <li style="padding: 0.5rem 0;">✓ Team Collaboration</li>
+                        <li style="padding: 0.5rem 0;">✓ Advanced Security</li>
+                        <li style="padding: 0.5rem 0;">✓ Dedicated Support</li>
+                        <li style="padding: 0.5rem 0;">✓ Custom Integrations</li>
+                    </ul>
+                    <a href="/dashboard" class="btn btn-outline" style="width: 100%;">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Launch Your Website?</h2>
+            <p>Join thousands of developers and creators who trust Ntando Hosting for their projects.</p>
+            <a href="/dashboard" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2rem;">
+                Start Building Now - It's Free
+            </a>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer>
-        <div class="footer-content">
-            <p>&copy; 2024 Ntandostore Enhanced - Professional Domain Structure</p>
-            <p>Deploy your websites with clean, professional URLs like sitename.username.extension</p>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="/dashboard">Dashboard</a></li>
+                        <li><a href="/api/templates">Templates</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Status Page</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">Discord</a></li>
+                        <li><a href="#">Email Newsletter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Ntando Hosting. All rights reserved. Made with ❤️ for developers.</p>
+            </div>
         </div>
     </footer>
 
     <script>
-        // Load statistics
-        async function loadStats() {
-            try {
-                const response = await fetch('/api/sites');
-                const sites = await response.json();
-                
-                const totalSites = sites.length;
-                const totalVisits = sites.reduce((sum, site) => sum + (site.visits || 0), 0);
-                
-                // Simulate user count (in real app, this would come from an API)
-                const totalUsers = Math.floor(totalSites * 0.7) + 12;
-                
-                // Animate counters
-                animateCounter('usersCount', 0, totalUsers, 1000);
-                animateCounter('sitesCount', 0, totalSites, 1000);
-            } catch (error) {
-                console.error('Failed to load stats:', error);
-                // Show default values if API fails
-                animateCounter('usersCount', 0, 25, 1000);
-                animateCounter('sitesCount', 0, 18, 1000);
-            }
-        }
-
-        function animateCounter(elementId, start, end, duration) {
-            const element = document.getElementById(elementId);
-            const increment = (end - start) / (duration / 16);
-            let current = start;
-            
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= end) {
-                    current = end;
-                    clearInterval(timer);
-                }
-                element.textContent = Math.floor(current).toLocaleString();
-            }, 16);
-        }
+        // Mobile menu toggle
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
 
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -772,31 +711,86 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    navLinks.classList.remove('active');
                 }
             });
         });
 
-        // Add animation to feature cards on scroll
+        // Animate stats on scroll
+        const animateValue = (element, start, end, duration) => {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                element.textContent = Math.floor(progress * (end - start) + start).toLocaleString() + '+';
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        // Intersection Observer for animations
         const observerOptions = {
             threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            rootMargin: '0px 0px -100px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.animation = 'fadeInUp 0.6s ease both';
+                    entry.target.classList.add('animate-fade-in');
+                    
+                    // Animate stats when visible
+                    if (entry.target.id === 'stats') {
+                        const siteCount = document.getElementById('siteCount');
+                        animateValue(siteCount, 0, 10000, 2000);
+                    }
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.feature-card, .extension-card, .step, .url-card').forEach(el => {
+        // Observe elements
+        document.querySelectorAll('.feature-card, .pricing-card, .stats').forEach(el => {
             observer.observe(el);
         });
 
-        // Load stats when page loads
-        window.addEventListener('load', loadStats);
+        // Header scroll effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.background = '#ffffff';
+                header.style.backdropFilter = 'none';
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Add some interactive effects
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Console welcome message
+        console.log('%c🚀 Welcome to Ntando Hosting!', 'font-size: 20px; color: #667eea; font-weight: bold;');
+        console.log('%cBuild amazing websites with custom subdomains like yoursite.ntando.app', 'font-size: 14px; color: #718096;');
     </script>
 </body>
 </html>
