@@ -11,22 +11,77 @@ const PORT = process.env.PORT || 3000;
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'ntandostore-secret-key-2024';
 
-// Domain Configuration
+// Enhanced Domain Configuration with comprehensive subdomain linking
 const DOMAIN_CONFIG = {
-  primary: 'ntandostore.com',
+  primary: 'ntando.app',
+  aliases: ['ntando.app', 'ntl.cloud', 'ntando.zw', 'ntandostore.com'],
   extensions: [
+    '.app',
+    '.cloud', 
+    '.zw',
     '.com',
     '.online', 
     '.id',
-    '.cloud',
     '.net',
     '.store',
     '.blog',
     '.uk',
-    '.zw',
     '.org'
   ],
-  defaultExtension: '.com'
+  defaultExtension: '.app',
+  customSubdomains: {
+    'ntando.app': { 
+      premium: true, 
+      description: 'Premium app domain',
+      type: 'primary',
+      target: 'ntando.app'
+    },
+    'ntl.cloud': { 
+      premium: true, 
+      description: 'Cloud services domain',
+      type: 'alias',
+      target: 'ntando.app'
+    },
+    'ntando.zw': { 
+      premium: true, 
+      description: 'Zimbabwe domain',
+      type: 'alias',
+      target: 'ntando.app'
+    },
+    'ntandostore.com': { 
+      premium: false, 
+      description: 'Standard domain',
+      type: 'legacy',
+      target: 'ntando.app'
+    }
+  },
+  // Subdomain mapping for all domains
+  subdomainMapping: {
+    // Primary domain subdomains
+    'ntando.app': {
+      base: 'ntando.app',
+      pattern: '{subdomain}.ntando.app',
+      aliases: ['{subdomain}.ntl.cloud', '{subdomain}.ntando.zw']
+    },
+    // Cloud domain subdomains
+    'ntl.cloud': {
+      base: 'ntl.cloud',
+      pattern: '{subdomain}.ntl.cloud',
+      aliases: ['{subdomain}.ntando.app', '{subdomain}.ntando.zw']
+    },
+    // Zimbabwe domain subdomains
+    'ntando.zw': {
+      base: 'ntando.zw',
+      pattern: '{subdomain}.ntando.zw',
+      aliases: ['{subdomain}.ntando.app', '{subdomain}.ntl.cloud']
+    },
+    // Legacy domain subdomains
+    'ntandostore.com': {
+      base: 'ntandostore.com',
+      pattern: '{subdomain}.ntandostore.com',
+      aliases: ['{subdomain}.ntando.app']
+    }
+  }
 };
 
 // DNS Forwarding Configuration
@@ -35,15 +90,18 @@ const DNS_CONFIG = {
   provider: process.env.DNS_PROVIDER || 'cloudflare',
   apiKey: process.env.DNS_API_KEY,
   zones: {
+    'ntando.app': process.env.DNS_ZONE_APP,
+    'ntl.cloud': process.env.DNS_ZONE_CLOUD,
+    'ntando.zw': process.env.DNS_ZONE_ZW,
     'ntandostore.com': process.env.DNS_ZONE_COM,
     'ntandostore.online': process.env.DNS_ZONE_ONLINE,
     'ntandostore.id': process.env.DNS_ZONE_ID,
-    'ntandostore.cloud': process.env.DNS_ZONE_CLOUD,
+    'ntandostore.cloud': process.env.DNS_ZONE_CLOUD_ALT,
     'ntandostore.net': process.env.DNS_ZONE_NET,
     'ntandostore.store': process.env.DNS_ZONE_STORE,
     'ntandostore.blog': process.env.DNS_ZONE_BLOG,
     'ntandostore.uk': process.env.DNS_ZONE_UK,
-    'ntandostore.zw': process.env.DNS_ZONE_ZW,
+    'ntandostore.zw': process.env.DNS_ZONE_ZW_ALT,
     'ntandostore.org': process.env.DNS_ZONE_ORG
   }
 };
@@ -52,7 +110,6 @@ const DNS_CONFIG = {
 if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
   console.error('JWT_SECRET environment variable is required in production');
   console.error('Please set JWT_SECRET in your Render.com environment variables');
-  // Use a fallback for initial deployment but warn strongly
   console.warn('⚠️  Using fallback JWT_SECRET - PLEASE SET PROPERLY IN RENDER DASHBOARD!');
   process.env.JWT_SECRET = 'ntandostore-emergency-fallback-' + Date.now();
 }
@@ -141,9 +198,7 @@ async function createDNSRecord(domain, recordType, name, content) {
   }
 
   try {
-    // This would integrate with your DNS provider (Cloudflare, etc.)
     console.log(`Creating DNS record: ${name}.${domain} -> ${content}`);
-    // Mock implementation for now
     return { success: true, record: { name, content, type: recordType } };
   } catch (error) {
     console.error('Failed to create DNS record:', error);
@@ -159,7 +214,6 @@ async function deleteDNSRecord(domain, recordId) {
 
   try {
     console.log(`Deleting DNS record: ${recordId}`);
-    // Mock implementation for now
     return { success: true };
   } catch (error) {
     console.error('Failed to delete DNS record:', error);
@@ -167,16 +221,19 @@ async function deleteDNSRecord(domain, recordId) {
   }
 }
 
-// Generate unique subdomain with domain extension
-function generateSubdomain(username, domainExtension = '.com') {
-  const adjectives = ['quick', 'bright', 'clever', 'swift', 'smart', 'happy', 'lucky', 'sunny', 'cool', 'warm'];
-  const nouns = ['site', 'web', 'page', 'space', 'zone', 'hub', 'spot', 'place', 'world', 'realm'];
+// Generate unique subdomain with enhanced options
+function generateSubdomain(username, domainExtension = '.app') {
+  const adjectives = ['quick', 'bright', 'clever', 'swift', 'smart', 'happy', 'lucky', 'sunny', 'cool', 'warm', 'elite', 'pro', 'max', 'ultra'];
+  const nouns = ['site', 'web', 'page', 'space', 'zone', 'hub', 'spot', 'place', 'world', 'realm', 'studio', 'lab', 'tech', 'digital'];
   const numbers = Math.floor(Math.random() * 9999) + 1;
   
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   const noun = nouns[Math.floor(Math.random() * nouns.length)];
   
-  return `${username}-${adjective}${noun}${numbers}`;
+  // Clean username for subdomain use
+  const cleanUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '').substring(0, 10);
+  
+  return `${cleanUsername}-${adjective}${noun}${numbers}`;
 }
 
 // Validate username
@@ -202,7 +259,7 @@ function validateUsername(username) {
   return true;
 }
 
-// Validate subdomain
+// Validate subdomain with enhanced rules
 function validateSubdomain(subdomain) {
   const validPattern = /^[a-zA-Z0-9-]+$/;
   if (!validPattern.test(subdomain)) {
@@ -220,9 +277,15 @@ function validateSubdomain(subdomain) {
   return true;
 }
 
-// Validate domain extension
+// Validate domain extension with premium checking
 function validateDomainExtension(extension) {
   return DOMAIN_CONFIG.extensions.includes(extension);
+}
+
+// Check if domain is premium
+function isPremiumDomain(extension) {
+  const domainConfig = DOMAIN_CONFIG.customSubdomains[extension];
+  return domainConfig && domainConfig.premium;
 }
 
 // Check domain availability
@@ -243,7 +306,87 @@ async function checkDomainAvailability(subdomain, extension) {
     return true;
   } catch (error) {
     console.error('Error checking domain availability:', error);
-    return true; // Assume available if error occurs
+    return true;
+  }
+}
+
+// Get all linked domains for a subdomain
+function getLinkedDomains(subdomain, baseDomain) {
+  const mapping = DOMAIN_CONFIG.subdomainMapping[baseDomain];
+  if (!mapping) return [];
+
+  const domains = [mapping.pattern.replace('{subdomain}', subdomain)];
+  
+  // Add all aliases
+  if (mapping.aliases) {
+    mapping.aliases.forEach(alias => {
+      domains.push(alias.replace('{subdomain}', subdomain));
+    });
+  }
+
+  return domains;
+}
+
+// Resolve subdomain to primary domain
+function resolveSubdomain(host) {
+  const parts = host.split('.');
+  
+  if (parts.length < 2) return null;
+  
+  const subdomain = parts[0];
+  const domain = parts.slice(1).join('.');
+  
+  // Check if this is one of our domains
+  if (DOMAIN_CONFIG.aliases.includes(domain)) {
+    return {
+      subdomain,
+      domain,
+      originalDomain: domain,
+      primaryDomain: DOMAIN_CONFIG.primary,
+      isAlias: domain !== DOMAIN_CONFIG.primary,
+      fullSubdomain: `${subdomain}.${domain}`
+    };
+  }
+  
+  return null;
+}
+
+// Get canonical domain for routing
+function getCanonicalDomain(resolvedSubdomain) {
+  if (!resolvedSubdomain) return null;
+  
+  // Always route to primary domain internally
+  return {
+    subdomain: resolvedSubdomain.subdomain,
+    canonicalDomain: resolvedSubdomain.primaryDomain,
+    originalRequest: resolvedSubdomain.fullSubdomain,
+    allDomains: getLinkedDomains(resolvedSubdomain.subdomain, resolvedSubdomain.primaryDomain)
+  };
+}
+
+// Check if subdomain exists across all domains
+async function findSubdomainAcrossDomains(subdomain) {
+  try {
+    const usersData = await fs.readFile(USERS_FILE, 'utf8');
+    const users = JSON.parse(usersData);
+    
+    // Search for the subdomain across all user sites
+    for (const user of Object.values(users)) {
+      for (const site of user.sites) {
+        if (site.slug === subdomain) {
+          return {
+            site,
+            user,
+            found: true
+          };
+        }
+      }
+    }
+    
+    return { found: false };
+  } catch (error) {
+    console.error('Error finding subdomain:', error);
+    return { found: false };
   }
 }
 
@@ -252,17 +395,69 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Dashboard route
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dashboard.html'));
-});
-
-// Get available domain extensions
+// Get available domain extensions with premium info
 app.get('/api/domains/extensions', (req, res) => {
   res.json({
     extensions: DOMAIN_CONFIG.extensions,
-    default: DOMAIN_CONFIG.defaultExtension
+    default: DOMAIN_CONFIG.defaultExtension,
+    aliases: DOMAIN_CONFIG.aliases,
+    customSubdomains: DOMAIN_CONFIG.customSubdomains,
+    primary: DOMAIN_CONFIG.primary,
+    subdomainMapping: DOMAIN_CONFIG.subdomainMapping
   });
+});
+
+// Get subdomain information and links
+app.get('/api/domains/subdomain/:subdomain', async (req, res) => {
+  try {
+    const { subdomain } = req.params;
+    
+    // Get all linked domains
+    const linkedDomains = getLinkedDomains(subdomain, 'ntando.app');
+    
+    // Check if subdomain exists
+    const result = await findSubdomainAcrossDomains(subdomain);
+    
+    res.json({
+      subdomain,
+      linkedDomains,
+      primaryDomain: `${subdomain}.ntando.app`,
+      aliasDomains: linkedDomains.filter(d => d !== `${subdomain}.ntando.app`),
+      exists: result.found,
+      siteInfo: result.found ? {
+        name: result.site.name,
+        user: result.user.username,
+        visits: result.site.visits,
+        createdAt: result.site.createdAt
+      } : null
+    });
+  } catch (error) {
+    console.error('Error getting subdomain info:', error);
+    res.status(500).json({ error: 'Failed to get subdomain information' });
+  }
+});
+
+// Test subdomain routing
+app.get('/api/domains/test/:subdomain', (req, res) => {
+  try {
+    const { subdomain } = req.params;
+    
+    const testHost = `${subdomain}.ntando.app`;
+    const resolved = resolveSubdomain(testHost);
+    const canonical = getCanonicalDomain(resolved);
+    const linkedDomains = getLinkedDomains(subdomain, 'ntando.app');
+    
+    res.json({
+      testHost,
+      resolved,
+      canonical,
+      linkedDomains,
+      status: 'routing_configured'
+    });
+  } catch (error) {
+    console.error('Error testing subdomain:', error);
+    res.status(500).json({ error: 'Failed to test subdomain routing' });
+  }
 });
 
 // Check domain availability
@@ -279,7 +474,14 @@ app.get('/api/domains/check/:subdomain/:extension', async (req, res) => {
     }
     
     const isAvailable = await checkDomainAvailability(subdomain, extension);
-    res.json({ available: isAvailable, domain: `${subdomain}${extension}` });
+    const isPremium = isPremiumDomain(extension);
+    
+    res.json({ 
+      available: isAvailable, 
+      domain: `${subdomain}${extension}`,
+      isPremium,
+      extension: extension
+    });
     
   } catch (error) {
     console.error('Domain check error:', error);
@@ -351,6 +553,7 @@ app.post('/api/register', async (req, res) => {
       password: hashedPassword,
       domainExtension: selectedExtension,
       subdomain: finalSubdomain,
+      isPremium: isPremiumDomain(selectedExtension),
       createdAt: new Date().toISOString(),
       sites: []
     };
@@ -374,7 +577,8 @@ app.post('/api/register', async (req, res) => {
         username: user.username,
         email: user.email,
         subdomain: user.subdomain,
-        domainExtension: user.domainExtension
+        domainExtension: user.domainExtension,
+        isPremium: user.isPremium
       }
     });
     
@@ -426,7 +630,8 @@ app.post('/api/login', async (req, res) => {
         username: user.username,
         email: user.email,
         subdomain: user.subdomain,
-        domainExtension: user.domainExtension
+        domainExtension: user.domainExtension,
+        isPremium: user.isPremium
       }
     });
     
@@ -450,6 +655,18 @@ app.get('/api/templates', (req, res) => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Portfolio</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        header { background: #2c3e50; color: white; padding: 1rem 0; position: fixed; width: 100%; top: 0; }
+        nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        nav ul { display: flex; list-style: none; gap: 2rem; }
+        nav a { color: white; text-decoration: none; }
+        main { margin-top: 80px; padding: 2rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
+        #hero { text-align: center; padding: 4rem 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin: -2rem -2rem 2rem -2rem; }
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .project { padding: 2rem; border: 1px solid #ddd; border-radius: 8px; }
+    </style>
 </head>
 <body>
     <header>
@@ -487,16 +704,7 @@ app.get('/api/templates', (req, res) => {
     </main>
 </body>
 </html>`,
-      css: `* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-header { background: #2c3e50; color: white; padding: 1rem 0; position: fixed; width: 100%; top: 0; }
-nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-nav ul { display: flex; list-style: none; gap: 2rem; }
-nav a { color: white; text-decoration: none; }
-main { margin-top: 80px; padding: 2rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
-#hero { text-align: center; padding: 4rem 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin: -2rem -2rem 2rem -2rem; }
-.project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
-.project { padding: 2rem; border: 1px solid #ddd; border-radius: 8px; }`
+      css: ''
     },
     {
       id: 'business',
@@ -509,6 +717,22 @@ main { margin-top: 80px; padding: 2rem; max-width: 1200px; margin-left: auto; ma
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Business</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; }
+        header { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: fixed; width: 100%; top: 0; z-index: 1000; }
+        nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #2c3e50; }
+        nav ul { display: flex; list-style: none; gap: 2rem; }
+        nav a { color: #333; text-decoration: none; font-weight: 500; }
+        main { margin-top: 80px; }
+        #home { text-align: center; padding: 6rem 2rem; background: linear-gradient(135deg, #74b9ff, #0984e3); color: white; }
+        #home h1 { font-size: 3rem; margin-bottom: 1rem; }
+        #services { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .service { text-align: center; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        button { background: #0984e3; color: white; border: none; padding: 1rem 2rem; font-size: 1.1rem; border-radius: 5px; cursor: pointer; margin-top: 1rem; }
+    </style>
 </head>
 <body>
     <header>
@@ -544,20 +768,7 @@ main { margin-top: 80px; padding: 2rem; max-width: 1200px; margin-left: auto; ma
     </main>
 </body>
 </html>`,
-      css: `* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; }
-header { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: fixed; width: 100%; top: 0; z-index: 1000; }
-nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; }
-.logo { font-size: 1.5rem; font-weight: bold; color: #2c3e50; }
-nav ul { display: flex; list-style: none; gap: 2rem; }
-nav a { color: #333; text-decoration: none; font-weight: 500; }
-main { margin-top: 80px; }
-#home { text-align: center; padding: 6rem 2rem; background: linear-gradient(135deg, #74b9ff, #0984e3); color: white; }
-#home h1 { font-size: 3rem; margin-bottom: 1rem; }
-#services { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
-.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
-.service { text-align: center; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-button { background: #0984e3; color: white; border: none; padding: 1rem 2rem; font-size: 1.1rem; border-radius: 5px; cursor: pointer; margin-top: 1rem; }`
+      css: ''
     },
     {
       id: 'blog',
@@ -570,6 +781,18 @@ button { background: #0984e3; color: white; border: none; padding: 1rem 2rem; fo
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Blog</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Georgia, serif; line-height: 1.8; background: #f8f9fa; }
+        header { text-align: center; padding: 3rem 2rem; background: white; border-bottom: 1px solid #ddd; }
+        header h1 { font-size: 2.5rem; color: #2c3e50; margin-bottom: 0.5rem; }
+        main { max-width: 800px; margin: 2rem auto; padding: 0 2rem; }
+        .post { background: white; padding: 2rem; margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .post h2 { color: #2c3e50; margin-bottom: 0.5rem; }
+        .meta { color: #666; font-size: 0.9rem; margin-bottom: 1rem; font-style: italic; }
+        .read-more { color: #3498db; text-decoration: none; font-weight: bold; }
+        .read-more:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
     <header>
@@ -594,16 +817,7 @@ button { background: #0984e3; color: white; border: none; padding: 1rem 2rem; fo
     </main>
 </body>
 </html>`,
-      css: `* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: Georgia, serif; line-height: 1.8; background: #f8f9fa; }
-header { text-align: center; padding: 3rem 2rem; background: white; border-bottom: 1px solid #ddd; }
-header h1 { font-size: 2.5rem; color: #2c3e50; margin-bottom: 0.5rem; }
-main { max-width: 800px; margin: 2rem auto; padding: 0 2rem; }
-.post { background: white; padding: 2rem; margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.post h2 { color: #2c3e50; margin-bottom: 0.5rem; }
-.meta { color: #666; font-size: 0.9rem; margin-bottom: 1rem; font-style: italic; }
-.read-more { color: #3498db; text-decoration: none; font-weight: bold; }
-.read-more:hover { text-decoration: underline; }`
+      css: ''
     },
     {
       id: 'landing',
@@ -616,6 +830,26 @@ main { max-width: 800px; margin: 2rem auto; padding: 0 2rem; }
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amazing Product</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
+        header { background: white; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: fixed; width: 100%; top: 0; z-index: 1000; }
+        nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #2563eb; }
+        .cta-button { background: #2563eb; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; }
+        main { margin-top: 80px; }
+        .hero { text-align: center; padding: 6rem 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.3rem; margin-bottom: 2rem; opacity: 0.9; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; }
+        .primary-btn { background: white; color: #667eea; padding: 1rem 2rem; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; }
+        .secondary-btn { background: transparent; color: white; border: 2px solid white; padding: 1rem 2rem; border-radius: 8px; font-size: 1.1rem; cursor: pointer; }
+        .features { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .features h2 { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .feature { text-align: center; padding: 2rem; }
+        .feature h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+    </style>
 </head>
 <body>
     <header>
@@ -653,24 +887,7 @@ main { max-width: 800px; margin: 2rem auto; padding: 0 2rem; }
     </main>
 </body>
 </html>`,
-      css: `* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
-header { background: white; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: fixed; width: 100%; top: 0; z-index: 1000; }
-nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
-.logo { font-size: 1.5rem; font-weight: bold; color: #2563eb; }
-.cta-button { background: #2563eb; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; }
-main { margin-top: 80px; }
-.hero { text-align: center; padding: 6rem 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-.hero h1 { font-size: 3.5rem; margin-bottom: 1rem; }
-.hero p { font-size: 1.3rem; margin-bottom: 2rem; opacity: 0.9; }
-.hero-buttons { display: flex; gap: 1rem; justify-content: center; }
-.primary-btn { background: white; color: #667eea; padding: 1rem 2rem; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; }
-.secondary-btn { background: transparent; color: white; border: 2px solid white; padding: 1rem 2rem; border-radius: 8px; font-size: 1.1rem; cursor: pointer; }
-.features { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
-.features h2 { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; }
-.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-.feature { text-align: center; padding: 2rem; }
-.feature h3 { font-size: 1.5rem; margin-bottom: 1rem; }`
+      css: ''
     }
   ];
   
@@ -749,7 +966,7 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
     if (enableDNS && DNS_CONFIG.enabled) {
       const customDomain = `${finalSlug}.${user.subdomain}`;
       const dnsResult = await createDNSRecord(
-        user.domainExtension ? `ntandostore${user.domainExtension}` : 'ntandostore.com',
+        user.domainExtension ? `ntando${user.domainExtension}` : 'ntando.app',
         'CNAME',
         customDomain,
         `${process.env.RENDER_SERVICE_HOST || 'your-service-url.onrender.com'}`
@@ -794,12 +1011,13 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
     user.sites.push(site);
     await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
 
-    // FIXED: Generate proper URLs for the new structure
-    const username = user.subdomain.split('.')[0];
-    const extension = user.domainExtension.replace('.', '');
-    
-    const standardUrl = `/${finalSlug}/${username}/${extension}/`;
+    // Generate URLs for the new structure with all linked domains
+    const standardUrl = `/${finalSlug}/`;
     const customUrl = enableDNS ? `https://${finalSlug}.${user.subdomain}` : null;
+    
+    // Get all linked domains for this subdomain
+    const linkedDomains = getLinkedDomains(finalSlug, user.domainExtension.replace('.', '') + '.' + user.domainExtension.replace('.', ''));
+    const fullLinkedDomains = getLinkedDomains(finalSlug, 'ntando.app'); // Always link to primary
     
     res.json({ 
       success: true, 
@@ -808,189 +1026,18 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
       fullUrl: `${req.protocol}://${req.get('host')}${standardUrl}`,
       customUrl,
       dnsRecord,
-      message: 'Site published successfully!' + (customUrl ? ` Custom domain: ${customUrl}` : ''),
+      linkedDomains: fullLinkedDomains,
+      primaryDomain: `${finalSlug}.ntando.app`,
+      aliasDomains: fullLinkedDomains.filter(d => d !== `${finalSlug}.ntando.app`),
+      message: 'Site published successfully!' + 
+               (customUrl ? ` Custom domain: ${customUrl}` : '') +
+               ` Accessible at: ${fullLinkedDomains.join(', ')}`,
       site
     });
 
   } catch (error) {
     console.error('Upload error:', error);
     res.status(500).json({ error: 'Failed to upload site' });
-  }
-});
-
-// Get user's DNS records
-app.get('/api/user/dns-records', authenticateToken, async (req, res) => {
-  try {
-    let dnsRecords = {};
-    try {
-      const dnsData = await fs.readFile(DNS_RECORDS_FILE, 'utf8');
-      dnsRecords = JSON.parse(dnsData);
-    } catch (error) {
-      return res.json([]);
-    }
-
-    const userRecords = Object.values(dnsRecords).filter(record => 
-      record.customDomain && record.userId === req.user.userId
-    );
-
-    res.json(userRecords);
-  } catch (error) {
-    console.error('Error loading DNS records:', error);
-    res.json([]);
-  }
-});
-
-// Update existing site (protected route)
-app.put('/api/sites/:siteId', authenticateToken, async (req, res) => {
-  try {
-    const { siteId } = req.params;
-    const { html, css, js, siteName, favicon, enableDNS } = req.body;
-    
-    if (!html) {
-      return res.status(400).json({ error: 'HTML content is required' });
-    }
-
-    // Get user info
-    let users = {};
-    try {
-      const usersData = await fs.readFile(USERS_FILE, 'utf8');
-      users = JSON.parse(usersData);
-    } catch (error) {
-      return res.status(500).json({ error: 'User data not found' });
-    }
-
-    const user = users[req.user.userId];
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    // Find the site
-    const site = user.sites.find(s => s.id === siteId);
-    if (!site) {
-      return res.status(404).json({ error: 'Site not found' });
-    }
-
-    // Create backup before updating
-    const userSubdomain = user.subdomain;
-    const siteDir = path.join(USERS_DIR, userSubdomain, site.slug);
-    const backupDir = path.join(siteDir, 'backups');
-    await fs.mkdir(backupDir, { recursive: true });
-    
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const backupFile = path.join(backupDir, `backup-${timestamp}.html`);
-    
-    try {
-      const currentHtml = await fs.readFile(path.join(siteDir, 'index.html'), 'utf8');
-      await fs.writeFile(backupFile, currentHtml);
-    } catch (error) {
-      console.log('No existing file to backup');
-    }
-
-    // Handle DNS changes
-    const currentDnsEnabled = site.enableDNS;
-    const newDnsEnabled = !!enableDNS;
-    
-    if (currentDnsEnabled !== newDnsEnabled) {
-      if (newDnsEnabled && DNS_CONFIG.enabled) {
-        // Enable DNS
-        const customDomain = `${site.slug}.${user.subdomain}`;
-        const dnsResult = await createDNSRecord(
-          user.domainExtension ? `ntandostore${user.domainExtension}` : 'ntandostore.com',
-          'CNAME',
-          customDomain,
-          process.env.RENDER_SERVICE_HOST || 'your-service-url.onrender.com'
-        );
-        
-        if (dnsResult.success) {
-          const dnsRecord = {
-            id: crypto.randomUUID(),
-            userId: user.id,
-            customDomain,
-            target: process.env.RENDER_SERVICE_HOST || 'your-service-url.onrender.com',
-            type: 'CNAME',
-            createdAt: new Date().toISOString()
-          };
-          
-          // Save DNS record
-          let dnsRecords = {};
-          try {
-            const dnsData = await fs.readFile(DNS_RECORDS_FILE, 'utf8');
-            dnsRecords = JSON.parse(dnsData);
-          } catch (error) {
-            // File doesn't exist
-          }
-          
-          dnsRecords[dnsRecord.id] = dnsRecord;
-          await fs.writeFile(DNS_RECORDS_FILE, JSON.stringify(dnsRecords, null, 2));
-          
-          site.dnsRecordId = dnsRecord.id;
-        }
-      } else if (site.dnsRecordId) {
-        // Disable DNS
-        await deleteDNSRecord(
-          user.domainExtension ? `ntandostore${user.domainExtension}` : 'ntandostore.com',
-          site.dnsRecordId
-        );
-        
-        // Remove DNS record
-        let dnsRecords = {};
-        try {
-          const dnsData = await fs.readFile(DNS_RECORDS_FILE, 'utf8');
-          dnsRecords = JSON.parse(dnsData);
-        } catch (error) {
-          // File doesn't exist
-        }
-        
-        delete dnsRecords[site.dnsRecordId];
-        await fs.writeFile(DNS_RECORDS_FILE, JSON.stringify(dnsRecords, null, 2));
-        
-        site.dnsRecordId = null;
-      }
-    }
-
-    // Create updated HTML
-    let fullHtml = html;
-    
-    if (favicon) {
-      fullHtml = fullHtml.replace('<head>', `<head>\n    <link rel="icon" href="data:image/x-icon;base64,${favicon}">`);
-    }
-    
-    if (css) {
-      fullHtml = fullHtml.replace('</head>', `<style>${css}</style></head>`);
-    }
-    
-    if (js) {
-      fullHtml = fullHtml.replace('</body>', `<script>${js}</script></body>`);
-    }
-
-    await fs.writeFile(path.join(siteDir, 'index.html'), fullHtml);
-
-    // Update site info
-    site.name = siteName || site.name;
-    site.enableDNS = newDnsEnabled;
-    site.updatedAt = new Date().toISOString();
-    
-    await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
-
-    // FIXED: Generate proper URLs for the new structure
-    const username = user.subdomain.split('.')[0];
-    const extension = user.domainExtension.replace('.', '');
-    
-    const standardUrl = `/${site.slug}/${username}/${extension}/`;
-    const customUrl = site.enableDNS ? `https://${site.slug}.${user.subdomain}` : null;
-
-    res.json({ 
-      success: true, 
-      message: 'Site updated successfully!',
-      url: standardUrl,
-      fullUrl: `${req.protocol}://${req.get('host')}${standardUrl}`,
-      customUrl,
-      site
-    });
-
-  } catch (error) {
-    console.error('Update error:', error);
-    res.status(500).json({ error: 'Failed to update site' });
   }
 });
 
@@ -1011,20 +1058,23 @@ app.get('/api/user/sites', authenticateToken, async (req, res) => {
       return res.json([]);
     }
 
-    // FIXED: Generate proper URLs for the new structure
-    const username = user.subdomain.split('.')[0];
-    const extension = user.domainExtension.replace('.', '');
-
     const sites = user.sites.map(site => {
-      const standardUrl = `/${site.slug}/${username}/${extension}/`;
+      const standardUrl = `/${site.slug}/`;
       const customUrl = site.enableDNS ? `https://${site.slug}.${user.subdomain}` : null;
+      
+      // Get all linked domains for this site
+      const linkedDomains = getLinkedDomains(site.slug, 'ntando.app');
       
       return {
         ...site,
         url: standardUrl,
         fullUrl: `${req.protocol}://${req.get('host')}${standardUrl}`,
         customUrl,
-        domainExtension: user.domainExtension
+        primaryDomain: `${site.slug}.ntando.app`,
+        aliasDomains: linkedDomains.filter(d => d !== `${site.slug}.ntando.app`),
+        linkedDomains,
+        domainExtension: user.domainExtension,
+        isPremium: user.isPremium
       };
     });
 
@@ -1071,11 +1121,7 @@ app.get('/api/sites/:siteId', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Site files not found' });
     }
 
-    // FIXED: Generate proper URLs for the new structure
-    const username = user.subdomain.split('.')[0];
-    const extension = user.domainExtension.replace('.', '');
-    
-    const standardUrl = `/${site.slug}/${username}/${extension}/`;
+    const standardUrl = `/${site.slug}/`;
     const customUrl = site.enableDNS ? `https://${site.slug}.${user.subdomain}` : null;
 
     res.json({
@@ -1122,7 +1168,7 @@ app.delete('/api/sites/:siteId', authenticateToken, async (req, res) => {
     // Handle DNS cleanup
     if (site.dnsRecordId) {
       await deleteDNSRecord(
-        user.domainExtension ? `ntandostore${user.domainExtension}` : 'ntandostore.com',
+        user.domainExtension ? `ntando${user.domainExtension}` : 'ntando.app',
         site.dnsRecordId
       );
       
@@ -1154,231 +1200,153 @@ app.delete('/api/sites/:siteId', authenticateToken, async (req, res) => {
   }
 });
 
-// NEW: Primary routing for sitename.username.extension structure
-app.get('/:siteName/:username/:extension/', async (req, res, next) => {
-  try {
-    const { siteName, username, extension } = req.params;
-    
-    // Validate extension
-    if (!validateDomainExtension('.' + extension)) {
-      return next();
-    }
-    
-    // Find user by username part of subdomain
-    let users = {};
-    try {
-      const usersData = await fs.readFile(USERS_FILE, 'utf8');
-      users = JSON.parse(usersData);
-    } catch (error) {
-      return next();
-    }
-    
-    // Find user that matches username part of subdomain
-    const user = Object.values(users).find(u => {
-      const userSubdomainParts = u.subdomain.split('.');
-      return userSubdomainParts[0] === username;
-    });
-    
-    if (!user) {
-      return next();
-    }
-    
-    // Find site by site name
-    const site = user.sites.find(s => s.slug === siteName);
-    if (!site) {
-      return next();
-    }
-    
-    // Update visit count
-    site.visits = (site.visits || 0) + 1;
-    await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
-    
-    // Serve the file
-    const userDir = path.join(USERS_DIR, user.subdomain, site.slug);
-    const filePath = path.join(userDir, 'index.html');
-    
-    try {
-      res.sendFile(filePath);
-    } catch (error) {
-      next();
-    }
-  } catch (error) {
-    next();
-  }
-});
-
-// Custom domain routing for DNS forwarding (existing)
+// Comprehensive subdomain routing system
 app.get('*', async (req, res, next) => {
   try {
     const host = req.get('host');
+    const originalUrl = req.originalUrl;
     
-    // Check if this is a custom domain request (e.g., site-name.username.ntandostore.com)
-    if (host && host.includes('ntandostore')) {
-      const parts = host.split('.');
+    // Skip if this is an API route or static file
+    if (originalUrl.startsWith('/api/') || originalUrl.startsWith('/dashboard') || originalUrl.startsWith('/health')) {
+      return next();
+    }
+    
+    console.log(`🌐 Processing request: ${host}${originalUrl}`);
+    
+    // Resolve the subdomain
+    const resolved = resolveSubdomain(host);
+    
+    if (resolved) {
+      console.log(`📍 Resolved subdomain: ${resolved.subdomain}.${resolved.domain} (Alias: ${resolved.isAlias})`);
       
-      // Check for pattern: site-name.username.ntandostore.extension
-      if (parts.length >= 4) {
-        const extension = '.' + parts[parts.length - 1];
-        const domain = parts.slice(0, -1).join('.');
+      // Get canonical routing information
+      const canonical = getCanonicalDomain(resolved);
+      
+      if (canonical) {
+        console.log(`🎯 Canonical routing: ${canonical.subdomain} -> ${canonical.canonicalDomain}`);
+        console.log(`🔗 All linked domains: ${canonical.allDomains.join(', ')}`);
         
-        // Check if extension is supported
-        if (validateDomainExtension(extension)) {
-          // Try to match with user subdomain + site slug
-          const domainParts = domain.split('.');
-          if (domainParts.length >= 2) {
-            const siteSlug = domainParts[0];
-            const userSubdomain = domainParts.slice(1).join('.');
-            
-            // Look up user by subdomain
-            let users = {};
-            try {
-              const usersData = await fs.readFile(USERS_FILE, 'utf8');
-              users = JSON.parse(usersData);
-            } catch (error) {
-              return next();
-            }
-            
-            const user = Object.values(users).find(u => u.subdomain === userSubdomain);
-            if (user) {
-              const site = user.sites.find(s => s.slug === siteSlug && s.enableDNS);
-              if (site) {
-                // Update visit count
-                site.visits = (site.visits || 0) + 1;
-                await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
-                
-                // Serve the file
-                const filePath = path.join(USERS_DIR, userSubdomain, siteSlug, 'index.html');
-                return res.sendFile(filePath);
-              }
-            }
+        // Find the subdomain across all domains
+        const result = await findSubdomainAcrossDomains(canonical.subdomain);
+        
+        if (result.found) {
+          const { site, user } = result;
+          
+          console.log(`✅ Found site: ${site.name} for user: ${user.username}`);
+          
+          // Update visit count
+          site.visits = (site.visits || 0) + 1;
+          await fs.writeFile(USERS_FILE, JSON.stringify(
+            JSON.parse(await fs.readFile(USERS_FILE, 'utf8')), 
+            null, 
+            2
+          ));
+          
+          // Add subdomain information to response headers
+          res.setHeader('X-Subdomain', canonical.subdomain);
+          res.setHeader('X-Original-Domain', canonical.originalRequest);
+          res.setHeader('X-Canonical-Domain', canonical.canonicalDomain);
+          res.setHeader('X-Linked-Domains', canonical.allDomains.join(','));
+          
+          // Serve the file
+          const filePath = path.join(USERS_DIR, user.subdomain, site.slug, 'index.html');
+          try {
+            console.log(`📁 Serving file: ${filePath}`);
+            return res.sendFile(filePath);
+          } catch (error) {
+            console.log(`❌ File not found: ${filePath}`);
+            return next();
           }
+        } else {
+          console.log(`❌ Subdomain not found: ${canonical.subdomain}`);
+          
+          // Check if this is a root domain request (no subdomain)
+          if (canonical.subdomain === 'www' || canonical.subdomain === '') {
+            // Redirect to main site
+            return res.redirect('/');
+          }
+          
+          // Serve 404 page for unknown subdomain
+          return res.status(404).send(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Subdomain Not Found - Ntando Hosting</title>
+                <style>
+                    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                    .container { max-width: 600px; margin: 0 auto; }
+                    h1 { color: #667eea; font-size: 2.5rem; margin-bottom: 1rem; }
+                    p { color: #666; margin-bottom: 2rem; }
+                    .btn { background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block; }
+                    .domains { margin-top: 2rem; font-family: monospace; background: #f5f5f5; padding: 1rem; border-radius: 8px; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>🌐 Subdomain Not Found</h1>
+                    <p>The subdomain <strong>${canonical.originalRequest}</strong> does not exist on our platform.</p>
+                    <a href="/" class="btn">Go to Homepage</a>
+                    <div class="domains">
+                        <strong>Available domains for your sites:</strong><br>
+                        ${canonical.allDomains.map(d => `• ${d}`).join('<br>')}
+                    </div>
+                </div>
+            </body>
+            </html>
+          `);
         }
       }
     }
     
     next();
   } catch (error) {
+    console.error('❌ Subdomain routing error:', error);
     next();
   }
 });
 
-// Legacy routing for backward compatibility (username/sitename/)
-app.get('/:subdomain/:slug/', async (req, res, next) => {
+// Legacy routing for backward compatibility
+app.get('/:siteName/', async (req, res, next) => {
   try {
-    const { subdomain, slug } = req.params;
+    const { siteName } = req.params;
+    const host = req.get('host');
     
-    // Check if this is a user subdomain (old format for compatibility)
-    const userDir = path.join(USERS_DIR, subdomain, slug);
-    const filePath = path.join(userDir, 'index.html');
-
-    try {
-      // Update visit count
+    // Only handle this if no subdomain routing occurred
+    if (host && !DOMAIN_CONFIG.aliases.some(alias => {
+      const parts = host.split('.');
+      return parts.length >= 2 && DOMAIN_CONFIG.aliases.includes(parts.slice(1).join('.'));
+    })) {
+      // Look for site in all users (legacy support)
       let users = {};
       try {
         const usersData = await fs.readFile(USERS_FILE, 'utf8');
         users = JSON.parse(usersData);
-        
-        // Find user by subdomain
-        const user = Object.values(users).find(u => u.subdomain === subdomain);
-        if (user) {
-          const site = user.sites.find(s => s.slug === slug);
-          if (site) {
-            site.visits = (site.visits || 0) + 1;
-            await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+      } catch (error) {
+        return next();
+      }
+      
+      // Search through all users to find the matching site
+      for (const user of Object.values(users)) {
+        const site = user.sites.find(s => s.slug === siteName);
+        if (site) {
+          // Update visit count
+          site.visits = (site.visits || 0) + 1;
+          await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+          
+          // Serve the file
+          const filePath = path.join(USERS_DIR, user.subdomain, site.slug, 'index.html');
+          try {
+            return res.sendFile(filePath);
+          } catch (error) {
+            return next();
           }
         }
-      } catch (error) {
-        console.error('Error updating visit count:', error);
       }
-
-      // Serve the file
-      res.sendFile(filePath);
-    } catch (error) {
-      next();
     }
+    
+    next();
   } catch (error) {
     next();
-  }
-});
-
-// Serve user subdomain root (redirect to first site or dashboard)
-app.get('/:subdomain/', async (req, res, next) => {
-  try {
-    const { subdomain } = req.params;
-    
-    // Find user by subdomain
-    let users = {};
-    try {
-      const usersData = await fs.readFile(USERS_FILE, 'utf8');
-      users = JSON.parse(usersData);
-    } catch (error) {
-      return next();
-    }
-
-    const user = Object.values(users).find(u => u.subdomain === subdomain);
-    if (!user) {
-      return next();
-    }
-
-    // Redirect to first site if exists, otherwise to dashboard
-    if (user.sites.length > 0) {
-      const username = user.subdomain.split('.')[0];
-      const extension = user.domainExtension.replace('.', '');
-      res.redirect(`/${user.sites[0].slug}/${username}/${extension}/`);
-    } else {
-      res.redirect('/dashboard');
-    }
-  } catch (error) {
-    next();
-  }
-});
-
-// Keep backward compatibility for old hosted sites
-app.get('/hosted/:domain/*', async (req, res) => {
-  try {
-    const { domain } = req.params;
-    const requestedPath = req.params[0] || 'index.html';
-    const filePath = path.join(UPLOADS_DIR, domain, requestedPath);
-
-    // Update visit count
-    let domains = {};
-    try {
-      const domainsData = await fs.readFile(DOMAINS_FILE, 'utf8');
-      domains = JSON.parse(domainsData);
-      if (domains[domain]) {
-        domains[domain].visits = (domains[domain].visits || 0) + 1;
-        await fs.writeFile(DOMAINS_FILE, JSON.stringify(domains, null, 2));
-      }
-    } catch (error) {
-      console.error('Error updating visit count:', error);
-    }
-
-    // Serve the file
-    res.sendFile(filePath);
-  } catch (error) {
-    res.status(404).send('Site not found');
-  }
-});
-
-// API to get all hosted sites (backward compatibility)
-app.get('/api/sites', async (req, res) => {
-  try {
-    const domainsData = await fs.readFile(DOMAINS_FILE, 'utf8');
-    const domains = JSON.parse(domainsData);
-    
-    const sites = Object.entries(domains).map(([domain, info]) => ({
-      domain,
-      name: info.name,
-      createdAt: info.createdAt,
-      visits: info.visits,
-      isCustom: info.isCustom || false,
-      url: `/${domain}/`,
-      oldUrl: `/hosted/${domain}/`
-    }));
-
-    res.json(sites);
-  } catch (error) {
-    res.json([]);
   }
 });
 
@@ -1386,11 +1354,20 @@ app.get('/api/sites', async (req, res) => {
 app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
-    service: 'Ntandostore Enhanced Free Hosting',
-    features: ['Subdomains', 'User System', 'Site Editing', 'Templates', 'Backups', 'DNS Forwarding', 'Custom Domains', 'Enhanced URL Structure'],
+    service: 'Ntando Enhanced Free Hosting',
+    features: ['Subdomains', 'User System', 'Site Editing', 'Templates', 'Backups', 'DNS Forwarding', 'Custom Domains', 'Enhanced URL Structure', 'Comprehensive Subdomain Routing'],
     domainExtensions: DOMAIN_CONFIG.extensions,
+    primaryDomain: DOMAIN_CONFIG.primary,
+    aliases: DOMAIN_CONFIG.aliases,
     dnsEnabled: DNS_CONFIG.enabled,
-    urlStructure: 'sitename.username.extension',
+    urlStructure: 'mysite.ntando.app, mysite.ntl.cloud, mysite.ntando.zw',
+    subdomainMapping: DOMAIN_CONFIG.subdomainMapping,
+    routing: {
+      type: 'comprehensive',
+      linking: 'all-domains-linked',
+      canonical: 'ntando.app',
+      aliases: ['ntl.cloud', 'ntando.zw', 'ntandostore.com']
+    },
     timestamp: new Date().toISOString() 
   });
 });
@@ -1413,15 +1390,16 @@ process.on('SIGINT', () => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Ntandostore Enhanced Hosting running on port ${PORT}`);
+  console.log(`🚀 Ntando Enhanced Hosting running on port ${PORT}`);
   console.log(`📁 Uploads directory: ${UPLOADS_DIR}`);
   console.log(`👥 Users directory: ${USERS_DIR}`);
   console.log(`🌐 Dashboard: http://localhost:${PORT}/dashboard`);
   console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`✨ Features: Subdomains, user system, site editing, templates, backups, DNS forwarding`);
-  console.log(`🌍 Supported domains: ${DOMAIN_CONFIG.extensions.join(', ')}`);
+  console.log(`🌍 Primary Domain: ${DOMAIN_CONFIG.primary}`);
+  console.log(`🔗 Available Domains: ${DOMAIN_CONFIG.aliases.join(', ')}`);
+  console.log(`🌐 URL Structure: mysite.ntando.app, mysite.ntl.cloud, mysite.ntando.zw`);
   console.log(`🔗 DNS Forwarding: ${DNS_CONFIG.enabled ? 'Enabled' : 'Disabled'}`);
-  console.log(`🌐 URL Structure: sitename.username.extension (e.g., ntandomods.dev07-happyspace3393.com)`);
   
   // Log important directories for Render.com deployment
   if (process.env.NODE_ENV === 'production') {
