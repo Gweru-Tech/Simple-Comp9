@@ -796,7 +796,7 @@ app.get('/api/templates', (req, res) => {
         .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
         .project { padding: 2rem; border: 1px solid #ddd; border-radius: 8px; }
     </style>
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+
 </head>
 <body>
     <header>
@@ -863,7 +863,7 @@ app.get('/api/templates', (req, res) => {
         .service { text-align: center; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         button { background: #0984e3; color: white; border: none; padding: 1rem 2rem; font-size: 1.1rem; border-radius: 5px; cursor: pointer; margin-top: 1rem; }
     </style>
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+
 </head>
 <body>
     <header>
@@ -924,7 +924,7 @@ app.get('/api/templates', (req, res) => {
         .read-more { color: #3498db; text-decoration: none; font-weight: bold; }
         .read-more:hover { text-decoration: underline; }
     </style>
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+
 </head>
 <body>
     <header>
@@ -982,7 +982,7 @@ app.get('/api/templates', (req, res) => {
         .feature { text-align: center; padding: 2rem; }
         .feature h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     </style>
-<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+
 </head>
 <body>
     <header>
