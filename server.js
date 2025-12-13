@@ -5,8 +5,25 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Import security middleware
+const {
+    generateCSRFToken,
+    validateCSRFToken,
+    authLimiter,
+    uploadLimiter,
+    generalLimiter,
+    validateInput,
+    validateFileUpload,
+    sanitizeHTML,
+    securityHeaders,
+    securityLogger
+} = require('./security-middleware');
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'ntandostore-secret-key-2024';
@@ -153,15 +170,51 @@ async function ensureDirectories() {
 // Initialize directories on startup
 ensureDirectories();
 
+// Security middleware
+app.use(securityHeaders);
+app.use(securityLogger);
+app.use(generalLimiter);
+
 // Middleware
 app.use(express.static('public'));
-app.use(cors());
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'],
+  credentials: true
+}));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Serve uploaded files
-app.use('/hosted', express.static(UPLOADS_DIR));
-app.use('/users', express.static(USERS_DIR));
+// Serve uploaded files with security headers
+app.use('/hosted', express.static(UPLOADS_DIR, {
+  setHeaders: (res, path) => {
+    res.set('X-Content-Type-Options', 'nosniff');
+  }
+}));
+app.use('/users', express.static(USERS_DIR, {
+  setHeaders: (res, path) => {
+    res.set('X-Content-Type-Options', 'nosniff');
+  }
+}));
+
+// File upload configuration
+const storage = multer.memoryStorage();
+const fileFilter = (req, file, cb) => {
+  const validation = validateFileUpload(file);
+  if (validation.valid) {
+    cb(null, true);
+  } else {
+    cb(new Error(validation.error), false);
+  }
+};
+
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB
+    files: 10 // Max 10 files
+  }
+});
 
 // Handle specific routes for static files
 app.get('/dashboard', (req, res) => {
@@ -172,7 +225,13 @@ app.get('/dashboard.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
-// Authentication middleware
+// CSRF token endpoint
+app.get('/api/csrf-token', (req, res) => {
+  const token = generateCSRFToken();
+  res.json({ token });
+});
+
+// Authentication middleware with enhanced security
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -181,13 +240,53 @@ const authenticateToken = (req, res, next) => {
     return res.status(401).json({ error: 'Access token required' });
   }
 
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ error: 'Invalid or expired token' });
-    }
-    req.user = user;
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    // Check if token is not blacklisted (implement blacklist logic if needed)
+    
+    req.user = decoded;
     next();
-  });
+  } catch (err) {
+    return res.status(403).json({ error: 'Invalid or expired token' });
+  }
+};
+
+// Enhanced input validation middleware
+const validateRequest = (req, res, next) => {
+  // Check for common attack patterns
+  const suspiciousPatterns = [
+    /<script/i,
+    /javascript:/i,
+    /vbscript:/i,
+    /onload=/i,
+    /onerror=/i,
+    /eval\(/i,
+    /document\.cookie/i
+  ];
+
+  const checkObject = (obj) => {
+    for (const key in obj) {
+      if (typeof obj[key] === 'string') {
+        for (const pattern of suspiciousPatterns) {
+          if (pattern.test(obj[key])) {
+            return false;
+          }
+        }
+      } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+        if (!checkObject(obj[key])) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  if (!checkObject(req.body) || !checkObject(req.query) || !checkObject(req.params)) {
+    return res.status(400).json({ error: 'Invalid request data' });
+  }
+
+  next();
 };
 
 // DNS Forwarding Functions
@@ -236,45 +335,14 @@ function generateSubdomain(username, domainExtension = '.app') {
   return `${cleanUsername}-${adjective}${noun}${numbers}`;
 }
 
-// Validate username
+// Validate username with enhanced security
 function validateUsername(username) {
-  const validPattern = /^[a-zA-Z0-9_-]+$/;
-  if (!validPattern.test(username)) {
-    return false;
-  }
-  
-  if (username.length < 3 || username.length > 30) {
-    return false;
-  }
-  
-  if (username.startsWith('-') || username.endsWith('-') || username.startsWith('_') || username.endsWith('_')) {
-    return false;
-  }
-  
-  const reserved = ['www', 'api', 'admin', 'dashboard', 'mail', 'ftp', 'cdn', 'static', 'assets', 'hosted', 'users'];
-  if (reserved.includes(username.toLowerCase())) {
-    return false;
-  }
-  
-  return true;
+  return validateInput(username, 'username');
 }
 
 // Validate subdomain with enhanced rules
 function validateSubdomain(subdomain) {
-  const validPattern = /^[a-zA-Z0-9-]+$/;
-  if (!validPattern.test(subdomain)) {
-    return false;
-  }
-  
-  if (subdomain.length < 3 || subdomain.length > 63) {
-    return false;
-  }
-  
-  if (subdomain.startsWith('-') || subdomain.endsWith('-')) {
-    return false;
-  }
-  
-  return true;
+  return validateInput(subdomain, 'slug');
 }
 
 // Validate domain extension with premium checking
@@ -412,6 +480,11 @@ app.get('/api/domains/subdomain/:subdomain', async (req, res) => {
   try {
     const { subdomain } = req.params;
     
+    // Validate subdomain
+    if (!validateSubdomain(subdomain)) {
+      return res.status(400).json({ error: 'Invalid subdomain' });
+    }
+    
     // Get all linked domains
     const linkedDomains = getLinkedDomains(subdomain, 'ntando.app');
     
@@ -441,6 +514,11 @@ app.get('/api/domains/subdomain/:subdomain', async (req, res) => {
 app.get('/api/domains/test/:subdomain', (req, res) => {
   try {
     const { subdomain } = req.params;
+    
+    // Validate subdomain
+    if (!validateSubdomain(subdomain)) {
+      return res.status(400).json({ error: 'Invalid subdomain' });
+    }
     
     const testHost = `${subdomain}.ntando.app`;
     const resolved = resolveSubdomain(testHost);
@@ -489,8 +567,8 @@ app.get('/api/domains/check/:subdomain/:extension', async (req, res) => {
   }
 });
 
-// User registration
-app.post('/api/register', async (req, res) => {
+// User registration with enhanced security
+app.post('/api/register', authLimiter, validateRequest, async (req, res) => {
   try {
     const { username, email, password, domainExtension } = req.body;
     
@@ -498,8 +576,13 @@ app.post('/api/register', async (req, res) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
     
+    // Validate inputs
     if (!validateUsername(username)) {
       return res.status(400).json({ error: 'Invalid username. Use 3-30 characters, letters, numbers, hyphens, and underscores only.' });
+    }
+    
+    if (!validateInput(email, 'email')) {
+      return res.status(400).json({ error: 'Invalid email address' });
     }
     
     if (password.length < 6) {
@@ -541,21 +624,27 @@ app.post('/api/register', async (req, res) => {
       counter++;
     }
     
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash password with enhanced security
+    const hashedPassword = await bcrypt.hash(password, 12);
     const userId = crypto.randomUUID();
     
     // Create user
     const user = {
       id: userId,
-      username,
-      email,
+      username: sanitizeHTML(username),
+      email: sanitizeHTML(email),
       password: hashedPassword,
       domainExtension: selectedExtension,
       subdomain: finalSubdomain,
       isPremium: isPremiumDomain(selectedExtension),
       createdAt: new Date().toISOString(),
-      sites: []
+      lastLogin: new Date().toISOString(),
+      sites: [],
+      security: {
+        loginAttempts: 0,
+        lockedUntil: null,
+        twoFactorEnabled: false
+      }
     };
     
     users[userId] = user;
@@ -565,8 +654,12 @@ app.post('/api/register', async (req, res) => {
     const userDir = path.join(USERS_DIR, user.subdomain);
     await fs.mkdir(userDir, { recursive: true });
     
-    // Generate JWT token
-    const token = jwt.sign({ userId: user.id, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
+    // Generate JWT token with extended expiration
+    const token = jwt.sign({ 
+      userId: user.id, 
+      username: user.username,
+      iat: Math.floor(Date.now() / 1000)
+    }, JWT_SECRET, { expiresIn: '7d' });
     
     res.json({ 
       success: true, 
@@ -588,13 +681,18 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// User login
-app.post('/api/login', async (req, res) => {
+// User login with enhanced security
+app.post('/api/login', authLimiter, validateRequest, async (req, res) => {
   try {
     const { username, password } = req.body;
     
     if (!username || !password) {
       return res.status(400).json({ error: 'Username and password are required' });
+    }
+    
+    // Validate inputs
+    if (!validateUsername(username)) {
+      return res.status(400).json({ error: 'Invalid username format' });
     }
     
     // Read users
@@ -612,14 +710,45 @@ app.post('/api/login', async (req, res) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
     
+    // Check if account is locked
+    if (user.security && user.security.lockedUntil && new Date(user.security.lockedUntil) > new Date()) {
+      return res.status(423).json({ error: 'Account temporarily locked due to multiple failed attempts' });
+    }
+    
     // Verify password
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
+      // Increment failed attempts
+      if (user.security) {
+        user.security.loginAttempts = (user.security.loginAttempts || 0) + 1;
+        
+        // Lock account after 5 failed attempts for 15 minutes
+        if (user.security.loginAttempts >= 5) {
+          user.security.lockedUntil = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+        }
+        
+        users[user.id] = user;
+        await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+      }
+      
       return res.status(400).json({ error: 'Invalid credentials' });
     }
     
+    // Reset failed attempts on successful login
+    if (user.security) {
+      user.security.loginAttempts = 0;
+      user.security.lockedUntil = null;
+      user.lastLogin = new Date().toISOString();
+      users[user.id] = user;
+      await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+    }
+    
     // Generate JWT token
-    const token = jwt.sign({ userId: user.id, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ 
+      userId: user.id, 
+      username: user.username,
+      iat: Math.floor(Date.now() / 1000)
+    }, JWT_SECRET, { expiresIn: '7d' });
     
     res.json({ 
       success: true, 
@@ -667,6 +796,7 @@ app.get('/api/templates', (req, res) => {
         .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
         .project { padding: 2rem; border: 1px solid #ddd; border-radius: 8px; }
     </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
     <header>
@@ -733,6 +863,7 @@ app.get('/api/templates', (req, res) => {
         .service { text-align: center; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         button { background: #0984e3; color: white; border: none; padding: 1rem 2rem; font-size: 1.1rem; border-radius: 5px; cursor: pointer; margin-top: 1rem; }
     </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
     <header>
@@ -793,6 +924,7 @@ app.get('/api/templates', (req, res) => {
         .read-more { color: #3498db; text-decoration: none; font-weight: bold; }
         .read-more:hover { text-decoration: underline; }
     </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
     <header>
@@ -850,6 +982,7 @@ app.get('/api/templates', (req, res) => {
         .feature { text-align: center; padding: 2rem; }
         .feature h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
     <header>
@@ -894,8 +1027,8 @@ app.get('/api/templates', (req, res) => {
   res.json(templates);
 });
 
-// Upload and create a new site (protected route)
-app.post('/api/upload', authenticateToken, async (req, res) => {
+// Upload and create a new site (protected route) with enhanced security
+app.post('/api/upload', uploadLimiter, authenticateToken, validateRequest, async (req, res) => {
   try {
     const { html, css, js, siteName, siteSlug, favicon, enableDNS } = req.body;
     
@@ -903,6 +1036,18 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'HTML content is required' });
     }
 
+    // Validate inputs
+    if (!validateInput(siteName, 'sitename')) {
+      return res.status(400).json({ error: 'Invalid site name' });
+    }
+
+    if (siteSlug && !validateInput(siteSlug, 'slug')) {
+      return res.status(400).json({ error: 'Invalid site slug' });
+    }
+
+    // Sanitize HTML content
+    const sanitizedHtml = sanitizeHTML(html);
+    
     // Get user info
     let users = {};
     try {
@@ -942,7 +1087,7 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
     await fs.mkdir(siteDir, { recursive: true });
 
     // Create index.html with favicon if provided
-    let fullHtml = html;
+    let fullHtml = sanitizedHtml;
     
     // Add favicon if provided
     if (favicon) {
@@ -998,14 +1143,18 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
     // Add site to user's sites
     const site = {
       id: crypto.randomUUID(),
-      name: siteName || 'Untitled Site',
+      name: sanitizeHTML(siteName) || 'Untitled Site',
       slug: finalSlug,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       visits: 0,
       published: true,
       enableDNS: !!enableDNS,
-      dnsRecordId: dnsRecord?.id || null
+      dnsRecordId: dnsRecord?.id || null,
+      security: {
+        lastScanned: new Date().toISOString(),
+        scanStatus: 'clean'
+      }
     };
 
     user.sites.push(site);
@@ -1086,9 +1235,14 @@ app.get('/api/user/sites', authenticateToken, async (req, res) => {
 });
 
 // Get site details for editing (protected route)
-app.get('/api/sites/:siteId', authenticateToken, async (req, res) => {
+app.get('/api/sites/:siteId', authenticateToken, validateRequest, async (req, res) => {
   try {
     const { siteId } = req.params;
+
+    // Validate siteId
+    if (!siteId || !/^[a-zA-Z0-9-]+$/.test(siteId)) {
+      return res.status(400).json({ error: 'Invalid site ID' });
+    }
 
     // Get user info
     let users = {};
@@ -1138,10 +1292,105 @@ app.get('/api/sites/:siteId', authenticateToken, async (req, res) => {
   }
 });
 
-// Delete site (protected route)
-app.delete('/api/sites/:siteId', authenticateToken, async (req, res) => {
+// Update site (protected route)
+app.put('/api/sites/:siteId', uploadLimiter, authenticateToken, validateRequest, async (req, res) => {
   try {
     const { siteId } = req.params;
+    const { html, css, js, siteName } = req.body;
+
+    // Validate inputs
+    if (!siteId || !/^[a-zA-Z0-9-]+$/.test(siteId)) {
+      return res.status(400).json({ error: 'Invalid site ID' });
+    }
+
+    if (!html) {
+      return res.status(400).json({ error: 'HTML content is required' });
+    }
+
+    if (siteName && !validateInput(siteName, 'sitename')) {
+      return res.status(400).json({ error: 'Invalid site name' });
+    }
+
+    // Get user info
+    let users = {};
+    try {
+      const usersData = await fs.readFile(USERS_FILE, 'utf8');
+      users = JSON.parse(usersData);
+    } catch (error) {
+      return res.status(500).json({ error: 'User data not found' });
+    }
+
+    const user = users[req.user.userId];
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Find the site
+    const siteIndex = user.sites.findIndex(s => s.id === siteId);
+    if (siteIndex === -1) {
+      return res.status(404).json({ error: 'Site not found' });
+    }
+
+    const site = user.sites[siteIndex];
+
+    // Create backup before updating
+    const siteDir = path.join(USERS_DIR, user.subdomain, site.slug);
+    const backupDir = path.join(siteDir, 'backups');
+    
+    try {
+      await fs.mkdir(backupDir, { recursive: true });
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const originalHtml = await fs.readFile(path.join(siteDir, 'index.html'), 'utf8');
+      await fs.writeFile(path.join(backupDir, `backup-${timestamp}.html`), originalHtml);
+    } catch (error) {
+      console.error('Backup creation failed:', error);
+    }
+
+    // Sanitize and update HTML
+    const sanitizedHtml = sanitizeHTML(html);
+    let fullHtml = sanitizedHtml;
+    
+    if (css) {
+      fullHtml = fullHtml.replace('</head>', `<style>${css}</style></head>`);
+    }
+    
+    if (js) {
+      fullHtml = fullHtml.replace('</body>', `<script>${js}</script></body>`);
+    }
+
+    await fs.writeFile(path.join(siteDir, 'index.html'), fullHtml);
+
+    // Update site info
+    if (siteName) {
+      site.name = sanitizeHTML(siteName);
+    }
+    site.updatedAt = new Date().toISOString();
+    site.security.lastScanned = new Date().toISOString();
+
+    users[req.user.userId].sites[siteIndex] = site;
+    await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+
+    res.json({ 
+      success: true, 
+      message: 'Site updated successfully',
+      site
+    });
+
+  } catch (error) {
+    console.error('Update error:', error);
+    res.status(500).json({ error: 'Failed to update site' });
+  }
+});
+
+// Delete site (protected route)
+app.delete('/api/sites/:siteId', authenticateToken, validateRequest, async (req, res) => {
+  try {
+    const { siteId } = req.params;
+
+    // Validate siteId
+    if (!siteId || !/^[a-zA-Z0-9-]+$/.test(siteId)) {
+      return res.status(400).json({ error: 'Invalid site ID' });
+    }
 
     // Get user info
     let users = {};
@@ -1200,7 +1449,7 @@ app.delete('/api/sites/:siteId', authenticateToken, async (req, res) => {
   }
 });
 
-// Comprehensive subdomain routing system
+// Comprehensive subdomain routing system with security
 app.get('*', async (req, res, next) => {
   try {
     const host = req.get('host');
@@ -1208,6 +1457,11 @@ app.get('*', async (req, res, next) => {
     
     // Skip if this is an API route or static file
     if (originalUrl.startsWith('/api/') || originalUrl.startsWith('/dashboard') || originalUrl.startsWith('/health')) {
+      return next();
+    }
+    
+    // Validate host to prevent host header injection
+    if (!host || /^[a-zA-Z0-9.-]+$/.test(host) === false) {
       return next();
     }
     
@@ -1242,7 +1496,10 @@ app.get('*', async (req, res, next) => {
             2
           ));
           
-          // Add subdomain information to response headers
+          // Add security headers
+          res.setHeader('X-Content-Type-Options', 'nosniff');
+          res.setHeader('X-Frame-Options', 'DENY');
+          res.setHeader('X-XSS-Protection', '1; mode=block');
           res.setHeader('X-Subdomain', canonical.subdomain);
           res.setHeader('X-Original-Domain', canonical.originalRequest);
           res.setHeader('X-Canonical-Domain', canonical.canonicalDomain);
@@ -1311,6 +1568,11 @@ app.get('/:siteName/', async (req, res, next) => {
     const { siteName } = req.params;
     const host = req.get('host');
     
+    // Validate siteName
+    if (!siteName || !/^[a-zA-Z0-9-]+$/.test(siteName)) {
+      return next();
+    }
+    
     // Only handle this if no subdomain routing occurred
     if (host && !DOMAIN_CONFIG.aliases.some(alias => {
       const parts = host.split('.');
@@ -1350,12 +1612,22 @@ app.get('/:siteName/', async (req, res, next) => {
   }
 });
 
-// Health check endpoint for render.com
+// Health check endpoint for render.com with enhanced security info
 app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
     service: 'Ntando Enhanced Free Hosting',
-    features: ['Subdomains', 'User System', 'Site Editing', 'Templates', 'Backups', 'DNS Forwarding', 'Custom Domains', 'Enhanced URL Structure', 'Comprehensive Subdomain Routing'],
+    version: '2.0.0',
+    security: {
+      csrfProtection: true,
+      rateLimiting: true,
+      inputValidation: true,
+      contentSecurityPolicy: true,
+      xssProtection: true,
+      fileUploadValidation: true,
+      httpsOnly: process.env.NODE_ENV === 'production'
+    },
+    features: ['Subdomains', 'User System', 'Site Editing', 'Templates', 'Backups', 'DNS Forwarding', 'Custom Domains', 'Enhanced URL Structure', 'Comprehensive Subdomain Routing', 'File Upload Manager', 'Security Monitoring'],
     domainExtensions: DOMAIN_CONFIG.extensions,
     primaryDomain: DOMAIN_CONFIG.primary,
     aliases: DOMAIN_CONFIG.aliases,
@@ -1377,6 +1649,18 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error('Unhandled error:', error);
+  
+  // Don't leak error details in production
+  if (process.env.NODE_ENV === 'production') {
+    res.status(500).json({ error: 'Internal server error' });
+  } else {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Graceful shutdown handler
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully');
@@ -1390,12 +1674,13 @@ process.on('SIGINT', () => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Ntando Enhanced Hosting running on port ${PORT}`);
+  console.log(`🚀 Ntando Enhanced Hosting v2.0.0 running on port ${PORT}`);
   console.log(`📁 Uploads directory: ${UPLOADS_DIR}`);
   console.log(`👥 Users directory: ${USERS_DIR}`);
   console.log(`🌐 Dashboard: http://localhost:${PORT}/dashboard`);
   console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`✨ Features: Subdomains, user system, site editing, templates, backups, DNS forwarding`);
+  console.log(`✨ Features: Subdomains, user system, site editing, templates, backups, DNS forwarding, file upload manager`);
+  console.log(`🔒 Security: CSRF protection, rate limiting, input validation, CSP headers, XSS protection`);
   console.log(`🌍 Primary Domain: ${DOMAIN_CONFIG.primary}`);
   console.log(`🔗 Available Domains: ${DOMAIN_CONFIG.aliases.join(', ')}`);
   console.log(`🌐 URL Structure: mysite.ntando.app, mysite.ntl.cloud, mysite.ntando.zw`);

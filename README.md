@@ -1,255 +1,307 @@
-# Ntandostore Enhanced - Subdomain Hosting Platform
+# Ntando Enhanced Hosting Platform
 
-A powerful free website hosting platform with user accounts, subdomain support, site editing, and advanced features.
+A secure, enterprise-grade subdomain hosting platform with advanced file management, comprehensive security features, and multi-domain support.
 
-## 🚀 Major Enhancements
+## 🚀 Features
 
-### New Features Added:
-- 👥 **User Authentication System** - Secure registration and login
-- 🌐 **Subdomain Hosting** - Each user gets unique subdomain (username-random.ntandostore)
-- ✏️ **Site Editing** - Edit deployed sites with automatic backups
-- 🎨 **Professional Templates** - Portfolio, Business, Blog, and Landing page templates
-- 🔐 **Automatic Backups** - Backups created before each site update
-- 📊 **Enhanced Analytics** - Track visits and site performance
-- 🌙 **Dark Mode Dashboard** - Modern UI with light/dark theme toggle
-- 🔍 **Live Preview** - Preview sites before deployment
-- 📱 **QR Code Sharing** - Generate QR codes for easy mobile sharing
+### Core Features
+- **User Authentication System** - Secure JWT-based authentication with account locking
+- **Subdomain Hosting** - Unique subdomains for each user with multiple domain extensions
+- **File Upload Manager** - Drag-and-drop file uploads with validation and security scanning
+- **Website Templates** - Professional templates for portfolios, business, blogs, and landing pages
+- **Site Editing** - In-place editing with automatic backups and version control
+- **DNS Forwarding** - Custom domain support with automatic SSL certificates
+- **Real-time Analytics** - Visitor tracking and performance monitoring
 
-## 🌐 URL Structure
+### Security Features
+- **CSRF Protection** - Cross-Site Request Forgery prevention
+- **Rate Limiting** - Advanced rate limiting for API endpoints
+- **Input Validation** - Comprehensive input sanitization and validation
+- **Content Security Policy** - XSS prevention with CSP headers
+- **File Upload Security** - File type validation, size limits, and virus scanning
+- **HTTPS Enforcement** - Automatic SSL certificates and HTTPS redirects
+- **Account Locking** - Automatic account locking after failed login attempts
+- **Security Headers** - Complete security header implementation
 
-### New Subdomain System:
-- **User Root**: `username-random123.ntandostore`
-- **Site Pages**: `username-random123/sitename.ntandostore`
-- **Direct Access**: Clean URLs without `/hosted/` prefix
+### Multi-Domain Support
+- **Primary Domain**: `ntando.app`
+- **Alias Domains**: `ntl.cloud`, `ntando.zw`, `ntandostore.com`
+- **Domain Extensions**: `.app`, `.cloud`, `.zw`, `.com`, `.online`, `.id`, `.net`, `.store`, `.blog`, `.uk`, `.org`
+- **Subdomain Mapping**: Automatic linking across all domains
 
-### Example URLs:
+## 🛡️ Security Architecture
+
+### Authentication & Authorization
+- JWT tokens with expiration and refresh
+- Password hashing with bcrypt (12 rounds)
+- Account locking after 5 failed attempts
+- Session management with secure cookies
+- Two-factor authentication support (planned)
+
+### Input Validation & Sanitization
+- Server-side validation for all inputs
+- XSS prevention with Content Security Policy
+- SQL injection prevention
+- Path traversal protection
+- File upload validation with allowlist
+
+### Rate Limiting
+- Authentication endpoints: 5 attempts per 15 minutes
+- Upload endpoints: 10 uploads per minute
+- General API: 100 requests per 15 minutes
+- Distributed rate limiting support
+
+### File Upload Security
+- File type validation with MIME type checking
+- File size limits (10MB per file, 10 files max)
+- Filename sanitization
+- Virus scanning integration (planned)
+- Secure file storage with isolated directories
+
+### Security Headers
+- `Content-Security-Policy` - Prevents XSS and code injection
+- `X-Frame-Options` - Prevents clickjacking
+- `X-Content-Type-Options` - Prevents MIME sniffing
+- `X-XSS-Protection` - XSS filter
+- `Strict-Transport-Security` - HTTPS enforcement
+- `Referrer-Policy` - Referrer control
+
+## 📁 Project Structure
+
 ```
-https://john-quick5678.ntandostore/
-https://john-quick5678/portfolio.ntandostore/
-https://john-quick5678/business.ntandostore/
-https://john-quick5678/blog.ntandostore/
+ntando-enhanced-hosting/
+├── server.js                 # Main application server
+├── security-middleware.js    # Security utilities and middleware
+├── package.json             # Dependencies and scripts
+├── README.md               # Project documentation
+├── public/                 # Static files
+│   ├── index.html         # Landing page
+│   └── dashboard.html     # User dashboard
+├── uploads/               # User uploaded files
+├── users/                 # User sites and data
+├── domains.json           # Domain configurations
+├── users.json            # User database
+└── dns-records.json      # DNS records
 ```
 
-## 🏗️ Architecture
+## 🚀 Setup & Installation
 
-### Backend Enhancements:
-- **User System**: JWT authentication, secure password hashing
-- **File Storage**: Organized by user subdomains in `/users/` directory
-- **API Routes**: RESTful APIs for user management and site CRUD operations
-- **Backup System**: Automatic versioning with timestamps
+### Prerequisites
+- Node.js 18.0.0 or higher
+- npm or yarn package manager
+- Redis (for rate limiting in production)
 
-### Frontend Enhancements:
-- **Authentication UI**: Login/Register forms with validation
-- **Dashboard**: Complete site management interface
-- **Code Editor**: HTML/CSS/JS editor with syntax highlighting
-- **Template Gallery**: Visual template selection and preview
+### Local Development
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-repo/ntando-enhanced-hosting.git
+   cd ntando-enhanced-hosting
+   ```
 
-## 📋 API Endpoints
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-### Authentication:
+3. **Set environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+4. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+5. **Access the application**
+   - Landing page: http://localhost:3000
+   - Dashboard: http://localhost:3000/dashboard
+   - Health check: http://localhost:3000/health
+
+### Production Deployment
+
+#### Render.com Deployment
+1. **Connect your repository** to Render.com
+2. **Set environment variables** in Render dashboard:
+   ```
+   NODE_ENV=production
+   JWT_SECRET=your-super-secret-jwt-key
+   PORT=3000
+   DNS_FORWARDING_ENABLED=true
+   DNS_PROVIDER=cloudflare
+   DNS_API_KEY=your-cloudflare-api-key
+   ```
+3. **Deploy** - Render will automatically build and deploy
+
+#### Docker Deployment
+```bash
+# Build the image
+docker build -t ntando-hosting .
+
+# Run the container
+docker run -p 3000:3000 \
+  -e NODE_ENV=production \
+  -e JWT_SECRET=your-secret \
+  ntando-hosting
+```
+
+## 🔧 Configuration
+
+### Environment Variables
+```env
+# Application
+NODE_ENV=development
+PORT=3000
+
+# Security
+JWT_SECRET=your-super-secret-jwt-key
+ALLOWED_ORIGINS=http://localhost:3000,https://yourdomain.com
+
+# DNS Configuration
+DNS_FORWARDING_ENABLED=false
+DNS_PROVIDER=cloudflare
+DNS_API_KEY=your-dns-api-key
+
+# File Upload
+MAX_FILE_SIZE=10485760  # 10MB in bytes
+MAX_FILES=10
+
+# Rate Limiting
+REDIS_URL=redis://localhost:6379
+```
+
+### Domain Configuration
+Edit the `DOMAIN_CONFIG` object in `server.js` to customize:
+- Primary domain and aliases
+- Available domain extensions
+- Subdomain mapping rules
+- DNS zone configurations
+
+## 📊 API Endpoints
+
+### Authentication
 - `POST /api/register` - User registration
 - `POST /api/login` - User login
-- `GET /api/user/sites` - Get user's sites (protected)
+- `GET /api/csrf-token` - Get CSRF token
 
-### Site Management:
-- `POST /api/upload` - Create new site (protected)
-- `PUT /api/sites/:siteId` - Update existing site (protected)
-- `GET /api/sites/:siteId` - Get site for editing (protected)
-- `DELETE /api/sites/:siteId` - Delete site (protected)
+### Site Management
+- `POST /api/upload` - Upload/create new site
+- `GET /api/user/sites` - Get user's sites
+- `GET /api/sites/:id` - Get site details
+- `PUT /api/sites/:id` - Update site
+- `DELETE /api/sites/:id` - Delete site
+
+### Templates
 - `GET /api/templates` - Get available templates
 
-### Site Access:
-- `GET /:subdomain/:slug/` - Serve user sites
-- `GET /:subdomain/` - User subdomain root
+### Domain Management
+- `GET /api/domains/extensions` - Get domain extensions
+- `GET /api/domains/check/:subdomain/:extension` - Check availability
+- `GET /api/domains/subdomain/:subdomain` - Get subdomain info
+- `GET /api/domains/test/:subdomain` - Test subdomain routing
 
-## 🎨 Available Templates
+### System
+- `GET /health` - Health check and system info
 
-1. **Portfolio Template** (`portfolio`)
-   - Clean design for showcasing work
-   - Project grid layout
-   - Contact section
+## 🔒 Security Best Practices
 
-2. **Business Template** (`business`)
-   - Professional corporate design
-   - Services section
-   - Call-to-action buttons
+### For Developers
+1. **Always validate inputs** on both client and server side
+2. **Use parameterized queries** if using databases
+3. **Implement proper error handling** without leaking sensitive information
+4. **Regularly update dependencies** to patch security vulnerabilities
+5. **Use HTTPS in production** with proper SSL certificates
 
-3. **Blog Template** (`blog`)
-   - Article-focused layout
-   - Meta information display
-   - Read more functionality
+### For Administrators
+1. **Monitor logs** for suspicious activity
+2. **Implement backup strategies** for user data
+3. **Regular security audits** and penetration testing
+4. **Keep systems updated** with latest security patches
+5. **Monitor rate limiting** and adjust as needed
 
-4. **Landing Page Template** (`landing`)
-   - Modern hero section
-   - Feature highlights
-   - Conversion-focused design
+### For Users
+1. **Use strong passwords** and enable 2FA when available
+2. **Regularly backup** website content
+3. **Be cautious** with file uploads from unknown sources
+4. **Keep software updated** on local development machines
+5. **Report security issues** to the development team
 
-## 🔐 Security Features
+## 🚨 Security Monitoring
 
-- **JWT Authentication**: Secure token-based auth
-- **Password Hashing**: bcrypt encryption
-- **Input Validation**: Sanitized user inputs
-- **Rate Limiting**: Prevent abuse
-- **CORS**: Proper cross-origin handling
+### Logging
+- All authentication attempts are logged
+- Failed login triggers security alerts
+- File uploads are monitored and logged
+- API access patterns are tracked
 
-## 📁 File Structure
+### Rate Limiting
+- Configurable limits per endpoint
+- Distributed rate limiting support
+- Automatic IP blocking for abuse
+- Whitelist support for trusted IPs
 
-```
-/
-├── server.js                 # Main Express server
-├── package.json              # Dependencies
-├── public/
-│   ├── index.html           # Landing page
-│   └── dashboard.html       # Enhanced dashboard
-├── users/                   # User directories
-│   └── username-random123/
-│       ├── site1/
-│       │   ├── index.html
-│       │   └── backups/
-│       └── site2/
-└── uploads/                 # Legacy hosted sites (backward compatible)
-```
+### Security Headers
+- All responses include security headers
+- CSP is enforced for all user content
+- XSS protection is enabled
+- Clickjacking protection is active
 
-## 🚀 Getting Started
+## 🤝 Contributing
 
-### Installation:
-```bash
-npm install
-```
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-### Environment Variables:
-```bash
-JWT_SECRET=your-secret-key-here
-PORT=3000
-```
+### Security Contributions
+- Follow responsible disclosure
+- Report security vulnerabilities privately
+- Include detailed reproduction steps
+- Provide suggested fixes if possible
 
-### Start the server:
-```bash
-npm start
-# or for development
-npm run dev
-```
+## 📝 License
 
-## 👤 User Account Features
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-### Registration:
-- Username: 3-30 characters (letters, numbers, hyphens, underscores)
-- Email: Valid email address required
-- Password: Minimum 6 characters
-- Auto-generated subdomain: `username-random123.ntandostore`
+## 🆘 Support
 
-### Dashboard Features:
-- Site management (create, edit, delete)
-- Template selection
-- Live preview
-- QR code generation
-- Visit analytics
-- Dark mode toggle
+- **Documentation**: Check this README and inline code comments
+- **Issues**: Report bugs and feature requests on GitHub Issues
+- **Security**: Report security vulnerabilities to security@ntando.app
+- **Community**: Join our Discord server for community support
 
-## 📝 Site Management
+## 🗺️ Roadmap
 
-### Create Site:
-1. Choose template or start from scratch
-2. Enter site name and slug
-3. Write HTML/CSS/JS code
-4. Deploy instantly
+### Phase 1 (Current)
+- ✅ Enhanced security features
+- ✅ File upload manager
+- ✅ Multi-domain support
+- ✅ Rate limiting
+- ✅ Input validation
 
-### Edit Site:
-1. Click "Edit" on any site
-2. Modify code in the editor
-3. Automatic backup created
-4. Update with one click
+### Phase 2 (Q1 2024)
+- 🔄 Two-factor authentication
+- 🔄 Real virus scanning
+- 🔄 Advanced analytics dashboard
+- 🔄 CDN integration
+- 🔄 Automated backups
 
-### Site Features:
-- Real-time visit tracking
-- Last updated timestamp
-- Backup management
-- QR code sharing
-- Mobile responsive
+### Phase 3 (Q2 2024)
+- 📋 API versioning
+- 📋 Webhook support
+- 📋 Team collaboration
+- 📋 Custom themes
+- 📋 Plugin system
 
-## 🔧 Technical Details
+### Phase 4 (Q3 2024)
+- 📋 Mobile apps
+- 📋 Desktop client
+- 📋 CLI tools
+- 📋 Enterprise features
+- 📋 White-label options
 
-### Dependencies:
-- **express**: Web framework
-- **bcrypt**: Password hashing
-- **jsonwebtoken**: JWT authentication
-- **fs/promises**: File system operations
+---
 
-### Storage:
-- User data: `users.json`
-- Domain data: `domains.json` (legacy)
-- Site files: Organized by subdomain
-
-### Authentication Flow:
-1. User registers/logs in
-2. JWT token generated and stored
-3. Token sent with API requests
-4. Server validates and processes requests
-
-## 🌍 Deployment
-
-### Render.com Ready:
-- Health check endpoint: `/health`
-- Auto-deployment configured
-- Environment variable support
-
-### Production Considerations:
-- Set strong `JWT_SECRET`
-- Configure rate limiting
-- Set up monitoring
-- Regular backups
-
-## 🔄 Backward Compatibility
-
-The enhanced platform maintains full backward compatibility:
-- Old `/hosted/` routes still work
-- Existing sites continue to function
-- API endpoints preserved
-- Database migration not required
-
-## 📊 Monitoring
-
-### Health Check:
-```json
-GET /health
-{
-  "status": "OK",
-  "service": "Ntandostore Enhanced Free Hosting",
-  "features": ["Subdomains", "User System", "Site Editing", "Templates", "Backups"],
-  "timestamp": "2024-01-01T00:00:00.000Z"
-}
-```
-
-## 🎯 Use Cases
-
-### For Individuals:
-- Portfolio websites
-- Personal blogs
-- Resume sites
-- Project showcases
-
-### For Small Businesses:
-- Landing pages
-- Product showcases
-- Service descriptions
-- Contact pages
-
-### For Developers:
-- Quick prototypes
-- Demo sites
-- Testing environments
-- Client previews
-
-## 🔮 Future Enhancements
-
-Potential upcoming features:
-- Custom domain mapping
-- SSL certificates
-- Team collaboration
-- Advanced analytics
-- API integrations
-- CDN integration
-
-## 📞 Support
-
-The enhanced Ntandostore platform provides a complete solution for free website hosting with modern features and professional tools. Enjoy building your web presence!
+**Built with ❤️ by the Ntando Enhanced Team**

@@ -1,7 +1,7 @@
 {
-  "name": "ntando-hosting",
-  "version": "1.0.0",
-  "description": "Free website hosting platform with custom subdomains",
+  "name": "ntando-enhanced-hosting",
+  "version": "2.0.0",
+  "description": "Enhanced subdomain hosting platform with security features and file upload capabilities",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -11,22 +11,26 @@
   "keywords": [
     "hosting",
     "subdomain",
-    "website",
-    "free",
-    "ntando"
+    "security",
+    "file-upload",
+    "cdn",
+    "ssl"
   ],
-  "author": "Ntando Hosting",
+  "author": "Ntando Enhanced Team",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
     "bcrypt": "^5.1.1",
     "jsonwebtoken": "^9.0.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   }
 }
