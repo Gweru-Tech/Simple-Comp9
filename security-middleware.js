@@ -1,192 +1,216 @@
-// Security Middleware for Enhanced Protection
+const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-const crypto = require('crypto');
 
-// Generate CSRF tokens
-const csrfTokens = new Map();
+// JWT Secret
+const JWT_SECRET = process.env.JWT_SECRET || 'ntandostore-secret-key-2024';
+
+// CSRF Token Management
+const CSRF_TOKENS = new Map();
 
 function generateCSRFToken() {
-    const token = crypto.randomBytes(32).toString('hex');
-    const expiresAt = Date.now() + 3600000; // 1 hour
-    csrfTokens.set(token, expiresAt);
-    return token;
+  const token = crypto.randomBytes(32).toString('hex');
+  CSRF_TOKENS.set(token, {
+    createdAt: Date.now(),
+    expiresAt: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+  });
+  
+  // Clean up expired tokens
+  const now = Date.now();
+  for (const [key, value] of CSRF_TOKENS.entries()) {
+    if (value.expiresAt < now) {
+      CSRF_TOKENS.delete(key);
+    }
+  }
+  
+  return token;
 }
 
 function validateCSRFToken(req, res, next) {
-    const token = req.headers['x-csrf-token'];
-    
-    if (!token || !csrfTokens.has(token)) {
-        return res.status(403).json({ error: 'Invalid CSRF token' });
-    }
-    
-    const expiresAt = csrfTokens.get(token);
-    if (Date.now() > expiresAt) {
-        csrfTokens.delete(token);
-        return res.status(403).json({ error: 'CSRF token expired' });
-    }
-    
-    csrfTokens.delete(token); // One-time use
-    next();
+  const token = req.headers['x-csrf-token'] || req.body._csrf;
+  
+  if (!token) {
+    return res.status(403).json({ error: 'CSRF token required' });
+  }
+  
+  const tokenData = CSRF_TOKENS.get(token);
+  
+  if (!tokenData || tokenData.expiresAt < Date.now()) {
+    return res.status(403).json({ error: 'Invalid or expired CSRF token' });
+  }
+  
+  // Remove used token
+  CSRF_TOKENS.delete(token);
+  
+  next();
 }
 
-// Clean up expired tokens
-setInterval(() => {
-    const now = Date.now();
-    for (const [token, expiresAt] of csrfTokens.entries()) {
-        if (now > expiresAt) {
-            csrfTokens.delete(token);
-        }
-    }
-}, 300000); // Clean up every 5 minutes
-
-// Rate limiting
-const createRateLimit = (windowMs, max, message) => rateLimit({
-    windowMs,
-    max,
-    message: { error: message },
-    standardHeaders: true,
-    legacyHeaders: false,
+// Rate Limiters
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 attempts per window
+  message: { error: 'Too many authentication attempts, please try again later' },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
-// Different rate limits for different endpoints
-const authLimiter = createRateLimit(
-    15 * 60 * 1000, // 15 minutes
-    5, // 5 attempts
-    'Too many authentication attempts, please try again later'
-);
+const uploadLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // 10 uploads per window
+  message: { error: 'Too many upload attempts, please try again later' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
-const uploadLimiter = createRateLimit(
-    60 * 1000, // 1 minute
-    10, // 10 uploads
-    'Too many upload attempts, please try again later'
-);
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // 100 requests per window
+  message: { error: 'Too many requests, please try again later' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
-const generalLimiter = createRateLimit(
-    15 * 60 * 1000, // 15 minutes
-    100, // 100 requests
-    'Too many requests, please try again later'
-);
+// Input Validation
+function validateInput(input, type) {
+  if (!input || typeof input !== 'string') {
+    return false;
+  }
 
-// Input validation
-function validateInput(input, type = 'string') {
-    if (typeof input !== 'string') return false;
-    
-    // Remove potentially dangerous characters
-    const clean = input.trim();
-    
-    switch (type) {
-        case 'username':
-            return /^[a-zA-Z0-9_-]{3,30}$/.test(clean);
-        case 'email':
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean);
-        case 'slug':
-            return /^[a-z0-9-]{3,63}$/.test(clean);
-        case 'sitename':
-            return clean.length >= 1 && clean.length <= 100 && !/<script/i.test(clean);
-        default:
-            return clean.length > 0 && clean.length <= 1000;
-    }
+  // Sanitize input
+  const sanitized = input.trim();
+
+  switch (type) {
+    case 'username':
+      return /^[a-zA-Z0-9_-]{3,30}$/.test(sanitized);
+    case 'email':
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sanitized);
+    case 'slug':
+      return /^[a-zA-Z0-9-]{3,63}$/.test(sanitized);
+    case 'sitename':
+      return sanitized.length >= 1 && sanitized.length <= 100;
+    default:
+      return sanitized.length > 0 && sanitized.length <= 1000;
+  }
 }
 
-// File upload validation
+// File Upload Validation
 function validateFileUpload(file) {
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    const allowedTypes = [
-        'text/html',
-        'text/css',
-        'text/javascript',
-        'application/json',
-        'text/plain',
-        'image/png',
-        'image/jpeg',
-        'image/gif',
-        'image/svg+xml',
-        'image/x-icon'
-    ];
-    
-    if (!file || !file.name || !file.type || !file.size) {
-        return { valid: false, error: 'Invalid file data' };
-    }
-    
-    if (file.size > maxSize) {
-        return { valid: false, error: 'File too large (max 10MB)' };
-    }
-    
-    if (!allowedTypes.includes(file.type)) {
-        return { valid: false, error: 'File type not allowed' };
-    }
-    
-    // Validate filename
-    const filename = file.name;
-    if (/\.\./.test(filename) || /[<>:"|?*]/.test(filename)) {
-        return { valid: false, error: 'Invalid filename' };
-    }
-    
-    return { valid: true };
+  const allowedTypes = [
+    'text/html',
+    'text/css',
+    'text/javascript',
+    'application/javascript',
+    'text/plain',
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/svg+xml',
+    'image/x-icon'
+  ];
+
+  if (!allowedTypes.includes(file.mimetype)) {
+    return { valid: false, error: 'File type not allowed' };
+  }
+
+  // Check file size (10MB max)
+  if (file.size > 10 * 1024 * 1024) {
+    return { valid: false, error: 'File size too large' };
+  }
+
+  return { valid: true };
 }
 
-// Content Security Policy
-const cspPolicy = {
-    directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "https://sites.super.myninja.ai"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
-        imgSrc: ["'self'", "data:", "https:", "http:"],
-        connectSrc: ["'self'"],
-        frameSrc: ["'none'"],
-        objectSrc: ["'none'"],
-        mediaSrc: ["'self'"],
-        manifestSrc: ["'self'"]
-    }
-};
-
-// Sanitize HTML content
+// HTML Sanitization
 function sanitizeHTML(html) {
-    // Basic HTML sanitization - in production, use a library like DOMPurify
-    return html
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-        .replace(/on\w+="[^"]*"/gi, '') // Remove event handlers
-        .replace(/javascript:/gi, '') // Remove javascript: URLs
-        .replace(/vbscript:/gi, '') // Remove vbscript: URLs
-        .replace(/data:(?!image\/)/gi, ''); // Allow data: URLs for images only
+  if (!html) return '';
+  
+  // Basic XSS protection
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/javascript:/gi, '')
+    .replace(/vbscript:/gi, '')
+    .replace(/on\w+\s*=/gi, '')
+    .replace(/<iframe[^>]*>/gi, '')
+    .replace(/<\/iframe>/gi, '')
+    .replace(/<object[^>]*>/gi, '')
+    .replace(/<\/object>/gi, '')
+    .replace(/<embed[^>]*>/gi, '')
+    .replace(/<\/embed>/gi, '');
 }
 
-// Security headers middleware
-function securityHeaders(req, res, next) {
-    // Helmet handles most security headers
-    helmet({
-        contentSecurityPolicy: cspPolicy,
-        crossOriginEmbedderPolicy: false
-    })(req, res, next);
-}
-
-// Request logging for security monitoring
-function securityLogger(req, res, next) {
-    const timestamp = new Date().toISOString();
-    const ip = req.ip || req.connection.remoteAddress;
-    const userAgent = req.get('User-Agent') || 'Unknown';
-    
-    console.log(`[${timestamp}] ${req.method} ${req.path} - IP: ${ip} - UA: ${userAgent}`);
-    
-    // Log suspicious activity
-    if (req.path.includes('..') || req.path.includes('<script>')) {
-        console.warn(`Suspicious request from ${ip}: ${req.method} ${req.path}`);
+// Security Headers
+const securityHeaders = helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://sites.super.myninja.ai"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      frameSrc: ["'none'"],
+      objectSrc: ["'none'"]
     }
-    
-    next();
+  },
+  crossOriginEmbedderPolicy: false,
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+});
+
+// Security Logger
+function securityLogger(req, res, next) {
+  const start = Date.now();
+  
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    const log = {
+      timestamp: new Date().toISOString(),
+      method: req.method,
+      url: req.originalUrl,
+      ip: req.ip,
+      userAgent: req.get('User-Agent'),
+      statusCode: res.statusCode,
+      duration,
+      suspicious: false
+    };
+
+    // Check for suspicious activity
+    const suspiciousPatterns = [
+      /\.\./,
+      /<script/i,
+      /javascript:/i,
+      /union.*select/i,
+      /drop.*table/i
+    ];
+
+    for (const pattern of suspiciousPatterns) {
+      if (pattern.test(req.originalUrl) || pattern.test(JSON.stringify(req.body))) {
+        log.suspicious = true;
+        console.warn('🚨 Suspicious activity detected:', log);
+        break;
+      }
+    }
+
+    if (!log.suspicious && (res.statusCode >= 400 || duration > 5000)) {
+      console.warn('⚠️ Request worth noting:', log);
+    }
+  });
+
+  next();
 }
 
 module.exports = {
-    generateCSRFToken,
-    validateCSRFToken,
-    authLimiter,
-    uploadLimiter,
-    generalLimiter,
-    validateInput,
-    validateFileUpload,
-    sanitizeHTML,
-    securityHeaders,
-    securityLogger
+  generateCSRFToken,
+  validateCSRFToken,
+  authLimiter,
+  uploadLimiter,
+  generalLimiter,
+  validateInput,
+  validateFileUpload,
+  sanitizeHTML,
+  securityHeaders,
+  securityLogger
 };

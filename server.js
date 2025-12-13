@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
 const crypto = require('crypto');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -1450,8 +1450,13 @@ app.delete('/api/sites/:siteId', authenticateToken, validateRequest, async (req,
 });
 
 // Comprehensive subdomain routing system with security
-app.get('*', async (req, res, next) => {
+app.use(async (req, res, next) => {
   try {
+    // Only handle GET requests for subdomain routing
+    if (req.method !== 'GET') {
+      return next();
+    }
+
     const host = req.get('host');
     const originalUrl = req.originalUrl;
     

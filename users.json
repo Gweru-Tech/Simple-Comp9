@@ -1,1 +1,19 @@
-{}
+{
+  "d6c8d38a-80f6-45c6-8dad-5e37c6e407db": {
+    "id": "d6c8d38a-80f6-45c6-8dad-5e37c6e407db",
+    "username": "Ntando",
+    "email": "admin@ntando.app",
+    "password": "$2b$12$uEfIDVbIzWMbhfKdDomQX.f9MoVP97jGzMKFDsETebyRYtZJ5pWPW",
+    "domainExtension": ".app",
+    "subdomain": "admin-ntando-app",
+    "isPremium": true,
+    "createdAt": "2025-12-13T07:48:19.013Z",
+    "lastLogin": "2025-12-13T07:48:19.013Z",
+    "sites": [],
+    "security": {
+      "loginAttempts": 0,
+      "lockedUntil": null,
+      "twoFactorEnabled": false
+    }
+  }
+}
