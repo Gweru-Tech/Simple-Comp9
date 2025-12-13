@@ -1,0 +1,2847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://sites.super.myninja.ai; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <title>Admin Dashboard - Ntando Enhanced Hosting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+            --info: #4299e1;
+            --dark: #1a202c;
+            --light: #f7fafc;
+            --gray: #718096;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --admin: #9f7aea;
+            --admin-dark: #805ad5;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            margin: 0;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            --dark: #f7fafc;
+            --light: #1a202c;
+            --gray: #a0aec0;
+            --border: #2d3748;
+        }
+
+        /* Login/Register Container */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--admin) 100%);
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .auth-card {
+            background: var(--light);
+            border-color: var(--border);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h2 {
+            color: var(--dark);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, var(--admin), var(--admin-dark));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            background: var(--light);
+            border-radius: 12px;
+            padding: 0.25rem;
+        }
+
+        body.dark-mode .auth-tabs {
+            background: var(--dark);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.75rem;
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        body.dark-mode .auth-tab.active {
+            background: var(--light);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: white;
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .form-group input, 
+        body.dark-mode .form-group select {
+            background: var(--light);
+            border-color: var(--border);
+            color: var(--dark);
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 0.25rem;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .btn-auth {
+            background: linear-gradient(135deg, var(--primary), var(--admin));
+            color: white;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-admin {
+            background: linear-gradient(135deg, var(--admin), var(--admin-dark));
+        }
+
+        .btn-admin:hover {
+            background: linear-gradient(135deg, var(--admin-dark), var(--admin));
+        }
+
+        .subdomain-display {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            color: var(--primary);
+            font-weight: 600;
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .subdomain-display {
+            background: var(--dark);
+            border-color: var(--border);
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .dashboard-container.active {
+            display: block;
+        }
+
+        /* Enhanced Navigation */
+        nav {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode nav {
+            background: var(--light);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--admin));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: var(--light);
+            border-radius: 25px;
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .user-info {
+            background: var(--dark);
+            border-color: var(--border);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--admin), var(--admin-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-subdomain {
+            font-family: 'Courier New', monospace;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .nav-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-logout {
+            background: var(--danger);
+        }
+
+        .btn-logout:hover {
+            background: #e53e3e;
+        }
+
+        .btn-home {
+            background: var(--info);
+        }
+
+        .btn-home:hover {
+            background: #3182ce;
+        }
+
+        .btn-users {
+            background: var(--admin);
+        }
+
+        .btn-users:hover {
+            background: var(--admin-dark);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .dashboard-header {
+            background: var(--light);
+            border-color: var(--border);
+        }
+
+        .dashboard-header h1 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .dashboard-header p {
+            color: var(--gray);
+        }
+
+        /* Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Upload Section with File Manager */
+        .upload-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .upload-section {
+            background: var(--light);
+            border-color: var(--border);
+        }
+
+        .upload-section h2 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        /* File Upload Area */
+        .file-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+
+        body.dark-mode .file-upload-area {
+            background: var(--dark);
+            border-color: var(--border);
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn-upload-file {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-upload-file:hover {
+            background: var(--primary-dark);
+        }
+
+        /* File Manager */
+        .file-manager {
+            margin-top: 1.5rem;
+        }
+
+        .file-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--light);
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s ease;
+        }
+
+        .file-item:hover {
+            background: var(--light);
+        }
+
+        body.dark-mode .file-item:hover {
+            background: var(--dark);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+
+        .file-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .file-size {
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-file-action {
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-file-action:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+
+        body.dark-mode .btn-file-action:hover {
+            background: var(--dark);
+        }
+
+        /* Template Selector */
+        .template-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .template-btn {
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            background: white;
+            color: var(--dark);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        body.dark-mode .template-btn {
+            background: var(--light);
+            border-color: var(--border);
+            color: var(--dark);
+        }
+
+        .template-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .template-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .template-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Site URL Display */
+        .site-url-display {
+            background: linear-gradient(135deg, var(--primary), var(--admin));
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+
+        /* Code Editor Tabs */
+        .code-editor {
+            margin-bottom: 1.5rem;
+        }
+
+        .code-tabs {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 0;
+            background: var(--light);
+            padding: 0.25rem;
+            border-radius: 10px 10px 0 0;
+        }
+
+        body.dark-mode .code-tabs {
+            background: var(--dark);
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        body.dark-mode .tab-btn.active {
+            background: var(--light);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .code-textarea {
+            width: 100%;
+            min-height: 400px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            background: white;
+            color: var(--dark);
+            resize: vertical;
+        }
+
+        body.dark-mode .code-textarea {
+            background: var(--light);
+            border-color: var(--border);
+            color: var(--dark);
+        }
+
+        .code-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--admin));
+            color: white;
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+            color: white;
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        /* Users Management Panel */
+        .users-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .users-panel {
+            background: var(--light);
+            border-color: var(--border);
+        }
+
+        .users-panel h2 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-add-user {
+            background: var(--success);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-user:hover {
+            background: #38a169;
+        }
+
+        .user-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .user-card {
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+
+        body.dark-mode .user-card {
+            background: var(--dark);
+            border-color: var(--border);
+        }
+
+        .user-card:hover {
+            border-color: var(--admin);
+            box-shadow: var(--shadow);
+        }
+
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-info h3 {
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-email {
+            color: var(--gray);
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .user-subdomain-display {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 0.25rem;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-user-action {
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit-user { background: var(--info); }
+        .btn-edit-user:hover { background: #3182ce; }
+        
+        .btn-reset-password { background: var(--warning); }
+        .btn-reset-password:hover { background: #dd6b20; }
+        
+        .btn-delete-user { background: var(--danger); }
+        .btn-delete-user:hover { background: #e53e3e; }
+
+        .user-stats {
+            display: flex;
+            gap: 1rem;
+            color: var(--gray);
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .user-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .admin-user {
+            background: linear-gradient(135deg, var(--admin), var(--admin-dark));
+            color: white;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+        /* Features Panel */
+        .features-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .features-panel {
+            background: var(--light);
+            border-color: var(--border);
+        }
+
+        .features-panel h2 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .feature-item {
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+
+        body.dark-mode .feature-item {
+            background: var(--dark);
+            border-color: var(--border);
+        }
+
+        .feature-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(72, 187, 120, 0.1);
+            color: var(--success);
+        }
+
+        .status-unlimited {
+            background: rgba(159, 122, 234, 0.1);
+            color: var(--admin);
+        }
+
+        .status-inactive {
+            background: rgba(245, 101, 101, 0.1);
+            color: var(--danger);
+        }
+
+        .feature-description {
+            color: var(--gray);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Sites List */
+        .sites-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .sites-section {
+            background: var(--light);
+            border-color: var(--border);
+        }
+
+        .sites-section h2 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .sites-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .site-card {
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+
+        body.dark-mode .site-card {
+            background: var(--dark);
+            border-color: var(--border);
+        }
+
+        .site-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .site-info h3 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .site-url {
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .site-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-site-action {
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-visit { background: var(--success); }
+        .btn-visit:hover { background: #38a169; }
+        
+        .btn-edit { background: var(--primary); }
+        .btn-edit:hover { background: var(--primary-dark); }
+        
+        .btn-preview { background: var(--warning); }
+        .btn-preview:hover { background: #dd6b20; }
+        
+        .btn-share { background: var(--secondary); }
+        .btn-share:hover { background: #6b46c1; }
+        
+        .btn-delete { background: var(--danger); }
+        .btn-delete:hover { background: #e53e3e; }
+
+        .site-stats {
+            display: flex;
+            gap: 2rem;
+            color: var(--gray);
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .site-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .status-success {
+            background: rgba(72, 187, 120, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-error {
+            background: rgba(245, 101, 101, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .status-warning {
+            background: rgba(237, 137, 54, 0.1);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 90%;
+            max-height: 80%;
+            overflow: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        body.dark-mode .modal-content {
+            background: var(--light);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #e53e3e;
+            transform: rotate(90deg);
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 500px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+
+        .spinner {
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .template-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .site-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .site-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--admin));
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* File Upload Progress */
+        .upload-progress {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: var(--light);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .upload-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .upload-status {
+            color: var(--gray);
+        }
+
+        .upload-speed {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* User Creation Modal */
+        .user-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .user-form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login/Register Container -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="admin-badge">👑 ADMIN ACCESS</div>
+                <h2>🚀 Ntando Enhanced Admin</h2>
+                <p>Unlimited Hosting Platform Management</p>
+            </div>
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab active" onclick="switchAuthTab('login')">Admin Login</button>
+                <button type="button" class="auth-tab" onclick="switchAuthTab('register')">Create User</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" value="Ntandostore" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" value="ntandomods" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn-auth btn-admin">👑 Admin Login</button>
+            </form>
+            
+            <!-- Register Form -->
+            <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="registerUsername">Username</label>
+                    <input type="text" id="registerUsername" placeholder="Choose a username" required>
+                    <small>3-30 characters, letters, numbers, hyphens, underscores</small>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" placeholder="Enter user email" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" placeholder="Set user password" required>
+                    <small>Minimum 6 characters</small>
+                </div>
+                <div class="form-group">
+                    <label for="registerDomain">Domain Extension</label>
+                    <select id="registerDomain">
+                        <option value=".app">.app (Premium)</option>
+                        <option value=".cloud">.cloud (Premium)</option>
+                        <option value=".zw">.zw (Premium)</option>
+                        <option value=".com">.com (Standard)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-auth">👤 Create User Account</button>
+                <div class="subdomain-display" id="subdomainPreview" style="display: none;">
+                    User subdomain: <span id="subdomainText"></span><span id="domainExtension"></span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <!-- Enhanced Navigation -->
+        <nav>
+            <div class="nav-container">
+                <a href="/" class="logo">🚀 Ntando Enhanced Admin</a>
+                <div class="nav-controls">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">👑</div>
+                        <span id="usernameDisplay"></span>
+                        <span class="user-subdomain" id="subdomainDisplay"></span>
+                    </div>
+                    <button class="nav-btn btn-users" onclick="showUsersTab()">👥 Users</button>
+                    <button class="nav-btn" onclick="toggleTheme()">🌙</button>
+                    <a href="/" class="nav-btn btn-home">← Home</a>
+                    <button class="nav-btn btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1>👑 Admin Dashboard</h1>
+                <p>Unlimited Control • User Management • Global Deployment</p>
+            </div>
+
+            <div class="status-message" id="statusMessage"></div>
+
+            <!-- Grid Layout -->
+            <div class="dashboard-grid">
+                <!-- Upload Section with File Manager -->
+                <div class="upload-section">
+                    <h2 id="formTitle">🚀 Deploy New Website</h2>
+                    
+                    <!-- File Upload Area -->
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <div class="upload-icon">📁</div>
+                        <p style="margin-bottom: 1rem; color: var(--dark); font-weight: 500;">Drag & drop files here or</p>
+                        <input type="file" id="fileInput" class="file-input" multiple accept=".html,.css,.js,.json,.txt,.png,.jpg,.jpeg,.gif,.svg,.ico">
+                        <button type="button" class="btn-upload-file" onclick="document.getElementById('fileInput').click()">Browse Files</button>
+                        <p style="margin-top: 1rem; color: var(--gray); font-size: 0.85rem;">
+                            Unlimited file size • All formats supported • Advanced security
+                        </p>
+                    </div>
+
+                    <!-- Upload Progress -->
+                    <div class="upload-progress" id="uploadProgress" style="display: none;">
+                        <div class="upload-info">
+                            <span class="upload-status">Uploading files...</span>
+                            <span class="upload-speed" id="uploadSpeed">∞ KB/s</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- File Manager -->
+                    <div class="file-manager" id="fileManager" style="display: none;">
+                        <h3 style="margin-bottom: 1rem; color: var(--dark);">Uploaded Files</h3>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+
+                    <!-- Site URL Display -->
+                    <div class="site-url-display" id="siteUrlDisplay">
+                        🌐 Unlimited hosting at: <span id="siteUrlText">admin.ntando.app</span>
+                    </div>
+
+                    <!-- Template Selector -->
+                    <div class="template-selector">
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--dark); font-weight: 500;">Choose Template</label>
+                        <div class="template-grid" id="templateButtons">
+                            <button type="button" class="template-btn" onclick="loadTemplate('portfolio')">
+                                <div class="template-icon">🎨</div>
+                                Portfolio
+                            </button>
+                            <button type="button" class="template-btn" onclick="loadTemplate('business')">
+                                <div class="template-icon">💼</div>
+                                Business
+                            </button>
+                            <button type="button" class="template-btn" onclick="loadTemplate('blog')">
+                                <div class="template-icon">📝</div>
+                                Blog
+                            </button>
+                            <button type="button" class="template-btn" onclick="loadTemplate('landing')">
+                                <div class="template-icon">🚀</div>
+                                Landing
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Code Editor -->
+                    <div class="code-editor">
+                        <div class="code-tabs">
+                            <button type="button" class="tab-btn active" onclick="switchTab('html')">HTML</button>
+                            <button type="button" class="tab-btn" onclick="switchTab('css')">CSS</button>
+                            <button type="button" class="tab-btn" onclick="switchTab('js')">JavaScript</button>
+                        </div>
+                        
+                        <div class="tab-content active" id="html-tab">
+                            <textarea id="html" class="code-textarea" placeholder="<!DOCTYPE html>
+<html>
+<head>
+    <title>My Website</title>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <p>Welcome to my website.</p>
+</body>
+</html>" required></textarea>
+                        </div>
+                        
+                        <div class="tab-content" id="css-tab">
+                            <textarea id="css" class="code-textarea" placeholder="body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f0f0f0;
+}
+
+h1 {
+    color: #333;
+}"></textarea>
+                        </div>
+                        
+                        <div class="tab-content" id="js-tab">
+                            <textarea id="js" class="code-textarea" placeholder="console.log('Hello World!');
+document.addEventListener('DOMContentLoaded', function() {
+    // Your JavaScript code here
+});"></textarea>
+                        </div>
+                    </div>
+
+                    <form id="uploadForm">
+                        <input type="hidden" id="siteId" value="">
+                        
+                        <div class="form-group">
+                            <label for="siteName">Website Name</label>
+                            <input type="text" id="siteName" placeholder="My Awesome Website" required oninput="updateSiteUrl()">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="siteSlug">Site Slug</label>
+                            <input type="text" id="siteSlug" placeholder="my-awesome-site" oninput="updateSiteUrl()">
+                            <small>This will be part of your URL</small>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary" id="submitBtn">🚀 Deploy Website</button>
+                            <button type="button" class="btn-secondary" id="updateBtn" style="display: none;" onclick="updateSite()">💾 Update Site</button>
+                            <button type="button" class="btn-danger" id="cancelEditBtn" style="display: none;" onclick="cancelEdit()">✖️ Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Features Panel -->
+                <div class="features-panel">
+                    <h2>✨ Admin Features (UNLIMITED)</h2>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    🔐 Admin Security
+                                </div>
+                                <span class="feature-status status-unlimited">UNLIMITED</span>
+                            </div>
+                            <div class="feature-description">
+                                Military-grade encryption, zero-trust architecture, unlimited SSL certificates, global WAF protection
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    📁 File Manager
+                                </div>
+                                <span class="feature-status status-unlimited">UNLIMITED</span>
+                            </div>
+                            <div class="feature-description">
+                                Unlimited storage, no file size limits, all formats supported, instant global CDN distribution
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    👥 User Management
+                                </div>
+                                <span class="feature-status status-unlimited">UNLIMITED</span>
+                            </div>
+                            <div class="feature-description">
+                                Create unlimited users, full control panel access, custom permissions, instant provisioning
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    🌐 Subdomains
+                                </div>
+                                <span class="feature-status status-unlimited">UNLIMITED</span>
+                            </div>
+                            <div class="feature-description">
+                                Unlimited subdomains, custom domains, enterprise DNS, global anycast network
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    🔄 Auto Backups
+                                </div>
+                                <span class="feature-status status-unlimited">UNLIMITED</span>
+                            </div>
+                            <div class="feature-description">
+                                Unlimited backup storage, real-time sync, point-in-time recovery, geo-redundant storage
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    📊 Analytics
+                                </div>
+                                <span class="feature-status status-unlimited">UNLIMITED</span>
+                            </div>
+                            <div class="feature-description">
+                                Real-time analytics, unlimited data retention, AI insights, custom reporting
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    ⚡ Performance
+                                </div>
+                                <span class="feature-status status-unlimited">UNLIMITED</span>
+                            </div>
+                            <div class="feature-description">
+                                Unlimited bandwidth, global CDN, edge computing, instant cache invalidation
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    🎯 Deployment
+                                </div>
+                                <span class="feature-status status-unlimited">UNLIMITED</span>
+                            </div>
+                            <div class="feature-description">
+                                Unlimited deployments, instant rollouts, blue-green deployments, instant rollback
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Management Section -->
+            <div class="users-section" id="usersSection" style="display: none;">
+                <div class="users-panel">
+                    <h2>
+                        👥 User Management
+                        <button type="button" class="btn-add-user" onclick="openCreateUserModal()">+ Add New User</button>
+                    </h2>
+                    <div class="user-list" id="usersList">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            Loading users...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sites List -->
+            <div class="sites-section">
+                <h2>🌐 Your Websites</h2>
+                <div class="sites-grid" id="sitesList">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Loading your websites...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Website Preview</h3>
+                <button type="button" class="modal-close" onclick="closeModal('previewModal')">×</button>
+            </div>
+            <iframe class="preview-iframe" id="previewFrame"></iframe>
+        </div>
+    </div>
+
+    <!-- Create User Modal -->
+    <div class="modal" id="createUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New User</h3>
+                <button type="button" class="modal-close" onclick="closeModal('createUserModal')">×</button>
+            </div>
+            <form id="createUserForm" onsubmit="createNewUser(event)">
+                <div class="user-form-grid">
+                    <div class="form-group">
+                        <label for="newUsername">Username</label>
+                        <input type="text" id="newUsername" placeholder="Enter username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newEmail">Email</label>
+                        <input type="email" id="newEmail" placeholder="Enter email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Password</label>
+                        <input type="password" id="newPassword" placeholder="Set password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newDomain">Domain Extension</label>
+                        <select id="newDomain">
+                            <option value=".app">.app (Premium)</option>
+                            <option value=".cloud">.cloud (Premium)</option>
+                            <option value=".zw">.zw (Premium)</option>
+                            <option value=".com">.com (Standard)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="userRole">User Role</label>
+                    <select id="userRole">
+                        <option value="user">Regular User</option>
+                        <option value="admin">Admin User</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">👤 Create User</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal('createUserModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentTab = 'html';
+        let templates = [];
+        let currentUser = null;
+        let editingSite = null;
+        let uploadedFiles = [];
+        let users = [];
+        let sites = [];
+
+        // Security constants (unlimited for admin)
+        const MAX_FILE_SIZE = Infinity; // Unlimited for admin
+        const ALLOWED_FILE_TYPES = [
+            'text/html',
+            'text/css',
+            'text/javascript',
+            'application/json',
+            'text/plain',
+            'image/png',
+            'image/jpeg',
+            'image/gif',
+            'image/svg+xml',
+            'image/x-icon',
+            'application/pdf',
+            'application/zip',
+            'video/mp4',
+            'audio/mpeg'
+        ];
+
+        // File type icons mapping
+        const FILE_ICONS = {
+            'text/html': '🌐',
+            'text/css': '🎨',
+            'text/javascript': '⚡',
+            'application/json': '📋',
+            'text/plain': '📄',
+            'image/png': '🖼️',
+            'image/jpeg': '🖼️',
+            'image/gif': '🖼️',
+            'image/svg+xml': '🎨',
+            'image/x-icon': '🔖',
+            'application/pdf': '📕',
+            'application/zip': '📦',
+            'video/mp4': '🎬',
+            'audio/mpeg': '🎵'
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing admin app');
+            
+            checkAuth();
+            initializeFileUpload();
+            loadTheme();
+            initializeData();
+            
+            // Add form event listeners
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const uploadForm = document.getElementById('uploadForm');
+            
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+            
+            if (registerForm) {
+                registerForm.addEventListener('submit', handleRegister);
+            }
+            
+            if (uploadForm) {
+                uploadForm.addEventListener('submit', handleUpload);
+            }
+            
+            // Add input event listener for subdomain preview
+            const registerUsername = document.getElementById('registerUsername');
+            if (registerUsername) {
+                registerUsername.addEventListener('input', updateSubdomainPreview);
+            }
+            
+            const registerDomain = document.getElementById('registerDomain');
+            if (registerDomain) {
+                registerDomain.addEventListener('change', updateSubdomainPreview);
+            }
+        });
+
+        // Initialize data
+        function initializeData() {
+            // Load or create admin user
+            let adminUser = localStorage.getItem('ntando_admin_user');
+            if (!adminUser) {
+                adminUser = {
+                    username: 'Ntandostore',
+                    email: 'admin@ntando.app',
+                    subdomain: 'admin.ntando.app',
+                    role: 'admin',
+                    createdAt: new Date().toISOString()
+                };
+                localStorage.setItem('ntando_admin_user', JSON.stringify(adminUser));
+            }
+            
+            // Load users
+            let savedUsers = localStorage.getItem('ntando_users');
+            if (savedUsers) {
+                users = JSON.parse(savedUsers);
+            } else {
+                users = [JSON.parse(adminUser)];
+                localStorage.setItem('ntando_users', JSON.stringify(users));
+            }
+            
+            // Load sites
+            let savedSites = localStorage.getItem('ntando_sites');
+            if (savedSites) {
+                sites = JSON.parse(savedSites);
+            }
+        }
+
+        // Authentication functions
+        function checkAuth() {
+            const token = localStorage.getItem('ntandostore_token');
+            const user = localStorage.getItem('ntandostore_user');
+            
+            if (token && user) {
+                currentUser = JSON.parse(user);
+                if (currentUser.role === 'admin' || currentUser.username === 'Ntandostore') {
+                    showDashboard();
+                } else {
+                    showAuth();
+                    showStatus('Access denied. Admin privileges required.', 'error');
+                }
+            } else {
+                showAuth();
+            }
+        }
+
+        function showAuth() {
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('dashboardContainer').classList.remove('active');
+        }
+
+        function showDashboard() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').classList.add('active');
+            
+            // Update user info
+            document.getElementById('usernameDisplay').textContent = currentUser.username;
+            document.getElementById('subdomainDisplay').textContent = currentUser.subdomain;
+            document.getElementById('userAvatar').textContent = '👑';
+            
+            // Load data
+            loadTemplates();
+            loadSites();
+            loadUsers();
+        }
+
+        // Authentication tab switching
+        function switchAuthTab(tab) {
+            console.log('Switching to tab:', tab);
+            
+            document.querySelectorAll('.auth-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            const clickedTab = event.currentTarget || event.target;
+            clickedTab.classList.add('active');
+            
+            const targetForm = document.getElementById(tab + 'Form');
+            if (targetForm) {
+                targetForm.classList.add('active');
+            }
+        }
+
+        // Handle login form submission
+        function handleLogin(e) {
+            e.preventDefault();
+            console.log('Admin login form submitted');
+            
+            const username = sanitizeInput(document.getElementById('loginUsername').value);
+            const password = document.getElementById('loginPassword').value;
+            
+            console.log('Login attempt:', { username });
+            
+            // Check for admin credentials
+            if (username === 'Ntandostore' && password === 'ntandomods') {
+                const adminUser = {
+                    username: username,
+                    subdomain: 'admin.ntando.app',
+                    email: 'admin@ntando.app',
+                    role: 'admin'
+                };
+                
+                console.log('Admin login successful');
+                
+                localStorage.setItem('ntandostore_token', 'admin_token_' + Date.now());
+                localStorage.setItem('ntandostore_user', JSON.stringify(adminUser));
+                currentUser = adminUser;
+                
+                showDashboard();
+                showStatus('👑 Admin login successful! Unlimited access granted.', 'success');
+            } else {
+                // Check regular users
+                const user = users.find(u => u.username === username && u.password === password);
+                if (user) {
+                    localStorage.setItem('ntandostore_token', 'user_token_' + Date.now());
+                    localStorage.setItem('ntandostore_user', JSON.stringify(user));
+                    currentUser = user;
+                    
+                    showDashboard();
+                    showStatus(`Welcome back, ${user.username}!`, 'success');
+                } else {
+                    showStatus('Invalid credentials. Try again or contact admin.', 'error');
+                }
+            }
+        }
+
+        // Handle registration form submission (create new user)
+        function handleRegister(e) {
+            e.preventDefault();
+            console.log('Creating new user');
+            
+            const username = sanitizeInput(document.getElementById('registerUsername').value);
+            const email = sanitizeInput(document.getElementById('registerEmail').value);
+            const password = document.getElementById('registerPassword').value;
+            const domainExtension = document.getElementById('registerDomain').value;
+            
+            // Validate inputs
+            if (!username || !email || !password) {
+                showStatus('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (username.length < 3 || username.length > 30) {
+                showStatus('Username must be 3-30 characters', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showStatus('Password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            // Check if user already exists
+            if (users.find(u => u.username === username || u.email === email)) {
+                showStatus('User already exists', 'error');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: 'user_' + Date.now(),
+                username: username,
+                email: email,
+                password: password, // In production, this should be hashed
+                subdomain: `${username}${domainExtension}`,
+                role: 'user',
+                domainExtension: domainExtension,
+                createdAt: new Date().toISOString(),
+                createdBy: currentUser?.username || 'system',
+                sites: [],
+                storage: 0,
+                bandwidth: 0
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('ntando_users', JSON.stringify(users));
+            
+            showStatus(`User "${username}" created successfully!`, 'success');
+            
+            // Clear form
+            document.getElementById('registerForm').reset();
+            document.getElementById('subdomainPreview').style.display = 'none';
+            
+            // Refresh users list if visible
+            if (document.getElementById('usersSection').style.display !== 'none') {
+                loadUsers();
+            }
+        }
+
+        // Load and display users
+        function loadUsers() {
+            const usersList = document.getElementById('usersList');
+            
+            if (users.length === 0) {
+                usersList.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--gray);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">👥</div>
+                        <h3>No users yet</h3>
+                        <p>Create your first user to get started!</p>
+                    </div>
+                `;
+            } else {
+                usersList.innerHTML = users.map(user => `
+                    <div class="user-card">
+                        <div class="user-header">
+                            <div class="user-info">
+                                <h3>
+                                    ${user.username}
+                                    ${user.role === 'admin' ? '<span class="admin-user">ADMIN</span>' : ''}
+                                    ${user.username === 'Ntandostore' ? '<span class="admin-user">👑 SUPER ADMIN</span>' : ''}
+                                </h3>
+                                <div class="user-email">${escapeHtml(user.email)}</div>
+                                <div class="user-subdomain-display">${escapeHtml(user.subdomain)}</div>
+                            </div>
+                            <div class="user-actions">
+                                <button type="button" class="btn-user-action btn-edit-user" onclick="editUser('${user.id}')">✏️</button>
+                                <button type="button" class="btn-user-action btn-reset-password" onclick="resetUserPassword('${user.id}')">🔑</button>
+                                ${user.username !== 'Ntandostore' ? `<button type="button" class="btn-user-action btn-delete-user" onclick="deleteUser('${user.id}')">🗑️</button>` : ''}
+                            </div>
+                        </div>
+                        <div class="user-stats">
+                            <div class="user-stat">
+                                <span>📅</span>
+                                <span>Created: ${new Date(user.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            <div class="user-stat">
+                                <span>🌐</span>
+                                <span>Sites: ${user.sites ? user.sites.length : 0}</span>
+                            </div>
+                            <div class="user-stat">
+                                <span>💾</span>
+                                <span>Storage: ${user.storage ? formatFileSize(user.storage) : '0 KB'}</span>
+                            </div>
+                            <div class="user-stat">
+                                <span>📊</span>
+                                <span>Bandwidth: ${user.bandwidth ? formatFileSize(user.bandwidth) : '0 KB'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Show users tab
+        function showUsersTab() {
+            const usersSection = document.getElementById('usersSection');
+            const uploadSection = document.querySelector('.upload-section').parentElement;
+            
+            if (usersSection.style.display === 'none') {
+                usersSection.style.display = 'block';
+                uploadSection.style.display = 'none';
+                loadUsers();
+            } else {
+                usersSection.style.display = 'none';
+                uploadSection.style.display = 'block';
+            }
+        }
+
+        // Open create user modal
+        function openCreateUserModal() {
+            document.getElementById('createUserModal').style.display = 'block';
+        }
+
+        // Create new user from modal
+        function createNewUser(e) {
+            e.preventDefault();
+            
+            const username = sanitizeInput(document.getElementById('newUsername').value);
+            const email = sanitizeInput(document.getElementById('newEmail').value);
+            const password = document.getElementById('newPassword').value;
+            const domain = document.getElementById('newDomain').value;
+            const role = document.getElementById('userRole').value;
+            
+            // Validate
+            if (!username || !email || !password) {
+                showStatus('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Check duplicate
+            if (users.find(u => u.username === username || u.email === email)) {
+                showStatus('User already exists', 'error');
+                return;
+            }
+            
+            // Create user
+            const newUser = {
+                id: 'user_' + Date.now(),
+                username: username,
+                email: email,
+                password: password,
+                subdomain: `${username}${domain}`,
+                role: role,
+                domainExtension: domain,
+                createdAt: new Date().toISOString(),
+                createdBy: currentUser.username,
+                sites: [],
+                storage: 0,
+                bandwidth: 0
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('ntando_users', JSON.stringify(users));
+            
+            closeModal('createUserModal');
+            showStatus(`User "${username}" created successfully!`, 'success');
+            loadUsers();
+            
+            // Clear form
+            document.getElementById('createUserForm').reset();
+        }
+
+        // Edit user
+        function editUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            // For demo, just show status
+            showStatus(`Editing user: ${user.username}`, 'success');
+        }
+
+        // Reset user password
+        function resetUserPassword(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            if (confirm(`Reset password for ${user.username}?`)) {
+                const newPassword = Math.random().toString(36).substring(2, 15);
+                user.password = newPassword;
+                localStorage.setItem('ntando_users', JSON.stringify(users));
+                showStatus(`Password reset for ${user.username}: ${newPassword}`, 'success');
+            }
+        }
+
+        // Delete user
+        function deleteUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            if (confirm(`Delete user "${user.username}"? This action cannot be undone.`)) {
+                users = users.filter(u => u.id !== userId);
+                localStorage.setItem('ntando_users', JSON.stringify(users));
+                showStatus(`User "${user.username}" deleted successfully`, 'success');
+                loadUsers();
+            }
+        }
+
+        // Update subdomain preview
+        function updateSubdomainPreview() {
+            const username = document.getElementById('registerUsername').value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+            const domainExtension = document.getElementById('registerDomain').value;
+            
+            if (username.length >= 3) {
+                const preview = `${username}-${Math.floor(Math.random() * 9999) + 1}`;
+                document.getElementById('subdomainText').textContent = preview;
+                document.getElementById('domainExtension').textContent = domainExtension;
+                document.getElementById('subdomainPreview').style.display = 'block';
+            } else {
+                document.getElementById('subdomainPreview').style.display = 'none';
+            }
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('ntandostore_token');
+            localStorage.removeItem('ntandostore_user');
+            currentUser = null;
+            showAuth();
+            showStatus('Logged out successfully', 'success');
+        }
+
+        // File upload initialization
+        function initializeFileUpload() {
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileInput = document.getElementById('fileInput');
+            
+            fileUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.add('dragover');
+            });
+            
+            fileUploadArea.addEventListener('dragleave', () => {
+                fileUploadArea.classList.remove('dragover');
+            });
+            
+            fileUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+        }
+
+        // Handle file upload with security validation
+        async function handleFiles(files) {
+            const validFiles = [];
+            
+            for (let file of files) {
+                // Admin has unlimited file size
+                if (currentUser?.role !== 'admin' && file.size > MAX_FILE_SIZE) {
+                    showStatus(`File ${file.name} is too large`, 'error');
+                    continue;
+                }
+                
+                // Admin can upload all file types
+                if (currentUser?.role !== 'admin' && !ALLOWED_FILE_TYPES.includes(file.type)) {
+                    showStatus(`File ${file.name} has unsupported type`, 'error');
+                    continue;
+                }
+                
+                if (!isValidFilename(file.name)) {
+                    showStatus(`Invalid filename: ${file.name}`, 'error');
+                    continue;
+                }
+                
+                validFiles.push(file);
+            }
+            
+            if (validFiles.length > 0) {
+                await uploadFiles(validFiles);
+            }
+        }
+
+        // Validate filename for security
+        function isValidFilename(filename) {
+            const invalidPatterns = [
+                /\.\./,
+                /[<>:"|?*]/,
+                /^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i
+            ];
+            
+            return !invalidPatterns.some(pattern => pattern.test(filename));
+        }
+
+        // Upload files with progress tracking
+        async function uploadFiles(files) {
+            const uploadProgress = document.getElementById('uploadProgress');
+            const progressFill = document.getElementById('progressFill');
+            const uploadSpeed = document.getElementById('uploadSpeed');
+            
+            uploadProgress.style.display = 'block';
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                progressFill.style.width = `${(i / files.length) * 100}%`;
+                uploadSpeed.textContent = '∞ KB/s'; // Unlimited speed for admin
+                
+                const content = await readFileContent(file);
+                
+                uploadedFiles.push({
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    content: content,
+                    uploaded: new Date().toISOString()
+                });
+                
+                updateFileManager();
+                
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            
+            progressFill.style.width = '100%';
+            uploadSpeed.textContent = 'Complete!';
+            
+            setTimeout(() => {
+                uploadProgress.style.display = 'none';
+                progressFill.style.width = '0%';
+            }, 2000);
+            
+            showStatus(`${files.length} file(s) uploaded successfully`, 'success');
+        }
+
+        // Read file content
+        function readFileContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = reject;
+                reader.readAsText(file);
+            });
+        }
+
+        // Update file manager display
+        function updateFileManager() {
+            const fileManager = document.getElementById('fileManager');
+            const fileList = document.getElementById('fileList');
+            
+            if (uploadedFiles.length > 0) {
+                fileManager.style.display = 'block';
+                
+                fileList.innerHTML = uploadedFiles.map((file, index) => `
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-icon">${FILE_ICONS[file.type] || '📄'}</div>
+                            <div class="file-details">
+                                <div class="file-name">${escapeHtml(file.name)}</div>
+                                <div class="file-size">${formatFileSize(file.size)}</div>
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <button type="button" class="btn-file-action" onclick="insertFile(${index})" title="Insert into editor">📝</button>
+                            <button type="button" class="btn-file-action" onclick="removeFile(${index})" title="Remove file">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                fileManager.style.display = 'none';
+            }
+        }
+
+        // Insert file content into editor
+        function insertFile(index) {
+            const file = uploadedFiles[index];
+            
+            if (file.type === 'text/html') {
+                document.getElementById('html').value = file.content;
+                switchTab('html');
+            } else if (file.type === 'text/css') {
+                document.getElementById('css').value = file.content;
+                switchTab('css');
+            } else if (file.type === 'text/javascript') {
+                document.getElementById('js').value = file.content;
+                switchTab('js');
+            } else if (file.type.startsWith('image/')) {
+                insertImageAsBase64(file);
+            }
+            
+            showStatus(`File ${file.name} inserted into editor`, 'success');
+        }
+
+        // Insert image as base64
+        function insertImageAsBase64(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const dataUrl = e.target.result;
+                const htmlContent = document.getElementById('html').value;
+                const imgTag = `<img src="${dataUrl}" alt="${escapeHtml(file.name)}" style="max-width: 100%; height: auto;">`;
+                document.getElementById('html').value = htmlContent + '\n' + imgTag;
+                switchTab('html');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Remove file from manager
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            updateFileManager();
+            showStatus('File removed', 'success');
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Load templates
+        async function loadTemplates() {
+            templates = [
+                {
+                    id: 'portfolio',
+                    name: 'Portfolio Template',
+                    html: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Portfolio - Professional</title>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>Professional Portfolio</h1>
+    <p>Welcome to my portfolio website!</p>
+</body>
+</html>`,
+                    css: `body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f5f5f5;
+}`
+                },
+                {
+                    id: 'business',
+                    name: 'Business Template',
+                    html: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Business - Enterprise</title>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>Enterprise Business</h1>
+    <p>Professional business website</p>
+</body>
+</html>`,
+                    css: `body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #ffffff;
+}`
+                },
+                {
+                    id: 'blog',
+                    name: 'Blog Template',
+                    html: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Professional Blog</title>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>Professional Blog</h1>
+    <p>Welcome to my blog!</p>
+</body>
+</html>`,
+                    css: `body {
+    font-family: Georgia, serif;
+    margin: 0;
+    padding: 20px;
+    background: #fafafa;
+}`
+                },
+                {
+                    id: 'landing',
+                    name: 'Landing Page',
+                    html: `<!DOCTYPE html>
+<html>
+<head>
+    <title>High-Converting Landing</title>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>Amazing Product</h1>
+    <p>Discover something amazing today!</p>
+</body>
+</html>`,
+                    css: `body {
+    font-family: 'Helvetica', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}`
+                }
+            ];
+        }
+
+        // Load template
+        function loadTemplate(templateId) {
+            const template = templates.find(t => t.id === templateId);
+            if (!template) return;
+
+            document.querySelectorAll('.template-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.template-btn').classList.add('active');
+
+            document.getElementById('siteName').value = template.name;
+            document.getElementById('html').value = template.html;
+            document.getElementById('css').value = template.css;
+            document.getElementById('js').value = '';
+            
+            updateSiteUrl();
+            showStatus(`Template "${template.name}" loaded successfully!`, 'success');
+        }
+
+        // Update site URL display
+        function updateSiteUrl() {
+            const siteName = sanitizeInput(document.getElementById('siteName').value) || 'my-site';
+            const siteSlug = sanitizeInput(document.getElementById('siteSlug').value) || siteName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            
+            const baseUrl = currentUser?.subdomain || 'admin.ntando.app';
+            document.getElementById('siteUrlText').textContent = `${baseUrl}/${siteSlug}`;
+        }
+
+        // Switch between code tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tab}-tab`).classList.add('active');
+        }
+
+        // Load sites
+        async function loadSites() {
+            // Mock sites data with unlimited capabilities
+            const mockSites = [
+                {
+                    id: '1',
+                    name: 'Admin Portal',
+                    slug: 'admin-portal',
+                    url: '#admin-portal',
+                    fullUrl: 'admin.ntando.app/admin-portal',
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    visits: 999999,
+                    bandwidth: '∞',
+                    storage: '∞'
+                }
+            ];
+            
+            // Add any saved sites
+            if (sites.length > 0) {
+                displaySites([...mockSites, ...sites]);
+            } else {
+                displaySites(mockSites);
+            }
+        }
+
+        // Display sites
+        function displaySites(sites) {
+            const sitesList = document.getElementById('sitesList');
+            
+            if (sites.length === 0) {
+                sitesList.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--gray);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🌐</div>
+                        <h3>No websites yet</h3>
+                        <p>Create your first website using the form above to get started!</p>
+                    </div>
+                `;
+            } else {
+                sitesList.innerHTML = sites.map(site => `
+                    <div class="site-card">
+                        <div class="site-header">
+                            <div class="site-info">
+                                <h3>${escapeHtml(site.name)}</h3>
+                                <div class="site-url">${escapeHtml(site.fullUrl)}</div>
+                            </div>
+                            <div class="site-actions">
+                                <a href="${site.url}" target="_blank" class="btn-site-action btn-visit">👁️ Visit</a>
+                                <button type="button" class="btn-site-action btn-edit" onclick="editSite('${site.id}')">✏️ Edit</button>
+                                <button type="button" class="btn-site-action btn-preview" onclick="previewSite('${site.url}')">🔍 Preview</button>
+                                <button type="button" class="btn-site-action btn-share" onclick="shareSite('${site.fullUrl}')">📱 Share</button>
+                                <button type="button" class="btn-site-action btn-delete" onclick="deleteSite('${site.id}')">🗑️ Delete</button>
+                            </div>
+                        </div>
+                        <div class="site-stats">
+                            <div class="site-stat">
+                                <span>📅</span>
+                                <span>Created: ${new Date(site.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            <div class="site-stat">
+                                <span>👥</span>
+                                <span>Visits: ${site.visits || 0}</span>
+                            </div>
+                            <div class="site-stat">
+                                <span>💾</span>
+                                <span>Storage: ${site.storage || 'Unlimited'}</span>
+                            </div>
+                            <div class="site-stat">
+                                <span>📊</span>
+                                <span>Bandwidth: ${site.bandwidth || 'Unlimited'}</span>
+                            </div>
+                            <div class="site-stat">
+                                <span>🔄</span>
+                                <span>Updated: ${new Date(site.updatedAt).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Handle upload form submission
+        async function handleUpload(e) {
+            e.preventDefault();
+            
+            const siteName = sanitizeInput(document.getElementById('siteName').value);
+            const siteSlug = sanitizeInput(document.getElementById('siteSlug').value);
+            const html = document.getElementById('html').value;
+            const css = document.getElementById('css').value;
+            const js = document.getElementById('js').value;
+            
+            // Create site with unlimited features
+            const fullUrl = `${currentUser.subdomain}/${siteSlug || siteName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+            
+            const newSite = {
+                id: 'site_' + Date.now(),
+                name: siteName,
+                slug: siteSlug || siteName.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                url: '#' + (siteSlug || siteName.toLowerCase().replace(/[^a-z0-9]+/g, '-')),
+                fullUrl: fullUrl,
+                html: html,
+                css: css,
+                js: js,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                createdBy: currentUser.username,
+                visits: 0,
+                bandwidth: '∞',
+                storage: '∞',
+                files: uploadedFiles.length
+            };
+            
+            sites.push(newSite);
+            localStorage.setItem('ntando_sites', JSON.stringify(sites));
+            
+            showStatus(`🎉 Success! Website deployed with unlimited features at: ${fullUrl}`, 'success');
+            
+            // Clear form
+            document.getElementById('uploadForm').reset();
+            uploadedFiles = [];
+            updateFileManager();
+            updateSiteUrl();
+            
+            // Reload sites list
+            loadSites();
+            
+            // Show success confirmation
+            setTimeout(() => {
+                if (confirm(`Website deployed successfully!\n\n${fullUrl}\n\nUnlimited features activated:\n• Unlimited storage\n• Unlimited bandwidth\n• Global CDN\n• SSL certificate\n• Auto-backups\n\nWould you like to visit your new website?`)) {
+                    showStatus(`Opening ${fullUrl}...`, 'success');
+                }
+            }, 1000);
+        }
+
+        // Edit site
+        async function editSite(siteId) {
+            const site = sites.find(s => s.id === siteId);
+            if (!site) return;
+            
+            editingSite = site;
+            document.getElementById('siteId').value = site.id;
+            document.getElementById('siteName').value = site.name;
+            document.getElementById('siteSlug').value = site.slug;
+            document.getElementById('html').value = site.html || '';
+            document.getElementById('css').value = site.css || '';
+            document.getElementById('js').value = site.js || '';
+            
+            document.getElementById('formTitle').textContent = '✏️ Edit Website';
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('updateBtn').style.display = 'block';
+            document.getElementById('cancelEditBtn').style.display = 'block';
+            
+            updateSiteUrl();
+            showStatus(`Editing site: ${site.name}`, 'success');
+        }
+
+        // Update site
+        async function updateSite() {
+            if (!editingSite) return;
+            
+            const siteName = sanitizeInput(document.getElementById('siteName').value);
+            const siteSlug = sanitizeInput(document.getElementById('siteSlug').value);
+            const html = document.getElementById('html').value;
+            const css = document.getElementById('css').value;
+            const js = document.getElementById('js').value;
+            
+            // Update site
+            editingSite.name = siteName;
+            editingSite.slug = siteSlug;
+            editingSite.html = html;
+            editingSite.css = css;
+            editingSite.js = js;
+            editingSite.updatedAt = new Date().toISOString();
+            
+            // Update in storage
+            const siteIndex = sites.findIndex(s => s.id === editingSite.id);
+            if (siteIndex !== -1) {
+                sites[siteIndex] = editingSite;
+                localStorage.setItem('ntando_sites', JSON.stringify(sites));
+            }
+            
+            showStatus('✅ Site updated successfully!', 'success');
+            cancelEdit();
+            loadSites();
+        }
+
+        // Cancel edit
+        function cancelEdit() {
+            editingSite = null;
+            document.getElementById('siteId').value = '';
+            document.getElementById('formTitle').textContent = '🚀 Deploy New Website';
+            document.getElementById('submitBtn').style.display = 'block';
+            document.getElementById('updateBtn').style.display = 'none';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+            document.getElementById('uploadForm').reset();
+            uploadedFiles = [];
+            updateFileManager();
+            updateSiteUrl();
+        }
+
+        // Delete site
+        async function deleteSite(siteId) {
+            const site = sites.find(s => s.id === siteId);
+            if (!site) return;
+            
+            if (confirm('Are you sure you want to delete this website? This action cannot be undone.')) {
+                sites = sites.filter(s => s.id !== siteId);
+                localStorage.setItem('ntando_sites', JSON.stringify(sites));
+                showStatus('Website deleted successfully', 'success');
+                loadSites();
+            }
+        }
+
+        // Preview site
+        function previewSite(url) {
+            const frame = document.getElementById('previewFrame');
+            frame.src = url;
+            document.getElementById('previewModal').style.display = 'block';
+        }
+
+        // Share site
+        function shareSite(url) {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check out my website!',
+                    url: url
+                });
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    showStatus('URL copied to clipboard!', 'success');
+                });
+            }
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            document.querySelector('.nav-btn').textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.querySelector('.nav-btn').textContent = '☀️';
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type = 'success') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message status-${type}`;
+            statusEl.style.display = 'block';
+            
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Security utilities
+        function sanitizeInput(input) {
+            const div = document.createElement('div');
+            div.textContent = input;
+            return div.innerHTML;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function getCSRFToken() {
+            let token = sessionStorage.getItem('csrf_token');
+            if (!token) {
+                token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+                sessionStorage.setItem('csrf_token', token);
+            }
+            return token;
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + S to save/deploy
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                const submitBtn = document.getElementById('submitBtn');
+                const updateBtn = document.getElementById('updateBtn');
+                
+                if (submitBtn && submitBtn.style.display !== 'none') {
+                    submitBtn.click();
+                } else if (updateBtn && updateBtn.style.display !== 'none') {
+                    updateBtn.click();
+                }
+            }
+            
+            // Ctrl/Cmd + U to show users
+            if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+                e.preventDefault();
+                showUsersTab();
+            }
+            
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            }
+        });
+
+        // Admin debug mode - press Ctrl+Shift+A to show debug info
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                e.preventDefault();
+                const debugInfo = `
+                    === ADMIN DEBUG INFO ===
+                    Current User: ${currentUser?.username}
+                    Role: ${currentUser?.role}
+                    Total Users: ${users.length}
+                    Total Sites: ${sites.length}
+                    Storage: Unlimited
+                    Bandwidth: Unlimited
+                    Features: All Enabled
+                    =========================
+                `;
+                console.log(debugInfo);
+                showStatus('Debug info logged to console', 'success');
+            }
+        });
+    </script>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</body>
+  </html>
