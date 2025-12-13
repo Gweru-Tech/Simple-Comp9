@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://sites.super.myninja.ai; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <title>Dashboard - Ntando Enhanced Hosting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+            --info: #4299e1;
+            --dark: #1a202c;
+            --light: #f7fafc;
+            --gray: #718096;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            margin: 0;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            --dark: #f7fafc;
+            --light: #1a202c;
+            --gray: #a0aec0;
+            --border: #2d3748;
+        }
+
+        /* Login/Register Container */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .auth-card {
+            background: var(--light);
+            border-color: var(--border);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h2 {
+            color: var(--dark);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            background: var(--light);
+            border-radius: 12px;
+            padding: 0.25rem;
+        }
+
+        body.dark-mode .auth-tabs {
+            background: var(--dark);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.75rem;
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        body.dark-mode .auth-tab.active {
+            background: var(--light);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: white;
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .form-group input, 
+        body.dark-mode .form-group select {
+            background: var(--light);
+            border-color: var(--border);
+            color: var(--dark);
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 0.25rem;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .btn-auth {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .subdomain-display {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            color: var(--primary);
+            font-weight: 600;
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .subdomain-display {
+            background: var(--dark);
+            border-color: var(--border);
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .dashboard-container.active {
+            display: block;
+        }
+
+        /* Enhanced Navigation */
+        nav {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode nav {
+            background: var(--light);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: var(--light);
+            border-radius: 25px;
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .user-info {
+            background: var(--dark);
+            border-color: var(--border);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-subdomain {
+            font-family: 'Courier New', monospace;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .nav-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-logout {
+            background: var(--danger);
+        }
+
+        .btn-logout:hover {
+            background: #e53e3e;
+        }
+
+        .btn-home {
+            background: var(--info);
+        }
+
+        .btn-home:hover {
+            background: #3182ce;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .dashboard-header {
+            background: var(--light);
+            border-color: var(--border);
+        }
+
+        .dashboard-header h1 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .dashboard-header p {
+            color: var(--gray);
+        }
+
+        /* Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Upload Section with File Manager */
+        .upload-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .upload-section {
+            background: var(--light);
+            border-color: var(--border);
+        }
+
+        .upload-section h2 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        /* File Upload Area */
+        .file-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+
+        body.dark-mode .file-upload-area {
+            background: var(--dark);
+            border-color: var(--border);
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn-upload-file {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-upload-file:hover {
+            background: var(--primary-dark);
+        }
+
+        /* File Manager */
+        .file-manager {
+            margin-top: 1.5rem;
+        }
+
+        .file-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--light);
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s ease;
+        }
+
+        .file-item:hover {
+            background: var(--light);
+        }
+
+        body.dark-mode .file-item:hover {
+            background: var(--dark);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+
+        .file-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .file-size {
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-file-action {
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-file-action:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+
+        body.dark-mode .btn-file-action:hover {
+            background: var(--dark);
+        }
+
+        /* Template Selector */
+        .template-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .template-btn {
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            background: white;
+            color: var(--dark);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        body.dark-mode .template-btn {
+            background: var(--light);
+            border-color: var(--border);
+            color: var(--dark);
+        }
+
+        .template-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .template-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .template-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Site URL Display */
+        .site-url-display {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+
+        /* Code Editor Tabs */
+        .code-editor {
+            margin-bottom: 1.5rem;
+        }
+
+        .code-tabs {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 0;
+            background: var(--light);
+            padding: 0.25rem;
+            border-radius: 10px 10px 0 0;
+        }
+
+        body.dark-mode .code-tabs {
+            background: var(--dark);
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        body.dark-mode .tab-btn.active {
+            background: var(--light);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .code-textarea {
+            width: 100%;
+            min-height: 400px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            background: white;
+            color: var(--dark);
+            resize: vertical;
+        }
+
+        body.dark-mode .code-textarea {
+            background: var(--light);
+            border-color: var(--border);
+            color: var(--dark);
+        }
+
+        .code-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+            color: white;
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        /* Features Panel */
+        .features-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .features-panel {
+            background: var(--light);
+            border-color: var(--border);
+        }
+
+        .features-panel h2 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .feature-item {
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+
+        body.dark-mode .feature-item {
+            background: var(--dark);
+            border-color: var(--border);
+        }
+
+        .feature-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(72, 187, 120, 0.1);
+            color: var(--success);
+        }
+
+        .status-inactive {
+            background: rgba(245, 101, 101, 0.1);
+            color: var(--danger);
+        }
+
+        .feature-description {
+            color: var(--gray);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Sites List */
+        .sites-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        body.dark-mode .sites-section {
+            background: var(--light);
+            border-color: var(--border);
+        }
+
+        .sites-section h2 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .sites-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .site-card {
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+
+        body.dark-mode .site-card {
+            background: var(--dark);
+            border-color: var(--border);
+        }
+
+        .site-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .site-info h3 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .site-url {
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .site-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-site-action {
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-visit { background: var(--success); }
+        .btn-visit:hover { background: #38a169; }
+        
+        .btn-edit { background: var(--primary); }
+        .btn-edit:hover { background: var(--primary-dark); }
+        
+        .btn-preview { background: var(--warning); }
+        .btn-preview:hover { background: #dd6b20; }
+        
+        .btn-share { background: var(--secondary); }
+        .btn-share:hover { background: #6b46c1; }
+        
+        .btn-delete { background: var(--danger); }
+        .btn-delete:hover { background: #e53e3e; }
+
+        .site-stats {
+            display: flex;
+            gap: 2rem;
+            color: var(--gray);
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .site-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .status-success {
+            background: rgba(72, 187, 120, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-error {
+            background: rgba(245, 101, 101, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .status-warning {
+            background: rgba(237, 137, 54, 0.1);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 90%;
+            max-height: 80%;
+            overflow: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        body.dark-mode .modal-content {
+            background: var(--light);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #e53e3e;
+            transform: rotate(90deg);
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 500px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+
+        .spinner {
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .template-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .site-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .site-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* File Upload Progress */
+        .upload-progress {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: var(--light);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .upload-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .upload-status {
+            color: var(--gray);
+        }
+
+        .upload-speed {
+            color: var(--primary);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login/Register Container -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>🚀 Ntando Enhanced</h2>
+                <p>Secure Subdomain Hosting Platform</p>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+                <button class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn-auth">Sign In</button>
+            </form>
+            
+            <!-- Register Form -->
+            <form class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="registerUsername">Username</label>
+                    <input type="text" id="registerUsername" placeholder="Choose a username" required>
+                    <small>3-30 characters, letters, numbers, hyphens, underscores</small>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" placeholder="Choose a password" required>
+                    <small>Minimum 6 characters</small>
+                </div>
+                <div class="form-group">
+                    <label for="registerDomain">Domain Extension</label>
+                    <select id="registerDomain">
+                        <option value=".app">.app (Premium)</option>
+                        <option value=".cloud">.cloud (Premium)</option>
+                        <option value=".zw">.zw (Premium)</option>
+                        <option value=".com">.com (Standard)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-auth">Create Account</button>
+                <div class="subdomain-display" id="subdomainPreview" style="display: none;">
+                    Your subdomain: <span id="subdomainText"></span><span id="domainExtension"></span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <!-- Enhanced Navigation -->
+        <nav>
+            <div class="nav-container">
+                <a href="/" class="logo">🚀 Ntando Enhanced</a>
+                <div class="nav-controls">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <span id="usernameDisplay"></span>
+                        <span class="user-subdomain" id="subdomainDisplay"></span>
+                    </div>
+                    <button class="nav-btn" onclick="toggleTheme()">🌙</button>
+                    <a href="/" class="nav-btn btn-home">← Home</a>
+                    <button class="nav-btn btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1>📊 Enhanced Hosting Dashboard</h1>
+                <p>Deploy securely • Manage easily • Scale confidently</p>
+            </div>
+
+            <div class="status-message" id="statusMessage"></div>
+
+            <!-- Grid Layout -->
+            <div class="dashboard-grid">
+                <!-- Upload Section with File Manager -->
+                <div class="upload-section">
+                    <h2 id="formTitle">🚀 Deploy New Website</h2>
+                    
+                    <!-- File Upload Area -->
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <div class="upload-icon">📁</div>
+                        <p style="margin-bottom: 1rem; color: var(--dark); font-weight: 500;">Drag & drop files here or</p>
+                        <input type="file" id="fileInput" class="file-input" multiple accept=".html,.css,.js,.json,.txt,.png,.jpg,.jpeg,.gif,.svg,.ico">
+                        <button type="button" class="btn-upload-file" onclick="document.getElementById('fileInput').click()">Browse Files</button>
+                        <p style="margin-top: 1rem; color: var(--gray); font-size: 0.85rem;">
+                            Max file size: 10MB • Supported: HTML, CSS, JS, Images
+                        </p>
+                    </div>
+
+                    <!-- Upload Progress -->
+                    <div class="upload-progress" id="uploadProgress" style="display: none;">
+                        <div class="upload-info">
+                            <span class="upload-status">Uploading files...</span>
+                            <span class="upload-speed" id="uploadSpeed">0 KB/s</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- File Manager -->
+                    <div class="file-manager" id="fileManager" style="display: none;">
+                        <h3 style="margin-bottom: 1rem; color: var(--dark);">Uploaded Files</h3>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+
+                    <!-- Site URL Display -->
+                    <div class="site-url-display" id="siteUrlDisplay">
+                        🌐 Your site will be available at: <span id="siteUrlText">your-site.ntando.app</span>
+                    </div>
+
+                    <!-- Template Selector -->
+                    <div class="template-selector">
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--dark); font-weight: 500;">Choose Template</label>
+                        <div class="template-grid" id="templateButtons">
+                            <button type="button" class="template-btn" onclick="loadTemplate('portfolio')">
+                                <div class="template-icon">🎨</div>
+                                Portfolio
+                            </button>
+                            <button type="button" class="template-btn" onclick="loadTemplate('business')">
+                                <div class="template-icon">💼</div>
+                                Business
+                            </button>
+                            <button type="button" class="template-btn" onclick="loadTemplate('blog')">
+                                <div class="template-icon">📝</div>
+                                Blog
+                            </button>
+                            <button type="button" class="template-btn" onclick="loadTemplate('landing')">
+                                <div class="template-icon">🚀</div>
+                                Landing
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Code Editor -->
+                    <div class="code-editor">
+                        <div class="code-tabs">
+                            <button type="button" class="tab-btn active" onclick="switchTab('html')">HTML</button>
+                            <button type="button" class="tab-btn" onclick="switchTab('css')">CSS</button>
+                            <button type="button" class="tab-btn" onclick="switchTab('js')">JavaScript</button>
+                        </div>
+                        
+                        <div class="tab-content active" id="html-tab">
+                            <textarea id="html" class="code-textarea" placeholder="<!DOCTYPE html>
+<html>
+<head>
+    <title>My Website</title>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <p>Welcome to my website.</p>
+</body>
+</html>" required></textarea>
+                        </div>
+                        
+                        <div class="tab-content" id="css-tab">
+                            <textarea id="css" class="code-textarea" placeholder="body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f0f0f0;
+}
+
+h1 {
+    color: #333;
+}"></textarea>
+                        </div>
+                        
+                        <div class="tab-content" id="js-tab">
+                            <textarea id="js" class="code-textarea" placeholder="console.log('Hello World!');
+document.addEventListener('DOMContentLoaded', function() {
+    // Your JavaScript code here
+});"></textarea>
+                        </div>
+                    </div>
+
+                    <form id="uploadForm">
+                        <input type="hidden" id="siteId" value="">
+                        
+                        <div class="form-group">
+                            <label for="siteName">Website Name</label>
+                            <input type="text" id="siteName" placeholder="My Awesome Website" required oninput="updateSiteUrl()">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="siteSlug">Site Slug</label>
+                            <input type="text" id="siteSlug" placeholder="my-awesome-site" oninput="updateSiteUrl()">
+                            <small>This will be part of your URL</small>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary" id="submitBtn">🚀 Deploy Website</button>
+                            <button type="button" class="btn-secondary" id="updateBtn" style="display: none;" onclick="updateSite()">💾 Update Site</button>
+                            <button type="button" class="btn-danger" id="cancelEditBtn" style="display: none;" onclick="cancelEdit()">✖️ Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Features Panel -->
+                <div class="features-panel">
+                    <h2>✨ Platform Features</h2>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    🔐 Security
+                                </div>
+                                <span class="feature-status status-active">Active</span>
+                            </div>
+                            <div class="feature-description">
+                                AES-256 encryption, CSRF protection, XSS prevention, WAF protection, and real-time monitoring
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    📁 File Manager
+                                </div>
+                                <span class="feature-status status-active">Active</span>
+                            </div>
+                            <div class="feature-description">
+                                Drag-and-drop uploads, file validation, virus scanning, and automatic optimization
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    🌐 Subdomains
+                                </div>
+                                <span class="feature-status status-active">Active</span>
+                            </div>
+                            <div class="feature-description">
+                                Custom subdomains, SSL certificates, global CDN, and domain aliasing
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    🔄 Auto Backups
+                                </div>
+                                <span class="feature-status status-active">Active</span>
+                            </div>
+                            <div class="feature-description">
+                                Automatic daily backups, point-in-time recovery, and version control
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    📊 Analytics
+                                </div>
+                                <span class="feature-status status-active">Active</span>
+                            </div>
+                            <div class="feature-description">
+                                Real-time visitor analytics, performance metrics, and security event tracking
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-header">
+                                <div class="feature-title">
+                                    ⚡ Performance
+                                </div>
+                                <span class="feature-status status-active">Active</span>
+                            </div>
+                            <div class="feature-description">
+                                Global CDN, edge caching, image optimization, and lazy loading
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sites List -->
+            <div class="sites-section">
+                <h2>🌐 Your Websites</h2>
+                <div class="sites-grid" id="sitesList">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Loading your websites...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Website Preview</h3>
+                <button type="button" class="modal-close" onclick="closeModal('previewModal')">×</button>
+            </div>
+            <iframe class="preview-iframe" id="previewFrame"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentTab = 'html';
+        let templates = [];
+        let currentUser = null;
+        let editingSite = null;
+        let uploadedFiles = [];
+
+        // Security constants
+        const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+        const ALLOWED_FILE_TYPES = [
+            'text/html',
+            'text/css',
+            'text/javascript',
+            'application/json',
+            'text/plain',
+            'image/png',
+            'image/jpeg',
+            'image/gif',
+            'image/svg+xml',
+            'image/x-icon'
+        ];
+
+        // File type icons mapping
+        const FILE_ICONS = {
+            'text/html': '🌐',
+            'text/css': '🎨',
+            'text/javascript': '⚡',
+            'application/json': '📋',
+            'text/plain': '📄',
+            'image/png': '🖼️',
+            'image/jpeg': '🖼️',
+            'image/gif': '🖼️',
+            'image/svg+xml': '🎨',
+            'image/x-icon': '🔖'
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            initializeFileUpload();
+            loadTheme();
+            
+            // Add form event listeners
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('registerForm').addEventListener('submit', handleRegister);
+            document.getElementById('uploadForm').addEventListener('submit', handleUpload);
+            
+            // Add input event listener for subdomain preview
+            const registerUsername = document.getElementById('registerUsername');
+            if (registerUsername) {
+                registerUsername.addEventListener('input', updateSubdomainPreview);
+            }
+            
+            // Add domain change listener
+            const registerDomain = document.getElementById('registerDomain');
+            if (registerDomain) {
+                registerDomain.addEventListener('change', updateSubdomainPreview);
+            }
+        });
+
+        // Authentication functions
+        function checkAuth() {
+            const token = localStorage.getItem('ntandostore_token');
+            const user = localStorage.getItem('ntandostore_user');
+            
+            if (token && user) {
+                currentUser = JSON.parse(user);
+                showDashboard();
+            } else {
+                showAuth();
+            }
+        }
+
+        function showAuth() {
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('dashboardContainer').classList.remove('active');
+        }
+
+        function showDashboard() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').classList.add('active');
+            
+            // Update user info
+            document.getElementById('usernameDisplay').textContent = currentUser.username;
+            document.getElementById('subdomainDisplay').textContent = currentUser.subdomain;
+            document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+            
+            // Load data
+            loadTemplates();
+            loadSites();
+        }
+
+        // Authentication tab switching
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Form').classList.add('active');
+        }
+
+        // Handle login form submission
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = sanitizeInput(document.getElementById('loginUsername').value);
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simulate login (in real app, this would call your API)
+            if (username && password) {
+                const mockUser = {
+                    username: username,
+                    subdomain: `${username}.ntando.app`,
+                    email: `${username}@example.com`
+                };
+                
+                localStorage.setItem('ntandostore_token', 'mock_token_' + Date.now());
+                localStorage.setItem('ntandostore_user', JSON.stringify(mockUser));
+                currentUser = mockUser;
+                showDashboard();
+                showStatus('Login successful!', 'success');
+            } else {
+                showStatus('Please enter username and password', 'error');
+            }
+        }
+
+        // Handle registration form submission
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const username = sanitizeInput(document.getElementById('registerUsername').value);
+            const email = sanitizeInput(document.getElementById('registerEmail').value);
+            const password = document.getElementById('registerPassword').value;
+            const domainExtension = document.getElementById('registerDomain').value;
+            
+            // Validate inputs
+            if (!username || !email || !password) {
+                showStatus('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (username.length < 3 || username.length > 30) {
+                showStatus('Username must be 3-30 characters', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showStatus('Password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            // Simulate registration (in real app, this would call your API)
+            const mockUser = {
+                username: username,
+                subdomain: `${username}${domainExtension}`,
+                email: email
+            };
+            
+            localStorage.setItem('ntandostore_token', 'mock_token_' + Date.now());
+            localStorage.setItem('ntandostore_user', JSON.stringify(mockUser));
+            currentUser = mockUser;
+            showDashboard();
+            showStatus('Account created successfully!', 'success');
+        }
+
+        // Update subdomain preview
+        function updateSubdomainPreview() {
+            const username = document.getElementById('registerUsername').value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+            const domainExtension = document.getElementById('registerDomain').value;
+            
+            if (username.length >= 3) {
+                const preview = `${username}-${Math.floor(Math.random() * 9999) + 1}`;
+                document.getElementById('subdomainText').textContent = preview;
+                document.getElementById('domainExtension').textContent = domainExtension;
+                document.getElementById('subdomainPreview').style.display = 'block';
+            } else {
+                document.getElementById('subdomainPreview').style.display = 'none';
+            }
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('ntandostore_token');
+            localStorage.removeItem('ntandostore_user');
+            currentUser = null;
+            showAuth();
+            showStatus('Logged out successfully', 'success');
+        }
+
+        // File upload initialization
+        function initializeFileUpload() {
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileInput = document.getElementById('fileInput');
+            
+            // Drag and drop events
+            fileUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.add('dragover');
+            });
+            
+            fileUploadArea.addEventListener('dragleave', () => {
+                fileUploadArea.classList.remove('dragover');
+            });
+            
+            fileUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+        }
+
+        // Handle file upload with security validation
+        async function handleFiles(files) {
+            const validFiles = [];
+            
+            for (let file of files) {
+                // Validate file size
+                if (file.size > MAX_FILE_SIZE) {
+                    showStatus(`File ${file.name} is too large (max 10MB)`, 'error');
+                    continue;
+                }
+                
+                // Validate file type
+                if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+                    showStatus(`File ${file.name} has unsupported type`, 'error');
+                    continue;
+                }
+                
+                // Validate filename
+                if (!isValidFilename(file.name)) {
+                    showStatus(`Invalid filename: ${file.name}`, 'error');
+                    continue;
+                }
+                
+                validFiles.push(file);
+            }
+            
+            if (validFiles.length > 0) {
+                await uploadFiles(validFiles);
+            }
+        }
+
+        // Validate filename for security
+        function isValidFilename(filename) {
+            // Prevent path traversal and special characters
+            const invalidPatterns = [
+                /\.\./,  // Path traversal
+                /[<>:"|?*]/,  // Invalid characters
+                /^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i  // Reserved names
+            ];
+            
+            return !invalidPatterns.some(pattern => pattern.test(filename));
+        }
+
+        // Upload files with progress tracking
+        async function uploadFiles(files) {
+            const uploadProgress = document.getElementById('uploadProgress');
+            const progressFill = document.getElementById('progressFill');
+            const uploadSpeed = document.getElementById('uploadSpeed');
+            
+            uploadProgress.style.display = 'block';
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Simulate upload progress
+                progressFill.style.width = `${(i / files.length) * 100}%`;
+                uploadSpeed.textContent = `${Math.round(file.size / 1024)} KB`;
+                
+                // Process file content
+                const content = await readFileContent(file);
+                
+                uploadedFiles.push({
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    content: content,
+                    uploaded: new Date().toISOString()
+                });
+                
+                // Update file manager
+                updateFileManager();
+                
+                // Simulate upload completion
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            progressFill.style.width = '100%';
+            uploadSpeed.textContent = 'Complete!';
+            
+            setTimeout(() => {
+                uploadProgress.style.display = 'none';
+                progressFill.style.width = '0%';
+            }, 2000);
+            
+            showStatus(`${files.length} file(s) uploaded successfully`, 'success');
+        }
+
+        // Read file content
+        function readFileContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = reject;
+                reader.readAsText(file);
+            });
+        }
+
+        // Update file manager display
+        function updateFileManager() {
+            const fileManager = document.getElementById('fileManager');
+            const fileList = document.getElementById('fileList');
+            
+            if (uploadedFiles.length > 0) {
+                fileManager.style.display = 'block';
+                
+                fileList.innerHTML = uploadedFiles.map((file, index) => `
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-icon">${FILE_ICONS[file.type] || '📄'}</div>
+                            <div class="file-details">
+                                <div class="file-name">${escapeHtml(file.name)}</div>
+                                <div class="file-size">${formatFileSize(file.size)}</div>
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <button type="button" class="btn-file-action" onclick="insertFile(${index})" title="Insert into editor">📝</button>
+                            <button type="button" class="btn-file-action" onclick="removeFile(${index})" title="Remove file">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                fileManager.style.display = 'none';
+            }
+        }
+
+        // Insert file content into editor
+        function insertFile(index) {
+            const file = uploadedFiles[index];
+            
+            if (file.type === 'text/html') {
+                document.getElementById('html').value = file.content;
+                switchTab('html');
+            } else if (file.type === 'text/css') {
+                document.getElementById('css').value = file.content;
+                switchTab('css');
+            } else if (file.type === 'text/javascript') {
+                document.getElementById('js').value = file.content;
+                switchTab('js');
+            } else if (file.type.startsWith('image/')) {
+                // For images, create base64 data URL
+                insertImageAsBase64(file);
+            }
+            
+            showStatus(`File ${file.name} inserted into editor`, 'success');
+        }
+
+        // Insert image as base64
+        function insertImageAsBase64(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const dataUrl = e.target.result;
+                const htmlContent = document.getElementById('html').value;
+                const imgTag = `<img src="${dataUrl}" alt="${escapeHtml(file.name)}" style="max-width: 100%; height: auto;">`;
+                document.getElementById('html').value = htmlContent + '\n' + imgTag;
+                switchTab('html');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Remove file from manager
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            updateFileManager();
+            showStatus('File removed', 'success');
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Load templates
+        async function loadTemplates() {
+            // Mock templates for demo
+            templates = [
+                {
+                    id: 'portfolio',
+                    name: 'Portfolio Template',
+                    html: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Portfolio - John Doe</title>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>John Doe - Portfolio</h1>
+    <p>Welcome to my portfolio website!</p>
+</body>
+</html>`,
+                    css: `body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f5f5f5;
+}`
+                },
+                {
+                    id: 'business',
+                    name: 'Business Template',
+                    html: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Business - My Company</title>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>My Company</h1>
+    <p>Professional business website</p>
+</body>
+</html>`,
+                    css: `body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #ffffff;
+}`
+                },
+                {
+                    id: 'blog',
+                    name: 'Blog Template',
+                    html: `<!DOCTYPE html>
+<html>
+<head>
+    <title>My Blog</title>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>My Blog</h1>
+    <p>Welcome to my blog!</p>
+</body>
+</html>`,
+                    css: `body {
+    font-family: Georgia, serif;
+    margin: 0;
+    padding: 20px;
+    background: #fafafa;
+}`
+                },
+                {
+                    id: 'landing',
+                    name: 'Landing Page',
+                    html: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Landing Page</title>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <h1>Amazing Product</h1>
+    <p>Discover something amazing today!</p>
+</body>
+</html>`,
+                    css: `body {
+    font-family: 'Helvetica', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}`
+                }
+            ];
+        }
+
+        // Load template
+        function loadTemplate(templateId) {
+            const template = templates.find(t => t.id === templateId);
+            if (!template) return;
+
+            // Update template buttons
+            document.querySelectorAll('.template-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.template-btn').classList.add('active');
+
+            // Fill form with template content
+            document.getElementById('siteName').value = template.name;
+            document.getElementById('html').value = template.html;
+            document.getElementById('css').value = template.css;
+            document.getElementById('js').value = '';
+            
+            updateSiteUrl();
+            showStatus(`Template "${template.name}" loaded successfully!`, 'success');
+        }
+
+        // Update site URL display
+        function updateSiteUrl() {
+            const siteName = sanitizeInput(document.getElementById('siteName').value) || 'my-site';
+            const siteSlug = sanitizeInput(document.getElementById('siteSlug').value) || siteName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            
+            const baseUrl = currentUser?.subdomain || 'your-subdomain';
+            document.getElementById('siteUrlText').textContent = `${baseUrl}/${siteSlug}`;
+        }
+
+        // Switch between code tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tab}-tab`).classList.add('active');
+        }
+
+        // Load sites
+        async function loadSites() {
+            // Mock sites data
+            const mockSites = [
+                {
+                    id: '1',
+                    name: 'My Portfolio',
+                    slug: 'portfolio',
+                    url: '#portfolio',
+                    fullUrl: 'demo.ntando.app/portfolio',
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    visits: 1250
+                }
+            ];
+            
+            displaySites(mockSites);
+        }
+
+        // Display sites
+        function displaySites(sites) {
+            const sitesList = document.getElementById('sitesList');
+            
+            if (sites.length === 0) {
+                sitesList.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--gray);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🌐</div>
+                        <h3>No websites yet</h3>
+                        <p>Create your first website using the form above to get started!</p>
+                    </div>
+                `;
+            } else {
+                sitesList.innerHTML = sites.map(site => `
+                    <div class="site-card">
+                        <div class="site-header">
+                            <div class="site-info">
+                                <h3>${escapeHtml(site.name)}</h3>
+                                <div class="site-url">${escapeHtml(site.fullUrl)}</div>
+                            </div>
+                            <div class="site-actions">
+                                <a href="${site.url}" target="_blank" class="btn-site-action btn-visit">👁️ Visit</a>
+                                <button type="button" class="btn-site-action btn-edit" onclick="editSite('${site.id}')">✏️ Edit</button>
+                                <button type="button" class="btn-site-action btn-preview" onclick="previewSite('${site.url}')">🔍 Preview</button>
+                                <button type="button" class="btn-site-action btn-share" onclick="shareSite('${site.fullUrl}')">📱 Share</button>
+                                <button type="button" class="btn-site-action btn-delete" onclick="deleteSite('${site.id}')">🗑️ Delete</button>
+                            </div>
+                        </div>
+                        <div class="site-stats">
+                            <div class="site-stat">
+                                <span>📅</span>
+                                <span>Created: ${new Date(site.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            <div class="site-stat">
+                                <span>👥</span>
+                                <span>Visits: ${site.visits || 0}</span>
+                            </div>
+                            <div class="site-stat">
+                                <span>🔄</span>
+                                <span>Updated: ${new Date(site.updatedAt).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Handle upload form submission
+        async function handleUpload(e) {
+            e.preventDefault();
+            
+            const siteName = sanitizeInput(document.getElementById('siteName').value);
+            const siteSlug = sanitizeInput(document.getElementById('siteSlug').value);
+            const html = document.getElementById('html').value;
+            const css = document.getElementById('css').value;
+            const js = document.getElementById('js').value;
+            
+            // Simulate deployment (in real app, this would call your API)
+            const fullUrl = `${currentUser.subdomain}/${siteSlug || siteName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+            
+            showStatus(`🎉 Success! Your website is live at: ${fullUrl}`, 'success');
+            
+            // Clear form
+            document.getElementById('uploadForm').reset();
+            uploadedFiles = [];
+            updateFileManager();
+            updateSiteUrl();
+            
+            // Reload sites list
+            loadSites();
+            
+            // Show success confirmation
+            setTimeout(() => {
+                if (confirm(`Website deployed successfully!\n\n${fullUrl}\n\nWould you like to visit your new website?`)) {
+                    // In real app, this would open the actual URL
+                    showStatus(`Opening ${fullUrl}...`, 'success');
+                }
+            }, 1000);
+        }
+
+        // Edit site
+        async function editSite(siteId) {
+            showStatus(`Editing site ${siteId}...`, 'success');
+            // In real app, this would load the site data for editing
+        }
+
+        // Update site
+        async function updateSite() {
+            if (!editingSite) return;
+            
+            showStatus('✅ Site updated successfully!', 'success');
+            cancelEdit();
+            loadSites();
+        }
+
+        // Cancel edit
+        function cancelEdit() {
+            editingSite = null;
+            document.getElementById('siteId').value = '';
+            document.getElementById('formTitle').textContent = '🚀 Deploy New Website';
+            document.getElementById('submitBtn').style.display = 'block';
+            document.getElementById('updateBtn').style.display = 'none';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+            document.getElementById('uploadForm').reset();
+            uploadedFiles = [];
+            updateFileManager();
+            updateSiteUrl();
+        }
+
+        // Delete site
+        async function deleteSite(siteId) {
+            if (confirm('Are you sure you want to delete this website? This action cannot be undone.')) {
+                showStatus('Website deleted successfully', 'success');
+                loadSites();
+            }
+        }
+
+        // Preview site
+        function previewSite(url) {
+            const frame = document.getElementById('previewFrame');
+            frame.src = url;
+            document.getElementById('previewModal').style.display = 'block';
+        }
+
+        // Share site
+        function shareSite(url) {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check out my website!',
+                    url: url
+                });
+            } else {
+                // Fallback - copy to clipboard
+                navigator.clipboard.writeText(url).then(() => {
+                    showStatus('URL copied to clipboard!', 'success');
+                });
+            }
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            document.querySelector('.nav-btn').textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.querySelector('.nav-btn').textContent = '☀️';
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type = 'success') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message status-${type}`;
+            statusEl.style.display = 'block';
+            
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Security utilities
+        function sanitizeInput(input) {
+            const div = document.createElement('div');
+            div.textContent = input;
+            return div.innerHTML;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function getCSRFToken() {
+            // Generate or retrieve CSRF token
+            let token = sessionStorage.getItem('csrf_token');
+            if (!token) {
+                token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+                sessionStorage.setItem('csrf_token', token);
+            }
+            return token;
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + S to save/deploy
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                const submitBtn = document.getElementById('submitBtn');
+                const updateBtn = document.getElementById('updateBtn');
+                
+                if (submitBtn && submitBtn.style.display !== 'none') {
+                    submitBtn.click();
+                } else if (updateBtn && updateBtn.style.display !== 'none') {
+                    updateBtn.click();
+                }
+            }
+            
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            }
+        });
+    </script>
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</body>
+  </html>
